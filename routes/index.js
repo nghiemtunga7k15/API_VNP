@@ -132,4 +132,32 @@ router.delete('/api/v1/buff-eye/delete/:id', function(req, res, next) {
 		})
 });
 
+router.post('/api/', function(req, res, next) {
+		if( req.body.link_live == null || req.body.link_live == null || req.body.status == null) {
+			return res.json( {
+						code : 200 
+					} );
+		}
+  		SchemaFbUser.find({status : 1 })
+			.limit(10)
+			.select('user_id fb_dtsg cookie')
+			.exec(function(err, data){
+				if (err) {
+					return res.json( {code : 404 , data : { msg : 'Data Not Found'} } );
+				} else {
+					return res.json( {
+						code : 200 , 
+						data : data , 
+						link_live : req.body.link_live , 
+						text      : req.body.text,
+						status    : 0
+					} );
+	   				
+				}
+		})
+
+ 
+});
+
+
 module.exports = router;
