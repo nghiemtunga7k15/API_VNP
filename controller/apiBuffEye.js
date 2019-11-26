@@ -26,12 +26,18 @@ let ApiController = {
 		const conditions = {id : id};
 		const update     = data;
 		ApiBuffEye.findOneAndUpdate( conditions, update , function(err , detailBuffEye) { 
+			if ( detailBuffEye == null ) {
+				return cb(true ,null);
+			} 
 			if (err) return cb(err ,null);
         	return cb(null , detailBuffEye )
 		});
 	},
 	handleDeleteBuffEye( id   ,cb ) {
 		ApiBuffEye.findOneAndRemove( {id : id}, function(err , deleteSuccess) { 
+			if ( deleteSuccess == null ) {
+				return cb(true ,null);
+			} 
 			if (err) return cb(err ,null);
         	return cb(null , deleteSuccess )
 		});
