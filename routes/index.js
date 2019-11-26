@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const ApiController = require('../controller/api.js');
+const ApiBuffEyeController = require('../controller/apiBuffEye.js');
 
 
 const SchemaFbLive = require('../Schema/fb_live.js');
@@ -43,7 +43,7 @@ router.post('/api/v1/buff-eye/create', function(req, res, next) {
 		time_buff  : 		req.body.time_buff 	,
 		eye_num    :		req.body.eye_num
 	}
-	ApiController.handleAddBuffEye(data, function (err , api) {
+	ApiBuffEyeController.handleAddBuffEye(data, function (err , api) {
 		if(err)  {
 			res.json( {code : 404 , data : { msg : 'Not Add'} } );
 		} else { 
@@ -52,7 +52,9 @@ router.post('/api/v1/buff-eye/create', function(req, res, next) {
 	})
 });
 router.get('/api/v1/buff-eye/list', function(req, res, next) {
-		ApiController.handleGetListBuffEye(function ( err , listBuffEye){
+		let _limit = parseInt(req.query.limit);
+		let page = parseInt(req.query.page);
+		ApiBuffEyeController.handleGetListBuffEye( _limit , page , function ( err , listBuffEye){
 			if(err) {
 				res.json( {code : 404 , data : { msg : 'Not Get List'} } );
 			} else {
@@ -62,7 +64,7 @@ router.get('/api/v1/buff-eye/list', function(req, res, next) {
 });
 router.get('/api/v1/buff-eye/detail/:id', function(req, res, next) {
 		let id = parseInt(req.params.id);
-		ApiController.handleGetDetailBuffEye( id ,function ( err , detailBuffEye){
+		ApiBuffEyeController.handleGetDetailBuffEye( id ,function ( err , detailBuffEye){
 			if(err)  {
 				res.json( {code : 404 , data : { msg : 'Not Get Detail'} } );
 			} else {
@@ -84,7 +86,7 @@ router.put('/api/v1/buff-eye/update/:id', function(req, res, next) {
 			eye_num    :		req.body.eye_num
 		}
 
-		ApiController.handleGetUpdateBuffEye( id , data ,function ( err , updateSuccess){
+		ApiBuffEyeController.handleGetUpdateBuffEye( id , data ,function ( err , updateSuccess){
 			if(err)  {
 				res.json( {code : 404 , data : { msg : 'Not Update'} } );
 			} else {
@@ -95,7 +97,7 @@ router.put('/api/v1/buff-eye/update/:id', function(req, res, next) {
 
 router.delete('/api/v1/buff-eye/delete/:id', function(req, res, next) {
 		let id = parseInt(req.params.id);
-		ApiController.handleDeleteBuffEye( id ,function ( err , updateSuccess){
+		ApiBuffEyeController.handleDeleteBuffEye( id ,function ( err , updateSuccess){
 			if(err)  {
 				res.json( {code : 404 , data : { msg : 'Not Delete'} } );
 			} else {
