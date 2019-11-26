@@ -20,6 +20,12 @@ router.get('/api/v1/fb-live/', function(req, res, next) {
 router.get('/api/v1/fb-user', function(req, res, next) {
 		let _limit = parseInt(req.query.limit);
 		let page = parseInt(req.query.page);
+		if (!_limit || _limit == null) {
+			_limit = 20;
+		}
+		if (!page || page == null) {
+			page = 1;
+		}
 		SchemaFbUser.find({status : 1 }).sort({ last_time_use : 1 })
 			.limit(_limit)
     		.skip( (_limit * page ) -  _limit)
@@ -27,7 +33,7 @@ router.get('/api/v1/fb-user', function(req, res, next) {
 				if (err) {
 					res.json( {code : 404 , data : { msg : 'Data Not Found'} } );
 				} else {
-					res.json( {code : 200 , data : data } );
+					res.json( {code : 200 , data : data  , page : page , limit : _limit } );
 				}
 		})
 });
@@ -54,11 +60,17 @@ router.post('/api/v1/buff-eye/create', function(req, res, next) {
 router.get('/api/v1/buff-eye/list', function(req, res, next) {
 		let _limit = parseInt(req.query.limit);
 		let page = parseInt(req.query.page);
+		if (!_limit || _limit == null) {
+			_limit = 20;
+		}
+		if (!page || page == null) {
+			page = 1;
+		}
 		ApiBuffEyeController.handleGetListBuffEye( _limit , page , function ( err , listBuffEye){
 			if(err) {
 				res.json( {code : 404 , data : { msg : 'Not Get List'} } );
 			} else {
-				res.json( {code : 200 , data : listBuffEye } );
+				res.json( {code : 200 , data : listBuffEye ,  page : page , limit : _limit } );
 			}
 		})
 });
