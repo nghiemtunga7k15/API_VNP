@@ -133,7 +133,7 @@ router.delete('/api/v1/buff-eye/delete/:id', function(req, res, next) {
 });
 
 router.post('/api/', function(req, res, next) {
-		if( req.body.link_live == null || req.body.link_live == null || req.body.status == null) {
+		if( req.body.link_live == null || req.body.text == null || req.body.status == null) {
 			return res.json( {
 						code : 200 
 					} );
