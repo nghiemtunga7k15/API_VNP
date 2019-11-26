@@ -6,7 +6,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var app = express();
-
+require('dotenv').config()
 
 
 var mongoose = require('mongoose');
@@ -15,7 +15,7 @@ var mongoose = require('mongoose');
 // Connect To Database
 
 
-mongoose.connect('mongodb://210.245.80.4:27017/db_fb_virtual_interaction', {useNewUrlParser: true});
+mongoose.connect(`mongodb://210.245.80.4:27017/${process.env.DB_NAME}`, {useNewUrlParser: true});
 
 
 // view engine setup

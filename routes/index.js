@@ -14,13 +14,13 @@ router.get('/api/v1/fb-live/', function(req, res, next) {
 				} else {
 					res.json( {code : 200 , data : data } );
 				}
-		})
+		})	
 });
 /* GET LIVE */
 router.get('/api/v1/fb-user', function(req, res, next) {
 		let valLimit = parseInt(req.query.limit);
 		let page = parseInt(req.query.page);
-		SchemaFbUser.find({}).sort({})
+		SchemaFbUser.find({status : 1 }).sort({ last_time_use : 1 })
 			.limit(valLimit)
     		.skip(valLimit * page)
 			.exec(function(err, data){
