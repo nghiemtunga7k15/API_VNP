@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const ApiBuffEyeController = require('../controller/apiBuffEye.js');
 
+const ApiBuffEye = require('../Schema/api_buff_eye.js');
 
 const SchemaFbLive = require('../Schema/fb_live.js');
 
@@ -10,9 +11,9 @@ const SchemaFbUser = require('../Schema/fb_user.js');
 router.get('/api/v1/fb-live/', function(req, res, next) {
 		SchemaFbLive.find({status : 0}).sort({time_create: -1}).limit(1).exec(function(err, data){
 				if (err) {
-					res.json( {code : 404 , data : { msg : 'Data Not Found'} } );
+					return res.json( {code : 404 , data : { msg : 'Data Not Found'} } );
 				} else {
-					res.json( {code : 200 , data : data } );
+					return res.json( {code : 200 , data : data } );
 				}
 		})	
 });
@@ -31,9 +32,15 @@ router.get('/api/v1/fb-user', function(req, res, next) {
     		.skip( (_limit * page ) -  _limit)
 			.exec(function(err, data){
 				if (err) {
-					res.json( {code : 404 , data : { msg : 'Data Not Found'} } );
+					return res.json( {code : 404 , data : { msg : 'Data Not Found'} } );
 				} else {
-					res.json( {code : 200 , data : data  , page : page , limit : _limit } );
+					SchemaFbUser.count({}, function( err, totalRecord){
+	   					if ( err ) {
+	   						return res.json( {code : 404 , data : { msg : 'Data Not Found'} } );
+	   					} else {
+							return res.json( {code : 200 , data : data  , page : page , limit : _limit , total : totalRecord } );
+	   					}
+					})
 				}
 		})
 });
@@ -51,9 +58,9 @@ router.post('/api/v1/buff-eye/create', function(req, res, next) {
 	}
 	ApiBuffEyeController.handleAddBuffEye(data, function (err , api) {
 		if(err)  {
-			res.json( {code : 404 , data : { msg : 'Not Add'} } );
+			return res.json( {code : 404 , data : { msg : 'Not Add'} } );
 		} else { 
-			res.json( {code : 200 , data : api } );
+			return res.json( {code : 200 , data : api } );
 		}
 	})
 });
@@ -68,9 +75,16 @@ router.get('/api/v1/buff-eye/list', function(req, res, next) {
 		}
 		ApiBuffEyeController.handleGetListBuffEye( _limit , page , function ( err , listBuffEye){
 			if(err) {
-				res.json( {code : 404 , data : { msg : 'Not Get List'} } );
+				return res.json( {code : 404 , data : { msg : 'Not Get List'} } );
 			} else {
-				res.json( {code : 200 , data : listBuffEye ,  page : page , limit : _limit } );
+				ApiBuffEye.count({}, function( err, totalRecord){
+   					if ( err ) {
+   						return res.json( {code : 404 , data : { msg : 'Not Get List'} } );
+   					} else {
+						return res.json( {code : 200 , data : listBuffEye ,  page : page , limit : _limit , total : totalRecord } );
+   					}
+				})
+
 			}
 		})
 });
@@ -78,9 +92,9 @@ router.get('/api/v1/buff-eye/detail/:id', function(req, res, next) {
 		let id = parseInt(req.params.id);
 		ApiBuffEyeController.handleGetDetailBuffEye( id ,function ( err , detailBuffEye){
 			if(err)  {
-				res.json( {code : 404 , data : { msg : 'Not Get Detail'} } );
+				return res.json( {code : 404 , data : { msg : 'Not Get Detail'} } );
 			} else {
-				res.json( {code : 200 , data : detailBuffEye } );
+				return res.json( {code : 200 , data : detailBuffEye } );
 			}
 		})
 });
@@ -100,9 +114,9 @@ router.put('/api/v1/buff-eye/update/:id', function(req, res, next) {
 
 		ApiBuffEyeController.handleGetUpdateBuffEye( id , data ,function ( err , updateSuccess){
 			if(err)  {
-				res.json( {code : 404 , data : { msg : 'Not Update'} } );
+				return res.json( {code : 404 , data : { msg : 'Not Update'} } );
 			} else {
-				res.json( {code : 200 , data : { msg : 'Update Success'} } );
+				return res.json( {code : 200 , data : { msg : 'Update Success'} } );
 			}
 		})
 });
@@ -111,9 +125,9 @@ router.delete('/api/v1/buff-eye/delete/:id', function(req, res, next) {
 		let id = parseInt(req.params.id);
 		ApiBuffEyeController.handleDeleteBuffEye( id ,function ( err , updateSuccess){
 			if(err)  {
-				res.json( {code : 404 , data : { msg : 'Not Delete'} } );
+				return res.json( {code : 404 , data : { msg : 'Not Delete'} } );
 			} else {
-				res.json( {code : 200 , data : { msg : 'Delete Success'} } );
+				return res.json( {code : 200 , data : { msg : 'Delete Success'} } );
 			}
 		})
 });
