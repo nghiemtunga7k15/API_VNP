@@ -15,7 +15,7 @@ var mongoose = require('mongoose');
 // Connect To Database
 
 
-mongoose.connect(`mongodb://210.245.80.4:27017/${process.env.DB_NAME}`, {useNewUrlParser: true});
+mongoose.connect(`mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`, {useNewUrlParser: true});
 
 
 // view engine setup
