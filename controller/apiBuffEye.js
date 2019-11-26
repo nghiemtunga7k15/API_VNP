@@ -10,7 +10,7 @@ let ApiController = {
 	handleGetListBuffEye( _limit , page ,  cb ) {
 		ApiBuffEye.find({})
 			.limit(_limit)
-    		.skip(_limit * page)
+    		.skip((_limit * page ) - _limit)
 			.exec(function(err, listBuffEye){
 				if (err) return cb(err ,null);
         	return cb(null , listBuffEye )

@@ -18,11 +18,11 @@ router.get('/api/v1/fb-live/', function(req, res, next) {
 });
 /* GET LIVE */
 router.get('/api/v1/fb-user', function(req, res, next) {
-		let valLimit = parseInt(req.query.limit);
+		let _limit = parseInt(req.query.limit);
 		let page = parseInt(req.query.page);
 		SchemaFbUser.find({status : 1 }).sort({ last_time_use : 1 })
-			.limit(valLimit)
-    		.skip(valLimit * page)
+			.limit(_limit)
+    		.skip( (_limit * page ) -  _limit)
 			.exec(function(err, data){
 				if (err) {
 					res.json( {code : 404 , data : { msg : 'Data Not Found'} } );
