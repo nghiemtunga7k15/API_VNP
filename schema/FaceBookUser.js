@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var apiSchema =  mongoose.Schema({
+var FaceBookUserSchema =  mongoose.Schema({
     user_id             :  	{ type: String, default : '' },
     user_agent          :   { type: String, default : '' },     
     fb_dtsg             :   { type: String, default : '' },     
@@ -14,4 +14,4 @@ var apiSchema =  mongoose.Schema({
 });
 
 
-module.exports = mongoose.model('fb_users', apiSchema);
+module.exports = mongoose.model('fb_users', FaceBookUserSchema);

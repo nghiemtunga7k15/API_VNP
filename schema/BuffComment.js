@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 const AutoIncrement = require('mongoose-sequence')(mongoose);
 
-var apiVideoCmts =  mongoose.Schema({
+var BuffCommentSchema =  mongoose.Schema({
     video_id            :   { type: String },
     comments            :   { type: String },     
     comments_count      :   { type: Number },     
@@ -11,6 +11,6 @@ var apiVideoCmts =  mongoose.Schema({
 
 });
 
-apiVideoCmts.plugin(AutoIncrement, {inc_field: 'idVideo'});
+BuffCommentSchema.plugin(AutoIncrement, {inc_field: 'idVideo'});
 
-module.exports = mongoose.model('video-comment', apiVideoCmts);
+module.exports = mongoose.model('video-comment', BuffCommentSchema);

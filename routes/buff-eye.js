@@ -1,15 +1,14 @@
 var express = require('express');
 var router = express.Router();
-const ApiBuffEyeController = require('../controller/apiBuffEye.js');
-
-const ApiBuffEye = require('../Schema/api_buff_eye.js');
-
-const SchemaFbLive = require('../Schema/fb_live.js');
-
-const SchemaFbUser = require('../Schema/fb_user.js');
+/*CONTROLLER*/
+const controllerBuffEye = require('../controller/controllerBuffEye.js');
+/*MODAL*/
+const modalBuffEye = require('../schema/BuffEye.js');
+const modalFbLive = require('../schema/FaceBookLive.js');
+const modalFbUser = require('../schema/FaceBookUser.js');
 /* GET USER */
-router.get('/api/v1/fb-live/', function(req, res, next) {
-		SchemaFbLive.find({status : 0}).sort({time_create: -1}).limit(1).exec(function(err, data){
+router.get('/fb-live/', function(req, res, next) {
+		modalFbLive.find({status : 0}).sort({time_create: -1}).limit(1).exec(function(err, data){
 				if (err) {
 					return res.json( {code : 404 , data : { msg : 'Data Not Found'} } );
 				} else {
@@ -18,7 +17,7 @@ router.get('/api/v1/fb-live/', function(req, res, next) {
 		})	
 });
 /* GET LIVE */
-router.get('/api/v1/fb-user', function(req, res, next) {
+router.get('/fb-user', function(req, res, next) {
 		let _limit = parseInt(req.query.limit);
 		let page = parseInt(req.query.page);
 		if (!_limit || _limit == null) {
@@ -27,14 +26,14 @@ router.get('/api/v1/fb-user', function(req, res, next) {
 		if (!page || page == null) {
 			page = 1;
 		}
-		SchemaFbUser.find({status : 1 }).sort({ last_time_use : 1 })
+		modalFbUser.find({status : 1 }).sort({ last_time_use : 1 })
 			.limit(_limit)
     		.skip( (_limit * page ) -  _limit)
 			.exec(function(err, data){
 				if (err) {
 					return res.json( {code : 404 , data : { msg : 'Data Not Found'} } );
 				} else {
-					SchemaFbUser.count({}, function( err, totalRecord){
+					modalFbUser.count({}, function( err, totalRecord){
 	   					if ( err ) {
 	   						return res.json( {code : 404 , data : { msg : 'Data Not Found'} } );
 	   					} else {
@@ -45,7 +44,7 @@ router.get('/api/v1/fb-user', function(req, res, next) {
 		})
 });
 
-router.post('/api/v1/buff-eye/create', function(req, res, next) {
+router.post('/create', function(req, res, next) {
 	let data = { 
 		status     : 		req.body.status,
 		process_id :		req.body.process_id ,
@@ -56,7 +55,7 @@ router.post('/api/v1/buff-eye/create', function(req, res, next) {
 		time_buff  : 		req.body.time_buff 	,
 		eye_num    :		req.body.eye_num
 	}
-	ApiBuffEyeController.handleAddBuffEye(data, function (err , api) {
+	controllerBuffEye.handleCreate(data, function (err , api) {
 		if(err)  {
 			return res.json( {code : 404 , data : { msg : 'Not Add'} } );
 		} else { 
@@ -64,7 +63,7 @@ router.post('/api/v1/buff-eye/create', function(req, res, next) {
 		}
 	})
 });
-router.get('/api/v1/buff-eye/list', function(req, res, next) {
+router.get('/list', function(req, res, next) {
 		let _limit = parseInt(req.query.limit);
 		let page = parseInt(req.query.page);
 		if (!_limit || _limit == null) {
@@ -73,11 +72,11 @@ router.get('/api/v1/buff-eye/list', function(req, res, next) {
 		if (!page || page == null) {
 			page = 1;
 		}
-		ApiBuffEyeController.handleGetListBuffEye( _limit , page , function ( err , listBuffEye){
+		controllerBuffEye.getListBuffEye( _limit , page , function ( err , listBuffEye){
 			if(err) {
 				return res.json( {code : 404 , data : { msg : 'Not Get List'} } );
 			} else {
-				ApiBuffEye.count({}, function( err, totalRecord){
+				modalBuffEye.count({}, function( err, totalRecord){
    					if ( err ) {
    						return res.json( {code : 404 , data : { msg : 'Not Get List'} } );
    					} else {
@@ -88,9 +87,9 @@ router.get('/api/v1/buff-eye/list', function(req, res, next) {
 			}
 		})
 });
-router.get('/api/v1/buff-eye/detail/:id', function(req, res, next) {
+router.get('/detail/:id', function(req, res, next) {
 		let id = parseInt(req.params.id);
-		ApiBuffEyeController.handleGetDetailBuffEye( id ,function ( err , detailBuffEye){
+		controllerBuffEye.getDetailBuffEye( id ,function ( err , detailBuffEye){
 			if(err)  {
 				return res.json( {code : 404 , data : { msg : 'Not Get Detail'} } );
 			} else {
@@ -99,7 +98,7 @@ router.get('/api/v1/buff-eye/detail/:id', function(req, res, next) {
 		})
 });
 
-router.put('/api/v1/buff-eye/update/:id', function(req, res, next) {
+router.put('/update/:id', function(req, res, next) {
 		let id = parseInt(req.params.id);
 		let data = { 
 			status     : 		req.body.status,
@@ -112,7 +111,7 @@ router.put('/api/v1/buff-eye/update/:id', function(req, res, next) {
 			eye_num    :		req.body.eye_num
 		}
 
-		ApiBuffEyeController.handleGetUpdateBuffEye( id , data ,function ( err , updateSuccess){
+		controllerBuffEye.handleUpdateBuffEye( id , data ,function ( err , updateSuccess){
 			if(err)  {
 				return res.json( {code : 404 , data : { msg : 'Not Update'} } );
 			} else {
@@ -121,9 +120,9 @@ router.put('/api/v1/buff-eye/update/:id', function(req, res, next) {
 		})
 });
 
-router.delete('/api/v1/buff-eye/delete/:id', function(req, res, next) {
+router.delete('/delete/:id', function(req, res, next) {
 		let id = parseInt(req.params.id);
-		ApiBuffEyeController.handleDeleteBuffEye( id ,function ( err , updateSuccess){
+		controllerBuffEye.handleDelete( id ,function ( err , updateSuccess){
 			if(err)  {
 				return res.json( {code : 404 , data : { msg : 'Not Delete'} } );
 			} else {
@@ -132,30 +131,30 @@ router.delete('/api/v1/buff-eye/delete/:id', function(req, res, next) {
 		})
 });
 
-router.post('/api/', function(req, res, next) {
-		if( req.body.link_live == null || req.body.text == null || req.body.status == null) {
-			return res.json( {
-						code : 200 
-					} );
-		}
-  		SchemaFbUser.find({status : 1 })
-			.limit(10)
-			.select('user_id fb_dtsg cookie')
-			.exec(function(err, data){
-				if (err) {
-					return res.json( {code : 404 , data : { msg : 'Data Not Found'} } );
-				} else {
-					return res.json( {
-						code : 200 , 
-						data : data , 
-						link_live : req.body.link_live , 
-						text      : req.body.text,
-						status    : 0
-					} );
+// router.post('/api/', function(req, res, next) {
+// 		if( req.body.link_live == null || req.body.text == null || req.body.status == null) {
+// 			return res.json( {
+// 						code : 200 
+// 					} );
+// 		}
+//   		modalFbUser.find({status : 1 })
+// 			.limit(10)
+// 			.select('user_id fb_dtsg cookie')
+// 			.exec(function(err, data){
+// 				if (err) {
+// 					return res.json( {code : 404 , data : { msg : 'Data Not Found'} } );
+// 				} else {
+// 					return res.json( {
+// 						code : 200 , 
+// 						data : data , 
+// 						link_live : req.body.link_live , 
+// 						text      : req.body.text,
+// 						status    : 0
+// 					} );
 	   				
-				}
-		})
-});
+// 				}
+// 		})
+// });
 
 
 module.exports = router;

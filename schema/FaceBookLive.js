@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
-const AutoIncrement = require('mongoose-sequence')(mongoose);
 
-var ApiBuffEyeSchema =  mongoose.Schema({
+var FaceBookLiveVideoSchema =  mongoose.Schema({
     status              :   { type: Number, default : 0 },
     process_id          :   { type: Number, default : 0 },     
     note         		:   { type: String, default : 'Description'},
@@ -12,6 +11,5 @@ var ApiBuffEyeSchema =  mongoose.Schema({
     eye_num         	:   { type: Number, required: true },
 });
 
-ApiBuffEyeSchema.plugin(AutoIncrement, {inc_field: 'id'});
 
-module.exports = mongoose.model('api', ApiBuffEyeSchema);
+module.exports = mongoose.model('fb_live_videos', FaceBookLiveVideoSchema);
