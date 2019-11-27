@@ -6,8 +6,8 @@ const controllerBuffEye = require('../controller/controllerBuffEye.js');
 const modalBuffEye = require('../schema/BuffEye.js');
 const modalFbLive = require('../schema/FaceBookLive.js');
 const modalFbUser = require('../schema/FaceBookUser.js');
-/* GET USER */
-router.get('/fb-live/', function(req, res, next) {
+/* GET LIVE */
+router.get('/fb-live', function(req, res, next) {
 		modalBuffEye.find({status : 0}).sort({time_create: -1}).limit(1).exec(function(err, data){
 				if (err) {
 					return res.json( {code : 404 , data : { msg : 'Data Not Found'} } );
@@ -16,17 +16,18 @@ router.get('/fb-live/', function(req, res, next) {
 				}
 		})	
 });
-/* GET LIVE */
+/* GET USER */
 router.get('/fb-user', function(req, res, next) {
 		let _limit = parseInt(req.query.limit);
 		let page = parseInt(req.query.page);
+		let status = req.query.status ? parseInt(req.query.status) : 1 ;
 		if (!_limit || _limit == null) {
 			_limit = 20;
 		}
 		if (!page || page == null) {
 			page = 1;
 		}
-		modalFbUser.find({status : 1 }).sort({ last_time_use : 1 })
+		modalFbUser.find({status : status }).sort({ last_time_use : 1 })
 			.limit(_limit)
     		.skip( (_limit * page ) -  _limit)
 			.exec(function(err, data){
