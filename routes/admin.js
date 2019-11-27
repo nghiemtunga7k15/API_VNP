@@ -13,6 +13,8 @@ router.post('/create', function(req, res, next) {
 		price_comment_randum        :		req.body.price_comment_randum ,
 		price_comment_choose        :		req.body.price_comment_choose ,
 		comment_max                 :		req.body.comment_max ,
+		price_like                  :		req.body.price_like ,
+		like_max                    :		req.body.like_max ,
 		time_create     			: 		new Date().getTime() ,
 		time_update     			: 		req.body.time_update ,	
 	}

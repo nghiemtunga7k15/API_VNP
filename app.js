@@ -7,6 +7,7 @@ var usersRouter = require('./routes/users');
 var adminRouter = require('./routes/admin');
 var buffEyeRouter = require('./routes/buff-eye');
 var buffCommentRouter = require('./routes/buff-cmt');
+var buffLikeRouter = require('./routes/buff-like');
 var app = express();
 require('dotenv').config()
 
@@ -34,6 +35,7 @@ app.use('/users', usersRouter);
 app.use('/admin', adminRouter);
 app.use('/api/v1/buff-eye', buffEyeRouter);
 app.use('/api/v1/buff-cmt', buffCommentRouter);
+app.use('/api/v1/buff-like', buffLikeRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -7,6 +7,8 @@ var AdminSchema =  mongoose.Schema({
     price_comment_randum     : 	 { type: Number , required: true },  
     price_comment_choose     : 	 { type: Number , required: true },  
     comment_max              : 	 { type: Number , required: true },  
+    price_like               :   { type: Number , required: true },  
+    like_max                 :   { type: Number , required: true },  
     time_create              :   { type: Number },   
     time_update              :   { type: Number, default : 0 },
 
