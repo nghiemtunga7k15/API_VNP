@@ -54,7 +54,12 @@ router.post('/create', function(req, res, next) {
 		time_create: 		new Date().getTime() ,
 		video_id   : 		req.body.video_id 	,
 		time_buff  : 		req.body.time_buff 	,
-		eye_num    :		req.body.eye_num
+		view       :		req.body.view,
+		price      :		req.body.price,
+		total_price_pay    :		parseInt(req.body.price) * parseInt(req.body.view),
+		time_done      	   :		req.body.time_done,
+		time_delay         :		req.body.time_delay,
+		time_buff_eye_done :		req.body.time_buff_eye_done,
 	}
 	controllerBuffEye.handleCreate(data, function (err , api) {
 		if(err)  {
@@ -107,10 +112,13 @@ router.put('/update/:id', function(req, res, next) {
 			process_id :		req.body.process_id ,
 			note       :		req.body.note 		,
 			last_time_check: 	req.body.last_time_check ,
-			time_create: 		new Date().getTime() ,
+			time_create: 		req.body.time_create ,
 			video_id   : 		req.body.video_id 	,
 			time_buff  : 		req.body.time_buff 	,
-			eye_num    :		req.body.eye_num
+			view       :		req.body.view,
+			price      :		req.body.price,
+			total_price_pay    :		parseInt(req.body.price) * parseInt(req.body.view),
+			time_update:new Date().getTime() ,
 		}
 
 		controllerBuffEye.handleUpdateBuffEye( id , data ,function ( err , updateSuccess){
