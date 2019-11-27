@@ -8,7 +8,7 @@ const modalFbLive = require('../schema/FaceBookLive.js');
 const modalFbUser = require('../schema/FaceBookUser.js');
 /* GET USER */
 router.get('/fb-live/', function(req, res, next) {
-		modalFbLive.find({status : 0}).sort({time_create: -1}).limit(1).exec(function(err, data){
+		modalBuffEye.find({status : 0}).sort({time_create: -1}).limit(1).exec(function(err, data){
 				if (err) {
 					return res.json( {code : 404 , data : { msg : 'Data Not Found'} } );
 				} else {
