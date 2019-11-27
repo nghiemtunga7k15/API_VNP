@@ -7,8 +7,10 @@ let BuffEyeController = {
 	      return cb(null, api);
 	    });
 	},
-	getListBuffEye( _limit , page ,  cb ) {
-		modalBuffEye.find({})
+	getListBuffEye( _limit , page , status  ,  cb ) {
+		let query  =  status ?  modalBuffEye.find({status : status})  : modalBuffEye.find({});
+		
+			query
 			.limit(_limit)
     		.skip((_limit * page ) - _limit)
 			.exec(function(err, listBuffEye){

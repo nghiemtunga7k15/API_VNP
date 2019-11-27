@@ -67,13 +67,14 @@ router.post('/create', function(req, res, next) {
 router.get('/list', function(req, res, next) {
 		let _limit = parseInt(req.query.limit);
 		let page = parseInt(req.query.page);
+		let status =   parseInt(req.query.status);
 		if (!_limit || _limit == null) {
 			_limit = 20;
 		}
 		if (!page || page == null) {
 			page = 1;
 		}
-		controllerBuffEye.getListBuffEye( _limit , page , function ( err , listBuffEye){
+		controllerBuffEye.getListBuffEye( _limit , page , status , function ( err , listBuffEye){
 			if(err) {
 				return res.json( {code : 404 , data : { msg : 'Not Get List'} } );
 			} else {
