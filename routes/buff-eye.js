@@ -112,7 +112,6 @@ router.put('/update/:id', function(req, res, next) {
 			process_id :		req.body.process_id ,
 			note       :		req.body.note 		,
 			last_time_check: 	req.body.last_time_check ,
-			time_create: 		req.body.time_create ,
 			video_id   : 		req.body.video_id 	,
 			time_buff  : 		req.body.time_buff 	,
 			view       :		req.body.view,

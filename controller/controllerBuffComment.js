@@ -35,9 +35,7 @@ let BuffCommentController = {
 	handleUpdate( idVideo  , data ,cb ) {
 		const conditions = {idVideo : idVideo};
 		const update     = data;
-
-		console.log(update)
-		modalBuffComment.findOneAndUpdate( conditions, update , function(err , updateSuccess) { 
+		modalBuffComment.findOneAndUpdate( conditions, update , { upsert: true, new: true } , function(err , updateSuccess) { 
 			if ( updateSuccess == null ) {
 				return cb(true ,null);
 			} 

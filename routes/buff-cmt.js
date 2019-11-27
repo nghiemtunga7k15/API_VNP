@@ -9,10 +9,18 @@ const modalFbUser = require('../schema/FaceBookUser.js');
 router.post('/create', function(req, res, next) {
 	let data = { 
 		video_id   :		req.body.video_id ,
-		delays     :		req.body.delays ,
-		time_create: 		new Date().getTime() ,
+		type_buff  :		req.body.type_buff ,
+		price      :		req.body.price ,
 		comments   : 		req.body.comments ,	
-		comments_count   : 		req.body.comments_count ,	
+		comments_count       : 		req.body.comments_count ,	
+		total_price_pay      : parseInt(req.body.comments_count) * parseInt(req.body.price),
+		status     :        req.body.status,
+ 		delays     :		req.body.delays ,
+		time_create: 		new Date().getTime() ,
+		time_done  : 		req.body.time_done ,	
+		time_delay : 		req.body.time_delay ,	
+		time_buff_eye_done   : 		req.body.time_buff_eye_done ,	
+		time_update          : 		req.body.time_update ,	
 	}
 	controllerBuffComment.handleCreate(data, function (err , api) {
 		if(err)  {
@@ -78,10 +86,17 @@ router.put('/update/:id', function(req, res, next) {
 		let id = parseInt(req.params.id);
 		let data = { 
 			video_id   :		req.body.video_id ,
-			delays     :		req.body.delays ,
-			time_create: 		new Date().getTime() ,
+			type_buff  :		req.body.type_buff ,
+			price      :		req.body.price ,
 			comments   : 		req.body.comments ,	
-			comments_count   : 		req.body.comments_count ,	
+			comments_count       : 		req.body.comments_count ,	
+			total_price_pay      : parseInt(req.body.comments_count) * parseInt(req.body.price),
+			status     :        req.body.status,
+	 		delays     :		req.body.delays ,
+			time_done  : 		req.body.time_done ,	
+			time_delay : 		req.body.time_delay ,	
+			time_buff_eye_done   : 		req.body.time_buff_eye_done ,	
+			time_update          : 		new Date().getTime() ,	
 		}
 
 		controllerBuffComment.handleUpdate( id , data ,function ( err , updateSuccess){
