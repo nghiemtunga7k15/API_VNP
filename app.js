@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var usersRouter = require('./routes/users');
+var adminRouter = require('./routes/admin');
 var buffEyeRouter = require('./routes/buff-eye');
 var buffCommentRouter = require('./routes/buff-cmt');
 var app = express();
@@ -29,8 +30,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/api/v1/buff-eye', buffEyeRouter);
 app.use('/users', usersRouter);
+app.use('/admin', adminRouter);
+app.use('/api/v1/buff-eye', buffEyeRouter);
 app.use('/api/v1/buff-cmt', buffCommentRouter);
 
 // catch 404 and forward to error handler

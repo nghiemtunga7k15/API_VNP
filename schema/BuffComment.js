@@ -8,12 +8,13 @@ var BuffCommentSchema =  mongoose.Schema({
     comments            :   { type: String , required: true },     
     comments_count      :   { type: Number , required: true },     
     total_price_pay     :   { type: Number , required: true },     
+    time_delay          :   { type: Number, default : 1 },
+    time_buff_cmt_done  :   { type: Number},
+    note                :   { type: String, default : 'Descript' },
     status              :   { type: Number, default : 0 },
-    delays         		:   { type: Number },
+    comment_max         :   { type: Number },
     time_create        	:   { type: Number },
     time_done           :   { type: Number, default : 0 },
-    time_delay          :   { type: Number, default : 0 },
-    time_buff_eye_done  :   { type: Number, default : 0 },
     time_update         :   { type: Number, default : 0 },
 
 });

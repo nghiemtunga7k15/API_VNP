@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 /*CONTROLLER*/
 const controllerBuffEye = require('../controller/controllerBuffEye.js');
+const controllerAdmin = require('../controller/controllerAdmin.js');
+
 /*MODAL*/
 const modalBuffEye = require('../schema/BuffEye.js');
 const modalFbLive = require('../schema/FaceBookLive.js');
@@ -46,28 +48,45 @@ router.get('/fb-user', function(req, res, next) {
 });
 
 router.post('/create', function(req, res, next) {
-	let data = { 
-		status     : 		req.body.status,
-		process_id :		req.body.process_id ,
-		note       :		req.body.note 		,
-		last_time_check: 	req.body.last_time_check ,
-		time_create: 		new Date().getTime() ,
-		video_id   : 		req.body.video_id 	,
-		time_buff  : 		req.body.time_buff 	,
-		view       :		req.body.view,
-		price      :		req.body.price,
-		total_price_pay    :		parseInt(req.body.price) * parseInt(req.body.view),
-		time_done      	   :		req.body.time_done,
-		time_delay         :		req.body.time_delay,
-		time_buff_eye_done :		req.body.time_buff_eye_done,
+
+	function getAdminSetup() {
+		return new Promise(function(resolve, reject) { 
+			controllerAdmin.getListSetup(function ( err , list){
+				if(err) return reject(err);
+				return resolve(list);
+			})
+		 });
 	}
-	controllerBuffEye.handleCreate(data, function (err , api) {
-		if(err)  {
-			return res.json( {code : 404 , data : { msg : 'Not Add'} } );
-		} else { 
-			return res.json( {code : 200 , data : api } );
+	let promise = getAdminSetup();
+	promise.then(success=>{
+
+		let data = { 
+			video_id           : 		req.body.video_id 	,
+			view               :		req.body.view,
+			price_one_eye      :		success[0].price_one_eye,
+			total_price_pay    :		parseInt(success[0].price_one_eye) * parseInt(req.body.view),
+			time_delay         :		req.body.time_delay,
+			time_buff_eye_done :		req.body.time_buff_eye_done,
+			note               : 		req.body.note,
+			status             : 		req.body.status,
+			view_max           :		success[0].view_max,
+			time_create        : 		new Date().getTime() ,
+			time_done      	   :		req.body.time_done,
+			time_update        :		req.body.time_update,
 		}
+
+		controllerBuffEye.handleCreate(data, function (err , api) {
+			if(err)  {
+				return res.json( {code : 404 , data : { msg : 'Not Add'} } );
+			} else { 
+				return res.json( {code : 200 , data : api } );
+			}
+		})
 	})
+	.catch(e=>{
+			return res.json( {code : 404 , data : { msg : 'Not Add'} } );
+	})
+	
 });
 router.get('/list', function(req, res, next) {
 		let _limit = parseInt(req.query.limit);
@@ -107,25 +126,46 @@ router.get('/detail/:id', function(req, res, next) {
 
 router.put('/update/:id', function(req, res, next) {
 		let id = parseInt(req.params.id);
-		let data = { 
-			status     : 		req.body.status,
-			process_id :		req.body.process_id ,
-			note       :		req.body.note 		,
-			last_time_check: 	req.body.last_time_check ,
-			video_id   : 		req.body.video_id 	,
-			time_buff  : 		req.body.time_buff 	,
-			view       :		req.body.view,
-			price      :		req.body.price,
-			total_price_pay    :		parseInt(req.body.price) * parseInt(req.body.view),
-			time_update:new Date().getTime() ,
+		let view  = req.body.view ? req.body.view : 0;
+
+		function getAdminSetup() {
+			return new Promise(function(resolve, reject) { 
+				controllerAdmin.getListSetup(function ( err , list){
+					if(err) return reject(err);
+					return resolve(list);
+				})
+			});
 		}
 
-		controllerBuffEye.handleUpdateBuffEye( id , data ,function ( err , updateSuccess){
-			if(err)  {
-				return res.json( {code : 404 , data : { msg : 'Not Update'} } );
-			} else {
-				return res.json( {code : 200 , data : { msg : 'Update Success'} } );
+		let promise = getAdminSetup();
+		promise.then(success=>{
+
+			let data = { 
+				video_id   		   : 		req.body.video_id 	,
+				view       		   :		req.body.view,
+				price_one_eye      :		success[0].price_one_eye,
+				total_price_pay    :		parseInt(success[0].price_one_eye) * view,
+				time_delay         :		req.body.time_delay,
+				time_buff_eye_done :		req.body.time_buff_eye_done,
+				note       		   : 		req.body.note,
+				status     		   : 		req.body.status,
+				view_max   		   :		success[0].view_max,
+				time_done      	   :		req.body.time_done,
+				time_update        :		new Date().getTime(),
 			}
+
+console.log(data)
+			controllerBuffEye.handleUpdateBuffEye( id , data ,function ( err , updateSuccess){
+				if(err)  {
+					return res.json( {code : 404 , data : { msg : 'Not Update'} } );
+				} else {
+					return res.json( {code : 200 , data : { msg : 'Update Success'} } );
+				}
+			})
+		})
+		.catch(e=>{
+				return res.json( {code : 404 , data : { msg : 'Not Add'} } );
+
 		})
 });
 
