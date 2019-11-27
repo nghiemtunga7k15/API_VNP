@@ -106,7 +106,7 @@ router.get('/list', function(req, res, next) {
    					if ( err ) {
    						return res.json( {code : 404 , data : { msg : 'Not Get List'} } );
    					} else {
-						return res.json( {code : 200 , data : listBuffEye ,  page : page , limit : _limit , total : totalRecord } );
+						return res.json( {code : 200 , data : listBuffEye ,  page : page , limit : _limit , total : totalRecord  , v : 10} );
    					}
 				})
 
