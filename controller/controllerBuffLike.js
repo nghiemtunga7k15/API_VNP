@@ -34,7 +34,7 @@ let BuffLikeController = {
 	},
 	handleUpdateBuffLike( idLike ,cb ) {
 		const conditions = { idLike : idLike };
-		modalBuffLike.findOneAndUpdate( conditions, { status : 1 } , function(err , success) { 
+		modalBuffLike.findOneAndUpdate( conditions, { status : 1 }  ,  { upsert: false }  , function(err , success) { 
 			if ( success == null ) {
 				return cb(true ,null);
 			} 
@@ -45,7 +45,7 @@ let BuffLikeController = {
 	handleUpdate( idLike  , data ,cb ) {
 		const conditions = {idLike : idLike};
 		const update     = data;
-		modalBuffLike.findOneAndUpdate( conditions, update , { upsert: true, new: true } , function(err , updateSuccess) { 
+		modalBuffLike.findOneAndUpdate( conditions, update ,  { upsert: false }  , function(err , updateSuccess) { 
 			if ( updateSuccess == null ) {
 				return cb(true ,null);
 			} 

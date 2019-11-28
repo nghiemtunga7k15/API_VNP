@@ -139,13 +139,13 @@ router.put('/update/:id', function(req, res, next) {
 
 		let promise = getAdminSetup();
 		promise.then(success=>{
-
+			let time  = req.body.time_buff_eye_done ? 0 : req.body.time_delay;
 			let data = { 
 				video_id   		   : 		req.body.video_id 	,
 				view       		   :		req.body.view,
 				price_one_eye      :		success[0].price_one_eye,
 				total_price_pay    :		parseInt(success[0].price_one_eye) * view,
-				time_delay         :		req.body.time_delay,
+				time_delay         :		time,
 				time_buff_eye_done :		req.body.time_buff_eye_done,
 				note       		   : 		req.body.note,
 				status     		   : 		req.body.status,
@@ -153,13 +153,13 @@ router.put('/update/:id', function(req, res, next) {
 				time_done      	   :		req.body.time_done,
 				time_update        :		new Date().getTime(),
 			}
-
-console.log(data)
 			controllerBuffEye.handleUpdateBuffEye( id , data ,function ( err , updateSuccess){
 				if(err)  {
 					return res.json( {code : 404 , data : { msg : 'Not Update'} } );
 				} else {
-					return res.json( {code : 200 , data : { msg : 'Update Success'} } );
+					controllerBuffEye.getDetailBuffEye( id ,function ( err , detailBuffEye){	
+						return res.json( {code : 200 , data : detailBuffEye } );
+					})
 				}
 			})
 		})

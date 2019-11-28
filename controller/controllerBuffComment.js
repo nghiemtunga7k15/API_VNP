@@ -33,7 +33,7 @@ let BuffCommentController = {
 	},
 	handleUpdateBuffComment( idVideo ,cb ) {
 		const conditions = { idVideo : idVideo };
-		modalBuffComment.findOneAndUpdate( conditions, { status : 1 } , function(err , detailBuffEye) { 
+		modalBuffComment.findOneAndUpdate( conditions, { status : 1 } ,  { upsert: false }  , function(err , detailBuffEye) { 
 			if ( detailBuffEye == null ) {
 				return cb(true ,null);
 			} 
@@ -44,7 +44,7 @@ let BuffCommentController = {
 	handleUpdate( idVideo  , data ,cb ) {
 		const conditions = {idVideo : idVideo};
 		const update     = data;
-		modalBuffComment.findOneAndUpdate( conditions, update , { upsert: true, new: true } , function(err , updateSuccess) { 
+		modalBuffComment.findOneAndUpdate( conditions, update , { upsert: false } , function(err , updateSuccess) { 
 			if ( updateSuccess == null ) {
 				return cb(true ,null);
 			} 

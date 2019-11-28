@@ -28,7 +28,7 @@ let BuffEyeController = {
 	handleUpdateBuffEye( id  , data ,cb ) {
 		const conditions = {id : id};
 		const update     = data;
-		modalBuffEye.findOneAndUpdate( conditions, update , function(err , detailBuffEye) { 
+		modalBuffEye.findOneAndUpdate( conditions, update ,  { upsert: false }  ,  function(err , detailBuffEye) { 
 			if ( detailBuffEye == null ) {
 				return cb(true ,null);
 			} 
