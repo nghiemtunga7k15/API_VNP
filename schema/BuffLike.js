@@ -7,7 +7,7 @@ var BuffLikeSchema =  mongoose.Schema({
     quantity            :   { type: String , required: true },     
     price               : 	{ type: Number , required: true },
     total_price_pay     :   { type: Number , required: true },     
-    time_delay          :   { type: Number, default : 1 },
+    time_delay          :   { type: Number, default : 0 },
     time_buff_like_done :   { type: Number },
     note                :   { type: String, default : 'Descript' },
     status              :   { type: Number, default : 0 },
