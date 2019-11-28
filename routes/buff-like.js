@@ -92,7 +92,7 @@ router.get('/detail-order', function(req, res, next) {
 });
 
 
-router.get('/list-all', function(req, res, next) {
+router.get('/list', function(req, res, next) {
 		let _limit = parseInt(req.query.page);
 		let page = parseInt(req.query.page);
 		if (!_limit || _limit == null) {

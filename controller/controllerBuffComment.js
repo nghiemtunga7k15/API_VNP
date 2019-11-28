@@ -8,12 +8,20 @@ let BuffCommentController = {
 	    });
 	},
 	getListBuffComment( _limit , page ,  cb ) {
-		modalBuffComment.find({})
+		modalBuffComment.find( { status : 0 })
 			.limit(_limit)
     		.skip((_limit * page ) - _limit)
 			.exec(function(err, listCmts){
 				if (err) return cb(err ,null);
         	return cb(null , listCmts )
+		});
+	},
+	getOrderBuffComment( cb ) {
+		modalBuffComment.find( { status : 0 })
+			.limit(1)
+			.exec(function(err, orderDetail){
+				if (err) return cb(err ,null);
+        	return cb(null , orderDetail )
 		});
 	},
 	getDetailBuffComment( idVideo ,cb ) {

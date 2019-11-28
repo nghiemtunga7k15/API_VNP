@@ -55,13 +55,8 @@ router.post('/create', function(req, res, next) {
 						if (err) {
 							return res.json( {code : 404 , data : { msg : 'Data Not Found'} } );
 						} else {
-							controllerBuffComment.handleUpdateBuffComment( parseInt(api.idVideo) , function (err , updateSucess){		
-								return res.json( {
-									code : 200 , 
-									data : api , 
-									cookie : cookies
-								} );
-							});
+							return res.json( {code : 404 , data : { msg : 'Add Success'} } );
+
 			   				
 						}
 				})
@@ -93,6 +88,21 @@ router.get('/list', function(req, res, next) {
    					}
 				})
 
+			}
+		})
+});
+router.get('/detail-order', function(req, res, next) {
+		controllerBuffComment.getOrderBuffComment(function ( err , orderDetail){
+			if(err) {
+					return res.json( {code : 404 , data : { msg : 'Order Not Found'} } );
+			} else {
+				if ( orderDetail.length > 0 ) {
+
+				controllerBuffComment.handleUpdateBuffComment(orderDetail[0].idVideo , function(err , success ) {})
+					return res.json( {code : 200 , data : orderDetail} );
+				} else {
+					return res.json( {code : 404 , data : { msg : 'Order Not Found'} } );
+				}
 			}
 		})
 });
