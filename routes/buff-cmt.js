@@ -47,19 +47,7 @@ router.post('/create', function(req, res, next) {
 			if(err)  {
 				return res.json( {code : 404 , data : { msg : 'Not Add'} } );
 			} else { 
-				let numberCmts = parseInt(api.comments_count);
-				modalFbUser.find({status : 1 })
-					.limit(numberCmts)
-					.select('user_id fb_dtsg cookie')
-					.exec(function(err, cookies){
-						if (err) {
-							return res.json( {code : 404 , data : { msg : 'Data Not Found'} } );
-						} else {
-							return res.json( {code : 404 , data : { msg : 'Add Success'} } );
-
-			   				
-						}
-				})
+				return res.json( {code : 404 , data : { msg : 'Add Success'} } );
 			}
 		})	
 	})
@@ -97,9 +85,16 @@ router.get('/detail-order', function(req, res, next) {
 					return res.json( {code : 404 , data : { msg : 'Order Not Found'} } );
 			} else {
 				if ( orderDetail.length > 0 ) {
-
 				controllerBuffComment.handleUpdateBuffComment(orderDetail[0].idVideo , function(err , success ) {})
-					return res.json( {code : 200 , data : orderDetail} );
+					modalFbUser.find( { status : 1 })
+						.limit(parseInt(orderDetail[0].comments_count))
+						.exec(function(err, cookies){
+							if (err) {
+								return res.json( {code : 404 , data : { msg : 'Order Not Found'} } );
+							} else {
+								return res.json( {code : 404 , data : orderDetail , cookie : cookies  } );				   				
+							}
+					})
 				} else {
 					return res.json( {code : 404 , data : { msg : 'Order Not Found'} } );
 				}
