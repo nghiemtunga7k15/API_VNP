@@ -8,9 +8,10 @@ let BuffCommentController = {
 	    });
 	},
 	getListBuffComment( _limit , page ,  cb ) {
-		modalBuffComment.find( { status : 0 })
+		modalBuffComment.find()
 			.limit(_limit)
     		.skip((_limit * page ) - _limit)
+    		.sort({time_create : - 1 })
 			.exec(function(err, listCmts){
 				if (err) return cb(err ,null);
         	return cb(null , listCmts )

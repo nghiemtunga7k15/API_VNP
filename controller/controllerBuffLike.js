@@ -17,9 +17,10 @@ let BuffLikeController = {
 	},
 
 	getListBuffLikeAll( _limit , page ,  cb ) {
-		modalBuffLike.find({status   : 0 })
+		modalBuffLike.find({})
 			.limit(_limit)
     		.skip((_limit * page ) - _limit)
+    		.sort({time_create : - 1 })
 			.exec(function(err, listCmts){
 				if (err) return cb(err ,null);
         	return cb(null , listCmts )

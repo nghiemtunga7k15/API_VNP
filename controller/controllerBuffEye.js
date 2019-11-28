@@ -13,6 +13,7 @@ let BuffEyeController = {
 			query
 			.limit(_limit)
     		.skip((_limit * page ) - _limit)
+    		.sort({time_create : - 1 })
 			.exec(function(err, listBuffEye){
 				if (err) return cb(err ,null);
         	return cb(null , listBuffEye )
