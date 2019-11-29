@@ -142,22 +142,13 @@ router.put('/update/:id', function(req, res, next) {
 
 		let promise = getAdminSetup();
 		promise.then(success=>{
-			let quantity = req.body.quantity ? req.body.quantity : 0;
-			let _comments_count = req.body.comments_count ? _comments_count : 0
-			let data = { 
-				video_id             :		req.body.video_id ,
-				type_buff            :		req.body.type_buff ,   
-				quantity             : 		req.body.quantity ,	
-				price                :		success[0].price_like ,               
-				total_price_pay      : 		parseInt(quantity) * parseInt(success[0].price_like),
-				time_delay           : 		req.body.time_delay ,	
-				time_buff_like_done  : 		req.body.time_buff_like_done ,	
-				note                 : 		req.body.note ,	
-				status               :      req.body.status,
-				like_max             :      success[0].like_max,
-				time_done            : 		req.body.time_done ,	
-				time_update          : 		new Date().getTime() ,	
+			let data = req.body;
+			data.time_update = new Date().getTime();
+
+			if ( req.body.quantity ) {
+				data.total_price_pay = parseInt(success[0].price_like) * parseInt(req.body.quantity ) ; 
 			}
+
 			controllerBuffLike.handleUpdate( idLike , data ,function ( err , updateSuccess){
 				if(err)  {
 					return res.json( {code : 404 , data : { msg : 'Not Update'} } );

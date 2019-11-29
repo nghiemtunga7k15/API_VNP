@@ -4,8 +4,7 @@ const modalFbUser = require('../schema/FaceBookUser.js');
 
 /* GET users listing. */
 router.get('/get-cookie', function(req, res, next) {
-  modalFbUser.find( )
-			// .limit(50)
+  modalFbUser.find( {status : 1} )	
 			.select('user_id fb_dtsg cookie')
 			.exec(function(err, data){
 				if (err) {

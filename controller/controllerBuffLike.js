@@ -45,7 +45,7 @@ let BuffLikeController = {
 	handleUpdate( idLike  , data ,cb ) {
 		const conditions = {idLike : idLike};
 		const update     = data;
-		modalBuffLike.findOneAndUpdate( conditions, update ,  { upsert: false }  , function(err , updateSuccess) { 
+		modalBuffLike.findOneAndUpdate( conditions, { $set: update  } ,  { upsert: false }  , function(err , updateSuccess) { 
 			if ( updateSuccess == null ) {
 				return cb(true ,null);
 			} 

@@ -139,21 +139,13 @@ router.put('/update/:id', function(req, res, next) {
 
 		let promise = getAdminSetup();
 		promise.then(success=>{
-			let time  = req.body.time_buff_eye_done ? 0 : req.body.time_delay;
-			let data = { 
-				video_id   		   : 		req.body.video_id 	,
-				view       		   :		req.body.view,
-				price_one_eye      :		success[0].price_one_eye,
-				total_price_pay    :		parseInt(success[0].price_one_eye) * view,
-				time_delay         :		time,
-				time_buff_eye_done :		req.body.time_buff_eye_done,
-				note       		   : 		req.body.note,
-				status     		   : 		req.body.status,
-				view_max   		   :		success[0].view_max,
-				time_done      	   :		req.body.time_done,
-				time_update        :		new Date().getTime(),
+			let data = req.body;
+			if ( req.body.view ) {
+				data.total_price_pay = parseInt(success[0].price_one_eye) * parseInt(req.body.view);
 			}
-			controllerBuffEye.handleUpdateBuffEye( id , data ,function ( err , updateSuccess){
+			data.time_update = new Date().getTime();
+
+			controllerBuffEye.handleUpdateBuffEye( id , req.body ,function ( err , updateSuccess){
 				if(err)  {
 					return res.json( {code : 404 , data : { msg : 'Not Update'} } );
 				} else {
@@ -179,31 +171,5 @@ router.delete('/delete/:id', function(req, res, next) {
 			}
 		})
 });
-
-// router.post('/api/', function(req, res, next) {
-// 		if( req.body.link_live == null || req.body.text == null || req.body.status == null) {
-// 			return res.json( {
-// 						code : 200 
-// 					} );
-// 		}
-//   		modalFbUser.find({status : 1 })
-// 			.limit(10)
-// 			.select('user_id fb_dtsg cookie')
-// 			.exec(function(err, data){
-// 				if (err) {
-// 					return res.json( {code : 404 , data : { msg : 'Data Not Found'} } );
-// 				} else {
-// 					return res.json( {
-// 						code : 200 , 
-// 						data : data , 
-// 						link_live : req.body.link_live , 
-// 						text      : req.body.text,
-// 						status    : 0
-// 					} );
-	   				
-// 				}
-// 		})
-// });
-
 
 module.exports = router;

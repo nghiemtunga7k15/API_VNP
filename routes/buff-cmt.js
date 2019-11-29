@@ -92,7 +92,7 @@ router.get('/detail-order', function(req, res, next) {
 							if (err) {
 								return res.json( {code : 404 , data : { msg : 'Order Not Found'} } );
 							} else {
-								return res.json( {code : 404 , data : orderDetail , cookie : cookies  } );				   				
+								return res.json( {code : 200 , data : orderDetail , cookie : cookies  } );				   				
 							}
 					})
 				} else {
@@ -136,24 +136,11 @@ router.put('/update/:id', function(req, res, next) {
 				price = 1;
 			}
 
-			let _comments_count = req.body.comments_counts ? req.body.comments_counts : 0
-			let time  = req.body.time_buff_cmt_done ? 0 : req.body.time_delay;
-			let data = { 
-				video_id             :		req.body.video_id ,
-				type_buff            :		req.body.type_buff ,   // 1 Chọn ngẫu nhiên   0 Chọn từ User
-				price                :		price ,                // 1 Chọn ngẫu nhiên  price = 1   0 Chọn từ User price =2
-				comments             : 		req.body.comments ,	
-				comments_count       : 		parseInt(_comments_count) ,	
-				total_price_pay      : 		parseInt(_comments_count) * parseInt(price),
-				time_delay           : 		time ,	
-				time_buff_cmt_done   : 		req.body.time_buff_cmt_done ,	
-				note                 : 		req.body.note ,	
-				status               :      req.body.status,
-				comment_max          :      success[0].comment_max,
-				time_done            : 		req.body.time_done ,	
-				time_update          : 		new Date().getTime(),	
+			let data = req.body;
+			if ( req.body.comments_count ) {
+				data.total_price_pay = parseInt(req.body.comments_count) * price;
 			}
-			
+			data.time_update = new Date().getTime();
 			controllerBuffComment.handleUpdate( id , data ,function ( err , updateSuccess){
 				if(err)  {
 					return res.json( {code : 404 , data : { msg : 'Not Update'} } );
@@ -165,7 +152,7 @@ router.put('/update/:id', function(req, res, next) {
 			})
 		})
 		.catch(e=>{
-				return res.json( {code : 404 , data : { msg : 'Not Add'} } );
+				return res.json( {code : 404 , data : { msg : 'Not Update'} } );
 		})
 });
 
