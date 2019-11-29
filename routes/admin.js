@@ -22,7 +22,7 @@ router.post('/create', function(req, res, next) {
 		if(err)  {
 			return res.json( {code : 404 , data : { msg : 'Not Add'} } );
 		} else { 
-			return res.json( {code : 404 , data : api } );
+			return res.json( {code : 200 , data : api } );
 		}
 	})
 });

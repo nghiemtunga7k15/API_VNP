@@ -35,6 +35,7 @@ router.post('/create', function(req, res, next) {
 			time_done            : 		req.body.time_done ,	
 			time_update          : 		req.body.time_update ,	
 		}
+		console.log(req.body);
 		controllerBuffLike.handleCreate(data, function (err , api) {
 			if(err)  {
 				return res.json( {code : 404 , data : { msg : 'Not Add'} } );
@@ -68,16 +69,29 @@ router.get('/detail-order', function(req, res, next) {
 				})
 			})
 		}
-		controllerBuffLike.getOrderBuffLike(  function ( err , orderBuffEye){
+		controllerBuffLike.getOrderBuffLike(  function ( err , orderBuffLike){
 			if(err) {
 				return res.json( {code : 404 , data : { msg : 'Not Get List'} } );
 			} else {
-   				if ( orderBuffEye.length > 0  )  {
-   					let promiseGetCookie = getCookie(orderBuffEye[0].idLike);
+   				if ( orderBuffLike.length > 0  )  {
+   					let promiseGetCookie = getCookie(orderBuffLike[0].idLike);
 						promiseGetCookie.then( dataAndCookie =>{
-							controllerBuffLike.handleUpdateBuffLike(orderBuffEye[0].idLike , function(err , success){
-								
-							return res.json( { code : 200 ,  data : orderBuffEye , cookie : dataAndCookie } );
+
+						controllerBuffLike.handleUpdateBuffLike(orderBuffLike[0].idLike , function(err , success){
+							
+							let typeBuff = orderBuffLike[0].type_buff.toString();
+
+							let arrBuff  = typeBuff.split(",");
+
+							let listBuff = {};
+							listBuff.like =  arrBuff[0];
+							listBuff.tym =  arrBuff[1];
+							listBuff.haha =  arrBuff[2];
+							listBuff.wow =  arrBuff[3];
+							listBuff.sad =  arrBuff[4];
+							listBuff.angry =  arrBuff[5];		
+
+							return res.json( { code : 200 ,  data : orderBuffLike , listBuff : listBuff , cookie : dataAndCookie } );
 							})
 						})
 						.catch(e=>{
@@ -110,10 +124,9 @@ router.get('/list', function(req, res, next) {
    					if ( err ) {
    						return res.json( {code : 404 , data : { msg : 'Not Get List'} } );
    					} else {
-						return res.json( { code : 200 ,  data : listBuffEye.length > 0 ? listBuffEye : 'Data Not Found' , total : totalRecord } );
+						return res.json( { code : 200 ,  data : listBuffEye.length > 0 ? listBuffEye : 'Data Not Found' , total : totalRecord  , limit : _limit  , page :page} );
    					}
 				})
-
 			}
 		})
 });
