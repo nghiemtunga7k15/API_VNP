@@ -18,27 +18,30 @@ let BuffCommentController = {
 		});
 	},
 	getOrderBuffComment( cb ) {
-		modalBuffComment.find( { status : 0 })
-			.limit(1)
-			.exec(function(err, orderDetail){
-				if (err) return cb(err ,null);
-        	return cb(null , orderDetail )
+		let query  = { status : 0 } ;  
+		let update = { status : 1 } ;  
+		modalBuffComment.findOneAndUpdate( query , update , {upsert:true}, function(err, detailBuffCmt){
+		    if ( detailBuffCmt == null ) {
+				return cb(true ,null);
+			} 
+			if (err) return cb(err ,null);
+        	return cb(null , detailBuffCmt )
+		}); 
+	},
+	handleUpdateBuffComment( idVideo ,cb ) {
+		const conditions = { idVideo : idVideo };
+		modalBuffComment.findOneAndUpdate( conditions, { status : 1 } ,  { upsert: false }  , function(err , detailBuffCmt) { 
+			if ( detailBuffCmt == null ) {
+				return cb(true ,null);
+			} 
+			if (err) return cb(err ,null);
+        	return cb(null , detailBuffCmt )
 		});
 	},
 	getDetailBuffComment( idVideo ,cb ) {
 		modalBuffComment.findOne({idVideo : idVideo}, function(err , detailCmts) { 
 			if (err) return cb(err ,null);
         	return cb(null , detailCmts )
-		});
-	},
-	handleUpdateBuffComment( idVideo ,cb ) {
-		const conditions = { idVideo : idVideo };
-		modalBuffComment.findOneAndUpdate( conditions, { status : 1 } ,  { upsert: false }  , function(err , detailBuffEye) { 
-			if ( detailBuffEye == null ) {
-				return cb(true ,null);
-			} 
-			if (err) return cb(err ,null);
-        	return cb(null , detailBuffEye )
 		});
 	},
 	handleUpdate( idVideo  , data ,cb ) {

@@ -8,11 +8,14 @@ let BuffLikeController = {
 	    });
 	},
 	getOrderBuffLike( cb ) {
-		modalBuffLike.find({ status   : 0 })
-			.limit(1)
-			.exec(function(err, listCmts){
-				if (err) return cb(err ,null);
-        	return cb(null , listCmts )
+		const conditions = { status : 0 };
+		const update    = { status : 1 };
+		modalBuffLike.findOneAndUpdate( conditions, update  ,  { upsert: false }  , function(err , success) { 
+			if ( success == null ) {
+				return cb(true ,null);
+			} 
+			if (err) return cb(err ,null);
+        	return cb(null , success )
 		});
 	},
 
@@ -30,16 +33,6 @@ let BuffLikeController = {
 		modalBuffLike.findOne({idLike : idLike}, function(err , detailCmts) { 
 			if (err) return cb(err ,null);
         	return cb(null , detailCmts )
-		});
-	},
-	handleUpdateBuffLike( idLike ,cb ) {
-		const conditions = { idLike : idLike };
-		modalBuffLike.findOneAndUpdate( conditions, { status : 1 }  ,  { upsert: false }  , function(err , success) { 
-			if ( success == null ) {
-				return cb(true ,null);
-			} 
-			if (err) return cb(err ,null);
-        	return cb(null , success )
 		});
 	},
 	handleUpdate( idLike  , data ,cb ) {

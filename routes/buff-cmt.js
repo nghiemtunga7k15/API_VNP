@@ -66,11 +66,11 @@ router.get('/list', function(req, res, next) {
 		}
 		controllerBuffComment.getListBuffComment( _limit , page , function ( err , listBuffEye){
 			if(err) {
-				return res.json( {code : 404 , data : { msg : 'Not Get List'} } );
+				return res.json( {code : 404 , data : { msg : 'Not Found'} } );
 			} else {
 				modalBuffComment.count({}, function( err, totalRecord){
    					if ( err ) {
-   						return res.json( {code : 404 , data : { msg : 'Not Get List'} } );
+   						return res.json( {code : 404 , data : { msg : 'Not Found'} } );
    					} else {
 						return res.json( {code : 200 , data : listBuffEye ,  page : page , limit : _limit , total : totalRecord } );
    					}
@@ -82,30 +82,26 @@ router.get('/list', function(req, res, next) {
 router.get('/detail-order', function(req, res, next) {
 		controllerBuffComment.getOrderBuffComment(function ( err , orderDetail){
 			if(err) {
-					return res.json( {code : 404 , data : { msg : 'Order Not Found'} } );
+					return res.json( {code : 404 , data : { msg : 'Not Found'} } );
+
 			} else {
-				if ( orderDetail.length > 0 ) {
-				controllerBuffComment.handleUpdateBuffComment(orderDetail[0].idVideo , function(err , success ) {})
 					modalFbUser.find( { status : 1 })
-						.limit(parseInt(orderDetail[0].comments_count))
+						.limit(parseInt(orderDetail.comments_count))
 						.exec(function(err, cookies){
 							if (err) {
-								return res.json( {code : 404 , data : { msg : 'Order Not Found'} } );
+								return res.json( {code : 404 , data : { msg : 'Not Found'} } );
 							} else {
 								return res.json( {code : 200 , data : orderDetail , cookie : cookies  } );				   				
 							}
 					})
-				} else {
-					return res.json( {code : 404 , data : { msg : 'Order Not Found'} } );
-				}
-			}
+			}	
 		})
 });
 router.get('/detail/:id', function(req, res, next) {
 		let id = parseInt(req.params.id);
 		controllerBuffComment.getDetailBuffComment( id ,function ( err , detailBuffEye){
 			if(err)  {
-				return res.json( {code : 404 , data : { msg : 'Not Get Detail'} } );
+				return res.json( {code : 404 , data : { msg : 'Not Found'} } );
 			} else {
 				return res.json( {code : 200 , data : detailBuffEye } );
 			}

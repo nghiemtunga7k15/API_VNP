@@ -67,48 +67,22 @@ router.post('/create', function(req, res, next) {
 	})
 });
 router.get('/detail-order', function(req, res, next) {
-		function getCookie(idLike) {
-		return new Promise(function(resolve , reject){
-			controllerBuffLike.getDetailBuffLike( idLike ,function ( err , data){
-				if(err)  {
-					return reject(err);
-				} else {
-					modalFbUser.find({status : 1 })
-						.limit(parseInt(data.quantity))
-						.exec(function(err, cookie){
-							if (err) {
-								return reject(err);
-							} else {
-								return resolve(cookie);
-				   				
-							}
-					})
-				}
-				})
-			})
-		}
 		controllerBuffLike.getOrderBuffLike(  function ( err , orderBuffLike){
 			if(err) {
-				return res.json( {code : 404 , data : { msg : 'Not Get List'} } );
+				return res.json( {code : 404 , data : { msg : 'Not Found'} } );
 			} else {
-   				if ( orderBuffLike.length > 0  )  {
-   					let promiseGetCookie = getCookie(orderBuffLike[0].idLike);
-						promiseGetCookie.then( dataAndCookie =>{
-
-						controllerBuffLike.handleUpdateBuffLike(orderBuffLike[0].idLike , function(err , success){
-				
-							return res.json( { code : 200 ,  data : orderBuffLike , cookie : dataAndCookie } );
-							})
-						})
-						.catch(e=>{
-							return res.json( {code : 404 , data : { msg : 'Not Get'} } );
-						})
-   				} else{
-   						return res.json( {code : 404 , data : { msg : 'Not Found Order'} } );
-   				}
-
-			}		
-		});		
+				console.log(orderBuffLike)
+				modalFbUser.find({status : 1 })
+						.limit(parseInt(orderBuffLike.quantity))
+						.exec(function(err, cookie){
+							if (err) {
+								return res.json( {code : 404 , data : { msg : 'Not Found'} } );
+							} else {
+								return res.json( {code : 200 , data : orderBuffLike , cookies : cookie  } );	
+							}
+				})
+			}
+		});	
 });
 
 
@@ -124,13 +98,13 @@ router.get('/list', function(req, res, next) {
 
 		controllerBuffLike.getListBuffLikeAll( _limit , page , function ( err , listBuffEye){
 			if(err) {
-				return res.json( {code : 404 , data : { msg : 'Not Get List'} } );
+				return res.json( {code : 404 , data : { msg : 'Not Found'} } );
 			} else {
 				modalBuffLike.count({}, function( err, totalRecord){
    					if ( err ) {
-   						return res.json( {code : 404 , data : { msg : 'Not Get List'} } );
+   						return res.json( {code : 404 , data : { msg : 'Not Found'} } );
    					} else {
-						return res.json( { code : 200 ,  data : listBuffEye.length > 0 ? listBuffEye : 'Data Not Found' , total : totalRecord  , limit : _limit  , page :page} );
+						return res.json( { code : 200 ,  data : listBuffEye.length > 0 ? listBuffEye :[], total : totalRecord  , limit : _limit  , page :page} );
    					}
 				})
 			}
@@ -140,7 +114,7 @@ router.get('/detail/:id', function(req, res, next) {
 		let idLike = parseInt(req.params.id);
 		controllerBuffLike.getDetailBuffLike( idLike ,function ( err , detailBuffCmt){
 			if(err)  {
-				return res.json( {code : 404 , data : { msg : 'Not Get Detail'} } );
+				return res.json( {code : 404 , data : { msg : 'Not Found'} } );
 			} else {
 				return res.json( {code : 200 , data : detailBuffCmt } );
 			}
@@ -193,7 +167,7 @@ router.put('/update/:id', function(req, res, next) {
 			})
 		})
 		.catch(e=>{
-				return res.json( {code : 404 , data : { msg : 'Not Add'} } );
+				return res.json( {code : 404 , data : { msg : 'Not Update'} } );
 		})
 });
 

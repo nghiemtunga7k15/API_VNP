@@ -19,6 +19,17 @@ let BuffEyeController = {
         	return cb(null , listBuffEye )
 		});
 	},
+	getOrderBuffEye( cb ) {
+		let query  = { status : 0 } ;  
+		let update = { status : 1 } ;  
+		modalBuffEye.findOneAndUpdate( query , update , {upsert:true}, function(err, detailBuffEye){
+		    if ( detailBuffEye == null ) {
+				return cb(true ,null);
+			} 
+			if (err) return cb(err ,null);
+        	return cb(null , detailBuffEye )
+		}); 
+	},
 	getDetailBuffEye( id ,cb ) {
 		modalBuffEye.findOne({id : id}, function(err , detailBuffEye) { 
 			if (err) return cb(err ,null);
