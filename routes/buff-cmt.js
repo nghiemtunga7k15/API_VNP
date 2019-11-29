@@ -23,9 +23,9 @@ router.post('/create', function(req, res, next) {
 	promise.then(success=>{
 		let price;
 		if ( parseInt(req.body.type_buff) == 0 ) {
-			price = success[0].price_comment_choose;
-		} else {  
 			price = success[0].price_comment_randum;
+		} else {  
+			price = success[0].price_comment_choose;
 		}; 
 		let data = { 
 			video_id             :		req.body.video_id ,
