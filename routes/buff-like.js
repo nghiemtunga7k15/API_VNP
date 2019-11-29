@@ -19,13 +19,35 @@ router.post('/create', function(req, res, next) {
 		 });
 	}
 	let promise = getAdminSetup();
+
+	let typeBuff = req.body.type_buff.toString();
+
+	let arrBuff  = typeBuff.split(",");
+
+
+	console.log(arrBuff)
+
+	let like  = arrBuff[0] && arrBuff[0] != '' ? parseInt(arrBuff[0]) : 0;
+	let love  = arrBuff[1] && arrBuff[1] != '' ? parseInt(arrBuff[1]) : 0;
+	let haha  = arrBuff[2] && arrBuff[2] != '' ? parseInt(arrBuff[2]) : 0;
+	let wow   = arrBuff[3] && arrBuff[3] != '' ? parseInt(arrBuff[3]) : 0;
+	let sad   = arrBuff[4] && arrBuff[4] != '' ? parseInt(arrBuff[4]) : 0;
+	let angry = arrBuff[5] && arrBuff[5] != '' ? parseInt(arrBuff[5]) : 0;
+	let quantity = like + love + haha + wow + sad + angry;
 	promise.then(success=>{
 		let data = { 
 			video_id             :		req.body.video_id ,
-			type_buff            :		req.body.type_buff ,   
-			quantity             : 		req.body.quantity ,	
+			type_buff            :		{
+				like    : like,
+				love    : love,
+				haha    : haha,
+				wow     : wow,
+				sad     : sad,
+				angry   : angry,
+			},   
+			quantity             : 		quantity ,	
 			price                :		success[0].price_like ,               
-			total_price_pay      : 		parseInt(req.body.quantity) * parseInt(success[0].price_like),
+			total_price_pay      : 		quantity * parseInt(success[0].price_like),
 			time_delay           : 		req.body.time_delay ,	
 			time_buff_like_done  : 		req.body.time_buff_like_done ,	
 			note                 : 		req.body.note ,	
@@ -35,7 +57,6 @@ router.post('/create', function(req, res, next) {
 			time_done            : 		req.body.time_done ,	
 			time_update          : 		req.body.time_update ,	
 		}
-		console.log(req.body);
 		controllerBuffLike.handleCreate(data, function (err , api) {
 			if(err)  {
 				return res.json( {code : 404 , data : { msg : 'Not Add'} } );
@@ -78,20 +99,8 @@ router.get('/detail-order', function(req, res, next) {
 						promiseGetCookie.then( dataAndCookie =>{
 
 						controllerBuffLike.handleUpdateBuffLike(orderBuffLike[0].idLike , function(err , success){
-							
-							let typeBuff = orderBuffLike[0].type_buff.toString();
-
-							let arrBuff  = typeBuff.split(",");
-
-							let listBuff = {};
-							listBuff.like =  arrBuff[0];
-							listBuff.tym =  arrBuff[1];
-							listBuff.haha =  arrBuff[2];
-							listBuff.wow =  arrBuff[3];
-							listBuff.sad =  arrBuff[4];
-							listBuff.angry =  arrBuff[5];		
-
-							return res.json( { code : 200 ,  data : orderBuffLike , listBuff : listBuff , cookie : dataAndCookie } );
+				
+							return res.json( { code : 200 ,  data : orderBuffLike , cookie : dataAndCookie } );
 							})
 						})
 						.catch(e=>{

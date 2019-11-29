@@ -3,11 +3,18 @@ const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 var BuffLikeSchema =  mongoose.Schema({
     video_id            :   { type: String , required: true },
-    type_buff           : 	{ type: String , required: true },
-    quantity            :   { type: String , required: true },     
+    type_buff           : 	{
+        like   :  { type: Number },
+        love   : { type: Number },
+        haha   : { type: Number },
+        wow    : { type: Number },
+        sad    : { type: Number },
+        angry  : { type: Number },
+    }, 
+    quantity            :   { type: Number , required: true },     
     price               : 	{ type: Number , required: true },
     total_price_pay     :   { type: Number , required: true },     
-    time_delay          :   { type: Number, default : 0 },
+    time_delay          :   { type: Number , default : 1 },
     time_buff_like_done :   { type: Number },
     note                :   { type: String, default : 'Descript' },
     status              :   { type: Number, default : 0 },
