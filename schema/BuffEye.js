@@ -14,6 +14,7 @@ var BuffEyeSchema =  mongoose.Schema({
     time_create         :   { type: Number},
     time_done           :   { type: Number, default : 0 },
     time_update         :   { type: Number, default : 0 },
+    last_time_check     :   { type: Number, default : 0 },
 });
 
 BuffEyeSchema.plugin(AutoIncrement, {inc_field: 'id'});

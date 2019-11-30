@@ -73,6 +73,7 @@ router.post('/create', function(req, res, next) {
 			time_create        : 		new Date().getTime() ,
 			time_done      	   :		req.body.time_done,
 			time_update        :		req.body.time_update,
+			last_time_check    :		req.body.last_time_check,
 		}
 
 		controllerBuffEye.handleCreate(data, function (err , api) {
@@ -92,13 +93,15 @@ router.get('/list', function(req, res, next) {
 		let _limit = parseInt(req.query.limit);
 		let page = parseInt(req.query.page);
 		let status =   parseInt(req.query.status);
+		let sort_name = req.query.sort_name;
+		let sort_value = req.query.sort_value;
 		if (!_limit || _limit == null) {
 			_limit = 20;
 		}
 		if (!page || page == null) {
 			page = 1;
 		}
-		controllerBuffEye.getListBuffEye( _limit , page , status , function ( err , listBuffEye){
+		controllerBuffEye.getListBuffEye( _limit , page , status , sort_name , sort_value  , function ( err , listBuffEye){
 			if(err) {
 				return res.json( {code : 404 , data : { msg : 'Not Found'} } );
 			} else {

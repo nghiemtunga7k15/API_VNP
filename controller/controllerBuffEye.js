@@ -7,13 +7,24 @@ let BuffEyeController = {
 	      return cb(null, api);
 	    });
 	},
-	getListBuffEye( _limit , page , status  ,  cb ) {
+	getListBuffEye( _limit , page , status  , sort_name , sort_value ,  cb ) {
+		let condition;
+		if (sort_name && sort_value) {
+			if (parseInt(sort_value) == 1 ) {  // Tang dan 
+				condition = `-${sort_name}`;
+			}else{
+				condition = `+${sort_name}`;   // Giam dan 
+
+			}
+		}else{
+			condition = "-time_create";
+		}
 		let query  =  status ?  modalBuffEye.find({status : status})  : modalBuffEye.find({});
-		
+			
 			query
 			.limit(_limit)
     		.skip((_limit * page ) - _limit)
-    		.sort({time_create : - 1 })
+    		.sort(condition)
 			.exec(function(err, listBuffEye){
 				if (err) return cb(err ,null);
         	return cb(null , listBuffEye )

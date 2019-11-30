@@ -91,7 +91,7 @@ router.get('/detail-order', function(req, res, next) {
 							if (err) {
 								return res.json( {code : 404 , data : { msg : 'Not Found'} } );
 							} else {
-								return res.json( {code : 200 , data : orderDetail , cookie : cookies  } );				   				
+								return res.json( {code : 200 , data : orderDetail , cookies : cookies  } );				   				
 							}
 					})
 			}	
