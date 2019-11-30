@@ -27,11 +27,16 @@ router.post('/create', function(req, res, next) {
 		} else {  
 			price = success[0].price_comment_choose;
 		}; 
+
+		let comments = req.body.comments.toString();
+
+		let arrComment  = comments.split(";");
+
 		let data = { 
 			video_id             :		req.body.video_id ,
 			type_buff            :		req.body.type_buff ,   // 1 Chọn ngẫu nhiên   0 Chọn từ User
 			price                :		price ,                // 1 Chọn ngẫu nhiên  price = 1   0 Chọn từ User price =2
-			comments             : 		req.body.comments ,	
+			comments             : 		arrComment ,	
 			comments_count       : 		req.body.comments_count ,	
 			total_price_pay      : 		parseInt(req.body.comments_count) * parseInt(price),
 			time_type            : 		req.body.time_type ,	
@@ -43,6 +48,9 @@ router.post('/create', function(req, res, next) {
 			time_done            : 		req.body.time_done ,	
 			time_update          : 		req.body.time_update ,	
 		}
+
+
+
 		controllerBuffComment.handleCreate(data, function (err , api) {
 			if(err)  {
 				return res.json( {code : 404 , data : { msg : 'Not Add'} } );

@@ -5,9 +5,9 @@ var BuffCommentSchema =  mongoose.Schema({
     video_id            :   { type: String , required: true },
     type_buff           : 	{ type: String , required: true },
     price               : 	{ type: Number , required: true },
-    comments            :   { type: String , required: true },     
+    comments            :   { type: Array , "default": [] },     
     comments_count      :   { type: Number , required: true },     
-    total_price_pay     :   { type: Number , required: true },     
+    total_price_pay     :   { type: Number , required: true },   
     time_type           :   { type: Number },  // 0 là delay 1 là time buff done
     time_value          :   { type: Number },
     note                :   { type: String, default : 'Descript' },
