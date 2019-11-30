@@ -87,14 +87,9 @@ router.get('/detail-order', function(req, res, next) {
 
 
 router.get('/list', function(req, res, next) {
-		let _limit = parseInt(req.query.page);
-		let page = parseInt(req.query.page);
-		if (!_limit || _limit == null) {
-			_limit = 20;
-		}
-		if (!page || page == null) {
-			page = 1;
-		}
+		let _limit = req.query.limit ?  parseInt(req.query.limit) : 20;
+		let page = req.query.page ?  parseInt(req.query.page) : 1;
+		
 
 		controllerBuffLike.getListBuffLikeAll( _limit , page , function ( err , listBuffEye){
 			if(err) {
