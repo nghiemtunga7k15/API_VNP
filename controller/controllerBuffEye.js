@@ -8,23 +8,15 @@ let BuffEyeController = {
 	    });
 	},
 	getListBuffEye( _limit , page , status  , sort_name , sort_value ,  cb ) {
-		let condition;
-		if (sort_name && sort_value) {
-			if (parseInt(sort_value) == 1 ) {  // Tang dan 
-				condition = `-${sort_name}`;
-			}else{
-				condition = `+${sort_name}`;   // Giam dan 
-
-			}
-		}else{
-			condition = "-time_create";
-		}
+			
+		let sort_where_name  =  sort_name ? sort_name : "time_create";
+		let sort_where_value =  sort_value && parseInt(sort_value) == 1  ? 1 :  -1 ;
 		let query  =  status ?  modalBuffEye.find({status : status})  : modalBuffEye.find({});
 			
 			query
 			.limit(_limit)
     		.skip((_limit * page ) - _limit)
-    		.sort(condition)
+    		.sort([[sort_where_name ,sort_where_value]] )
 			.exec(function(err, listBuffEye){
 				if (err) return cb(err ,null);
         	return cb(null , listBuffEye )
