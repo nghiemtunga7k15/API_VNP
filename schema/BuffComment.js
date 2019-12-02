@@ -8,8 +8,8 @@ var BuffCommentSchema =  mongoose.Schema({
     comments            :   { type: Array , "default": [] },     
     comments_count      :   { type: Number , required: true },     
     total_price_pay     :   { type: Number , required: true },   
-    time_type           :   { type: Number },  // 0 là delay 1 là time buff done
-    time_value          :   { type: Number },
+    time_type           :   { type: Number  , default : 0},  // 0 là delay 1 là time buff done
+    time_value          :   { type: Number  , default : 0  },
     note                :   { type: String, default : 'Descript' },
     status              :   { type: Number, default : 0 },
     comment_max         :   { type: Number },

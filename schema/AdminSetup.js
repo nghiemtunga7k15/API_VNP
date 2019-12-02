@@ -9,6 +9,9 @@ var AdminSchema =  mongoose.Schema({
     comment_max              : 	 { type: Number , required: true },  
     price_like               :   { type: Number , required: true },  
     like_max                 :   { type: Number , required: true },  
+    quantity_vip_eye         :   { type: Array , "default": [] },     
+    price_vip_eye            :   { type: Number , required: true },     
+    time_option              :   { type: Array , "default": [] },     
     time_create              :   { type: Number },   
     time_update              :   { type: Number, default : 0 },
 

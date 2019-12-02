@@ -7,24 +7,38 @@ const modalAdmin = require('../schema/AdminSetup.js');
 
 /* CREATE. */
 router.post('/create', function(req, res, next) {
-	let data = { 
-		price_one_eye               :		req.body.price_one_eye ,
-		view_max                    :		req.body.view_max ,
-		price_comment_randum        :		req.body.price_comment_randum ,
-		price_comment_choose        :		req.body.price_comment_choose ,
-		comment_max                 :		req.body.comment_max ,
-		price_like                  :		req.body.price_like ,
-		like_max                    :		req.body.like_max ,
-		time_create     			: 		new Date().getTime() ,
-		time_update     			: 		req.body.time_update ,	
-	}
-	controllerAdmin.handleCreate(data, function (err , api) {
-		if(err)  {
-			return res.json( {code : 404 , data : { msg : 'Not Add'} } );
-		} else { 
-			return res.json( {code : 200 , data : api } );
+
+
+		let timeOption = req.body.time_option.toString();
+
+		let arrTimeOption  = timeOption.split(";");
+
+		let quantityVipEye = req.body.quantity_vip_eye.toString();
+
+		let arrquantityVipEye  = quantityVipEye.split(";");
+
+ 
+		let data = { 
+			price_one_eye               :		req.body.price_one_eye ,
+			view_max                    :		req.body.view_max ,
+			price_comment_randum        :		req.body.price_comment_randum ,
+			price_comment_choose        :		req.body.price_comment_choose ,
+			comment_max                 :		req.body.comment_max ,
+			price_like                  :		req.body.price_like ,
+			like_max                    :		req.body.like_max ,
+			time_option                 :       arrTimeOption , 
+			quantity_vip_eye            :       arrquantityVipEye , 
+			price_vip_eye               :		req.body.price_vip_eye ,
+			time_create     			: 		new Date().getTime() ,
+			time_update     			: 		req.body.time_update ,	
 		}
-	})
+		controllerAdmin.handleCreate(data, function (err , api) {
+			if(err)  {
+				return res.json( {code : 404 , data : { msg : 'Not Add'} } );
+			} else { 
+				return res.json( {code : 200 , data : api } );
+			}
+		})
 });
 
 /* GET */
@@ -38,5 +52,18 @@ router.get('/list', function(req, res, next) {
 			}
 		})
 });
+
+router.delete('/delete/:id', function(req, res, next) {
+		let id_AdSetup = parseInt(req.params.id);
+		controllerAdmin.handleDelete(  id_AdSetup , function ( err , list){
+			if(err) {
+				return res.json( {code : 404 , data : { msg : 'Not Get List'} } );
+			} else{
+						return res.json( {code : 200 , data : list } );
+			}
+		})
+});
+
+
 
 module.exports = router;

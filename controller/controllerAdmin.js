@@ -15,5 +15,15 @@ let BuffCommentController = {
         	return cb(null , listSetup )
 		});
 	},
+
+	handleDelete( id_AdSetup   ,cb ) {
+		modalAdmin.findOneAndRemove( {id_AdSetup : id_AdSetup}, function(err , deleteSuccess) { 
+			if ( deleteSuccess == null ) {
+				return cb(true ,null);
+			} 
+			if (err) return cb(err ,null);
+        	return cb(null , deleteSuccess )
+		});
+	}
 }
 module.exports = BuffCommentController ;
