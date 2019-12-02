@@ -20,7 +20,7 @@ router.post('/create', function(req, res, next) {
 	}
 	let promise = getAdminSetup();
 	promise.then(success=>{
-
+		let timeOneDay  = 60 * 60 * 24;
 		let price = parseInt(success[0].price_vip_eye);
 		let data = { 
 			fb_id              : 		req.body.fb_id 	,
@@ -31,7 +31,7 @@ router.post('/create', function(req, res, next) {
 			note               : 		req.body.note,
 			status             : 		req.body.status,
 			time_create        : 		new Date().getTime() ,
-			time_update        :		req.body.time_update,
+			time_expired        :		( parseInt(req.body.time_vip_eye) * timeOneDay )  + new Date().getTime(),
 		}
 
 		controllerBuffVipEye.handleCreate(data, function (err , api) {
@@ -101,7 +101,15 @@ router.put('/update/:id', function(req, res, next) {
 
 		let promise = getAdminSetup();
 		promise.then(success=>{
+			let price = parseInt(success[0].price_vip_eye);
+			let timeOneDay  = 60 * 60 * 24;
 			let data = req.body;
+			if ( req.body.choose_option_eye ) {
+					data.total_price_pay = parseInt(req.body.choose_option_eye) * price;
+			}
+			if ( req.body.time_vip_eye ) {
+					data.time_expired =  ( parseInt(req.body.time_vip_eye) * timeOneDay )  + new Date().getTime();
+			}
 			data.time_update = new Date().getTime();
 
 			controllerBuffVipEye.handleUpdateBuffVipEye( idVipEye , req.body ,function ( err , updateSuccess){
