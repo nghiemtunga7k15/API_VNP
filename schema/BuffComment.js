@@ -4,7 +4,6 @@ const AutoIncrement = require('mongoose-sequence')(mongoose);
 var BuffCommentSchema =  mongoose.Schema({
     video_id            :   { type: String , required: true },
     type_buff           : 	{ type: String , required: true },
-    price               : 	{ type: Number , required: true },
     comments            :   { type: Array , "default": [] },     
     comments_count      :   { type: Number , required: true },     
     total_price_pay     :   { type: Number , required: true },   

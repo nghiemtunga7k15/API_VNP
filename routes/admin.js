@@ -34,7 +34,7 @@ router.post('/create', function(req, res, next) {
 		}
 		controllerAdmin.handleCreate(data, function (err , api) {
 			if(err)  {
-				return res.json( {code : 404 , data : { msg : 'Not Add'} } );
+				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 			} else { 
 				return res.json( {code : 200 , data : api } );
 			}
@@ -46,7 +46,7 @@ router.post('/create', function(req, res, next) {
 router.get('/list', function(req, res, next) {
 		controllerAdmin.getListSetup(  function ( err , list){
 			if(err) {
-				return res.json( {code : 404 , data : { msg : 'Not Get List'} } );
+				return res.json( {code : 404 , data : [] } );
 			} else{
 						return res.json( {code : 200 , data : list } );
 			}
@@ -57,7 +57,7 @@ router.delete('/delete/:id', function(req, res, next) {
 		let id_AdSetup = parseInt(req.params.id);
 		controllerAdmin.handleDelete(  id_AdSetup , function ( err , list){
 			if(err) {
-				return res.json( {code : 404 , data : { msg : 'Not Get List'} } );
+				return res.json( {code : 404 , data : [] } );
 			} else{
 						return res.json( {code : 200 , data : list } );
 			}

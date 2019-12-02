@@ -14,8 +14,8 @@ var BuffLikeSchema =  mongoose.Schema({
     quantity            :   { type: Number , required: true },     
     price               : 	{ type: Number , required: true },
     total_price_pay     :   { type: Number , required: true },     
-    time_type           :   { type: Number  },  // 0 là delay 1 là time buff done
-    time_value          :   { type: Number },
+    time_type           :   { type: String  },  //  delay vaf time buff done
+    time_value          :   { type: String },
     note                :   { type: String, default : 'Descript' },
     status              :   { type: Number, default : 0 },
     like_max            :   { type: Number },

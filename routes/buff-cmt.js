@@ -43,14 +43,14 @@ router.post('/create', function(req, res, next) {
 
 		controllerBuffComment.handleCreate(data, function (err , api) {
 			if(err)  {
-				return res.json( {code : 404 , data : { msg : 'Not Add'} } );
+				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 			} else { 
-				return res.json( {code : 200 , data : { msg : 'Add Success'} } );
+				return res.json( {code : 200 , data : { msg : 'Thành Công'} } );
 			}
 		})	
 	})
 	.catch(e=>{
-			return res.json( {code : 404 , data : { msg : 'Not Add'} } );
+			return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 	})
 });
 router.get('/list', function(req, res, next) {
@@ -58,11 +58,11 @@ router.get('/list', function(req, res, next) {
 		let page = req.query.page ?  parseInt(req.query.page) : 1;
 		controllerBuffComment.getListBuffComment( _limit , page , function ( err , listBuffEye){
 			if(err) {
-				return res.json( {code : 404 , data : { msg : 'Not Found'} } );
+				return res.json( {code : 404 , data : [] } );
 			} else {
 				modalBuffComment.count({}, function( err, totalRecord){
    					if ( err ) {
-   						return res.json( {code : 404 , data : { msg : 'Not Found'} } );
+   						return res.json( {code : 404 , data : [] } );
    					} else {
 						return res.json( {code : 200 , data : listBuffEye ,  page : page , limit : _limit , total : totalRecord } );
    					}
@@ -74,14 +74,14 @@ router.get('/list', function(req, res, next) {
 router.get('/detail-order', function(req, res, next) {
 		controllerBuffComment.getOrderBuffComment(function ( err , orderDetail){
 			if(err) {
-					return res.json( {code : 404 , data : { msg : 'Not Found'} } );
+					return res.json( {code : 404 , data : [] } );
 
 			} else {
 					modalFbUser.find( { status : 1 })
 						.limit(parseInt(orderDetail.comments_count))
 						.exec(function(err, cookies){
 							if (err) {
-								return res.json( {code : 404 , data : { msg : 'Not Found'} } );
+								return res.json( {code : 404 , data : [] } );
 							} else {
 								return res.json( {code : 200 , data : orderDetail , cookies : cookies  } );				   				
 							}
@@ -93,7 +93,7 @@ router.get('/detail/:id', function(req, res, next) {
 		let id = parseInt(req.params.id);
 		controllerBuffComment.getDetailBuffComment( id ,function ( err , detailBuffEye){
 			if(err)  {
-				return res.json( {code : 404 , data : { msg : 'Not Found'} } );
+				return res.json( {code : 404 , data : [] } );
 			} else {
 				return res.json( {code : 200 , data : detailBuffEye } );
 			}
@@ -101,7 +101,7 @@ router.get('/detail/:id', function(req, res, next) {
 });
 
 router.put('/update/:id', function(req, res, next) {
-		let id = parseInt(req.params.id);
+		let idVideo = parseInt(req.params.id);
 		let promise  =  controllerAdmin.getAdminSetup();
 		promise.then(success=>{
 			let price;
@@ -112,26 +112,34 @@ router.put('/update/:id', function(req, res, next) {
 			};
 
 			if ( !req.body.type_buff ) {
-				price = 1;
+				price = 10;
 			}
 
+
 			let data = req.body;
+
 			if ( req.body.comments_count ) {
 				data.total_price_pay = parseInt(req.body.comments_count) * price;
 			}
+
+			if ( req.body.comments ) {
+				let comments = req.body.comments.toString();
+				let arrComment  = comments.split(";");
+				data.comments  = arrComment
+			}
 			data.time_update = new Date().getTime();
-			controllerBuffComment.handleUpdate( id , data ,function ( err , updateSuccess){
+			controllerBuffComment.handleUpdate( idVideo , data ,function ( err , updateSuccess){
 				if(err)  {
-					return res.json( {code : 404 , data : { msg : 'Not Update'} } );
+					return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 				} else {
-					controllerBuffComment.getDetailBuffComment( id ,function ( err , detailBuffComment){
+					controllerBuffComment.getDetailBuffComment( idVideo ,function ( err , detailBuffComment){
 							return res.json( {code : 200 , data : detailBuffComment } );
 					})
 				}
 			})
 		})
 		.catch(e=>{
-				return res.json( {code : 404 , data : { msg : 'Not Update'} } );
+				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 		})
 });
 
@@ -139,9 +147,9 @@ router.delete('/delete/:id', function(req, res, next) {
 		let idVideo = parseInt(req.params.id);
 		controllerBuffComment.handleDelete( idVideo ,function ( err , updateSuccess){
 			if(err)  {
-				return res.json( {code : 404 , data : { msg : 'Not Delete'} } );
+				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 			} else {
-				return res.json( {code : 200 , data : { msg : 'Delete Success'} } );
+				return res.json( {code : 200 , data : { msg : 'Thành Công'} } );
 			}
 		})
 });

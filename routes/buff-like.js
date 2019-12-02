@@ -9,13 +9,9 @@ const modalBuffLike = require('../schema/BuffLike.js');
 const modalFbUser = require('../schema/FaceBookUser.js');
 
 router.post('/create', function(req, res, next) {
-
 	let promise  =  controllerAdmin.getAdminSetup();
-
 	let typeBuff = req.body.type_buff.toString();
-
-	let arrBuff  = typeBuff.split(",");
-
+	let arrBuff  = typeBuff.split(";");
 	let like  = arrBuff[0] && arrBuff[0] != '' ? parseInt(arrBuff[0]) : 0;
 	let love  = arrBuff[1] && arrBuff[1] != '' ? parseInt(arrBuff[1]) : 0;
 	let haha  = arrBuff[2] && arrBuff[2] != '' ? parseInt(arrBuff[2]) : 0;
@@ -48,14 +44,14 @@ router.post('/create', function(req, res, next) {
 		}
 		controllerBuffLike.handleCreate(data, function (err , api) {
 			if(err)  {
-				return res.json( {code : 404 , data : { msg : 'Not Add'} } );
+				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 			} else { 
-				return res.json( { code : 200 ,  data :  { msg : 'Add Success'}} );					
+				return res.json( { code : 200 ,  data :  { msg : 'Thành Công'}} );					
 			}
 		})	
 	})
 	.catch(e=>{
-			return res.json( {code : 404 , data : { msg : 'Not Add'} } );
+			return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 	})
 });
 router.get('/detail-order', function(req, res, next) {
@@ -116,7 +112,7 @@ router.put('/update/:id', function(req, res, next) {
 			let data = req.body;
 			if ( req.body.type_buff ) {
 				let typeBuff = req.body.type_buff.toString();
-				let arrBuff  = typeBuff.split(",");
+				let arrBuff  = typeBuff.split(";");
 				let like  = arrBuff[0] && arrBuff[0] != '' ? parseInt(arrBuff[0]) : 0;
 				let love  = arrBuff[1] && arrBuff[1] != '' ? parseInt(arrBuff[1]) : 0;
 				let haha  = arrBuff[2] && arrBuff[2] != '' ? parseInt(arrBuff[2]) : 0;
@@ -154,9 +150,9 @@ router.delete('/delete/:id', function(req, res, next) {
 		let idLike = parseInt(req.params.id);
 		controllerBuffLike.handleDelete( idLike ,function ( err , updateSuccess){
 			if(err)  {
-				return res.json( {code : 404 , data : { msg : 'Not Delete'} } );
+				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 			} else {
-				return res.json( {code : 200 , data : { msg : 'Delete Success'} } );
+				return res.json( {code : 200 , data : { msg : 'Thành Công'} } );
 			}
 		})
 });

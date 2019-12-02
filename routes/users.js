@@ -9,7 +9,7 @@ router.get('/get-cookie', function(req, res, next) {
 			.select('user_id fb_dtsg cookie')
 			.exec(function(err, data){
 				if (err) {
-					return res.json( {code : 404 , data : { msg : 'Data Not Found'} } );
+					return res.json( {code : 404 , data : [] } );
 				} else {
 					return res.json( {
 						code : 200 , 
@@ -24,7 +24,7 @@ router.get('/die', function(req, res, next) {
   modalFbUser.find({note : 'Cookie not working' })
 			.exec(function(err, data){
 				if (err) {
-					return res.json( {code : 404 , data : { msg : 'Data Not Found'} } );
+					return res.json( {code : 404 , data : [] } );
 				} else {
 					return res.json( {
 						code : 200 , 
@@ -37,7 +37,7 @@ router.get('/die', function(req, res, next) {
 
 router.get('/list', function(req, res, next) {
   controllerUser.getListUser(function (err ,  listUser) {
-  		if ( err ) 	return res.json( {code : 404 , data : { msg : 'Data Not Found'} } );
+  		if ( err ) 	return res.json( {code : 404 , data : [] } );
   		return res.json( {
 						code : 200 , 
 						data : listUser , 
@@ -66,7 +66,7 @@ router.post('/create', function(req, res, next) {
 				
 		}
 	controllerUser.handleCreate( data , function (err ,  listUser) {
-	  		if ( err ) 	return res.json( {code : 404 , data : { msg : 'Data Not Found'} } );
+	  		if ( err ) 	return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 	  		return res.json( {
 							code : 200 , 
 							data : listUser , 
@@ -79,9 +79,9 @@ router.put('/update/:id', function(req, res, next) {
 		let data = req.body;
 		controllerUser.handleUpdate( id , data ,function ( err , updateSuccess){
 				if(err)  {
-					return res.json( {code : 404 , data : { msg : 'Not Update'} } );
+					return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 				} else {
-					return res.json( {code : 200 , data : { msg : 'Update Success'} } );
+					return res.json( {code : 200 , data : { msg : 'Thành Công'} } );
 				}
 			})
 	
@@ -92,9 +92,9 @@ router.delete('/delete/:id', function(req, res, next) {
 
 		controllerUser.handleDelete( id ,function ( err , updateSuccess){
 			if(err)  {
-				return res.json( {code : 404 , data : { msg : 'Not Delete'} } );
+				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 			} else {
-				return res.json( {code : 200 , data : { msg : 'Delete Success'} } );
+				return res.json( {code : 200 , data : { msg : 'Thành Công'} } );
 			}
 		})
 });

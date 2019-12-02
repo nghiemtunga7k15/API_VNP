@@ -41,7 +41,7 @@ router.post('/create', function(req, res, next) {
 		})
 	})
 	.catch(e=>{
-			return res.json( {code : 404 , data : { msg : 'Not Found'} } );
+			return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 	})
 	
 });
@@ -59,11 +59,11 @@ router.get('/list', function(req, res, next) {
 		}
 		controllerBuffVipEye.getListBuffEye( _limit , page , status , sort_name , sort_value  , function ( err , listBuffEye){
 			if(err) {
-				return res.json( {code : 404 , data : { msg : 'Not Found'} } );
+				return res.json( {code : 404 , data : [] } );
 			} else {
 				modalBuffVipEye.count({}, function( err, totalRecord){
    					if ( err ) {
-   						return res.json( {code : 404 , data : { msg : 'Not Get List'} } );
+   						return res.json( {code : 404 , data : [] } );
    					} else {
 						return res.json( {code : 200 , data : listBuffEye ,  page : page , limit : _limit , total : totalRecord } );
    					}
@@ -78,7 +78,7 @@ router.get('/detail/:id', function(req, res, next) {
 		let idVipEye = parseInt(req.params.id);
 		controllerBuffVipEye.getDetailBuffVipEye( idVipEye ,function ( err , detailBuffEye){
 			if(err)  {
-				return res.json( {code : 404 , data : { msg : 'Not Get Detail'} } );
+				return res.json( {code : 404 , data : [] } );
 			} else {
 				return res.json( {code : 200 , data : detailBuffEye } );
 			}
@@ -104,7 +104,7 @@ router.put('/update/:id', function(req, res, next) {
 
 			controllerBuffVipEye.handleUpdateBuffVipEye( idVipEye , req.body ,function ( err , updateSuccess){
 				if(err)  {
-					return res.json( {code : 404 , data : { msg : 'Not Update'} } );
+					return res.json( {code : 404 , data : [] } );
 				} else {
 					controllerBuffVipEye.getDetailBuffVipEye( idVipEye ,function ( err , detailBuffVipEye){	
 						return res.json( {code : 200 , data : detailBuffVipEye } );
@@ -113,7 +113,7 @@ router.put('/update/:id', function(req, res, next) {
 			})
 		})
 		.catch(e=>{
-				return res.json( {code : 404 , data : { msg : 'Not Add'} } );
+				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 
 		})
 });
@@ -122,9 +122,9 @@ router.delete('/delete/:id', function(req, res, next) {
 		let idVipEye = parseInt(req.params.id);
 		controllerBuffVipEye.handleDelete( idVipEye ,function ( err , updateSuccess){
 			if(err)  {
-				return res.json( {code : 404 , data : { msg : 'Not Delete'} } );
+				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 			} else {
-				return res.json( {code : 200 , data : { msg : 'Delete Success'} } );
+				return res.json( {code : 200 , data : { msg : 'Thành Công'} } );
 			}
 		})
 });

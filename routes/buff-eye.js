@@ -78,7 +78,7 @@ router.post('/create', function(req, res, next) {
 		})
 	})
 	.catch(e=>{
-			return res.json( {code : 404 , data : [] } );
+			return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 	})
 	
 });

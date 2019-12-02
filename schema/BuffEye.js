@@ -6,7 +6,7 @@ var BuffEyeSchema =  mongoose.Schema({
     view         	    :   { type: Number, required: true },
     price_one_eye       :   { type: Number, required: true },
     total_price_pay     :   { type: Number, required: true },
-    time_type           :   { type: Number },  // 0 là delay 1 là time buff done
+    time_type           :   { type: String },  // 0 là delay 1 là time buff done
     time_value          :   { type: Number },
     note         		:   { type: String, default : 'Description'},
     status              :   { type: Number, default : 0 },
