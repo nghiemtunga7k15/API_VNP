@@ -24,6 +24,18 @@ let BuffCommentController = {
 			if (err) return cb(err ,null);
         	return cb(null , deleteSuccess )
 		});
+	},
+
+	getAdminSetup() {
+		let self = this;
+		return new Promise(function(resolve, reject) { 
+			self.getListSetup(function ( err , adminSetUp){
+				if(err) return reject(err);
+				return resolve(adminSetUp);
+			})
+		 });
 	}
+
+
 }
 module.exports = BuffCommentController ;

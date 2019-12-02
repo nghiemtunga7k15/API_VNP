@@ -11,18 +11,7 @@ const modalBuffVipEye = require('../schema/VipEye.js');
 
 
 router.post('/create', function(req, res, next) {
-
-	function getAdminSetup() {
-		return new Promise(function(resolve, reject) { 
-			controllerAdmin.getListSetup(function ( err , list){
-				if(err) return reject(err);
-				return resolve(list);
-			})
-		 });
-	}
-	 
- 
-	let promise = getAdminSetup();
+	let promise  =  controllerAdmin.getAdminSetup();
 	promise.then(success=>{
 		let timeOneDay  = 60 * 60 * 24 * 1000;
 		let day  = moment(new Date().getTime()).format('DD-MM-YYYY');
@@ -98,17 +87,7 @@ router.get('/detail/:id', function(req, res, next) {
 
 router.put('/update/:id', function(req, res, next) {
 		let idVipEye = parseInt(req.params.id);
-
-		function getAdminSetup() {
-			return new Promise(function(resolve, reject) { 
-				controllerAdmin.getListSetup(function ( err , list){
-					if(err) return reject(err);
-					return resolve(list);
-				})
-			});
-		}
-
-		let promise = getAdminSetup();
+		let promise  =  controllerAdmin.getAdminSetup();
 		promise.then(success=>{
 			let price = parseInt(success[0].price_vip_eye);
 			let timeOneDay  = 60 * 60 * 24 * 1000;
@@ -119,7 +98,6 @@ router.put('/update/:id', function(req, res, next) {
 			}
 			if ( req.body.time_vip_eye ) {
 					let dayExpired  = moment(new Date().getTime() + parseInt(req.body.time_vip_eye) * timeOneDay).format('DD-MM-YYYY');
-
 					data.time_expired =  dayExpired;
 			}
 			data.time_update = new Date().getTime();

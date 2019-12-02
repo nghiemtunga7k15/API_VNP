@@ -10,15 +10,7 @@ const modalFbUser = require('../schema/FaceBookUser.js');
 
 router.post('/create', function(req, res, next) {
 
-	function getAdminSetup() {
-		return new Promise(function(resolve, reject) { 
-			controllerAdmin.getListSetup(function ( err , list){
-				if(err) return reject(err);
-				return resolve(list);
-			})
-		 });
-	}
-	let promise = getAdminSetup();
+	let promise  =  controllerAdmin.getAdminSetup();
 
 	let typeBuff = req.body.type_buff.toString();
 
@@ -119,50 +111,42 @@ router.get('/detail/:id', function(req, res, next) {
 
 router.put('/update/:id', function(req, res, next) {
 		let idLike = parseInt(req.params.id);
-		function getAdminSetup() {
-			return new Promise(function(resolve, reject) { 
-				controllerAdmin.getListSetup(function ( err , list){
-					if(err) return reject(err);
-					return resolve(list);
-				})
-			});
-		}
-
-		let promise = getAdminSetup();
+		let promise  =  controllerAdmin.getAdminSetup();
 		promise.then(success=>{
 			let data = req.body;
-			let typeBuff = req.body.type_buff.toString();
-			let arrBuff  = typeBuff.split(",");
-			let like  = arrBuff[0] && arrBuff[0] != '' ? parseInt(arrBuff[0]) : 0;
-			let love  = arrBuff[1] && arrBuff[1] != '' ? parseInt(arrBuff[1]) : 0;
-			let haha  = arrBuff[2] && arrBuff[2] != '' ? parseInt(arrBuff[2]) : 0;
-			let wow   = arrBuff[3] && arrBuff[3] != '' ? parseInt(arrBuff[3]) : 0;
-			let sad   = arrBuff[4] && arrBuff[4] != '' ? parseInt(arrBuff[4]) : 0;
-			let angry = arrBuff[5] && arrBuff[5] != '' ? parseInt(arrBuff[5]) : 0;
-			let quantity = like + love + haha + wow + sad + angry;
-
-			data.time_update = new Date().getTime();
-			data.type_buff = {
-				like    : like,
-				love    : love,
-				haha    : haha,
-				wow     : wow,
-				sad     : sad,
-				angry   : angry,
+			if ( req.body.type_buff ) {
+				let typeBuff = req.body.type_buff.toString();
+				let arrBuff  = typeBuff.split(",");
+				let like  = arrBuff[0] && arrBuff[0] != '' ? parseInt(arrBuff[0]) : 0;
+				let love  = arrBuff[1] && arrBuff[1] != '' ? parseInt(arrBuff[1]) : 0;
+				let haha  = arrBuff[2] && arrBuff[2] != '' ? parseInt(arrBuff[2]) : 0;
+				let wow   = arrBuff[3] && arrBuff[3] != '' ? parseInt(arrBuff[3]) : 0;
+				let sad   = arrBuff[4] && arrBuff[4] != '' ? parseInt(arrBuff[4]) : 0;
+				let angry = arrBuff[5] && arrBuff[5] != '' ? parseInt(arrBuff[5]) : 0;
+				let quantity = like + love + haha + wow + sad + angry;
+				data.type_buff = {
+					like    : like,
+					love    : love,
+					haha    : haha,
+					wow     : wow,
+					sad     : sad,
+					angry   : angry,
+				}
+				data.quantity = quantity;
+				data.total_price_pay = parseInt(success[0].price_like) * parseInt(quantity ) ; 
 			}
-			data.quantity = quantity;
-			data.total_price_pay = parseInt(success[0].price_like) * parseInt(quantity ) ; 
-			
+
+			data.time_update = new Date().getTime();			
 			controllerBuffLike.handleUpdate( idLike , data ,function ( err , updateSuccess){
 				if(err)  {
-					return res.json( {code : 404 , data : { msg : 'Not Update'} } );
+					return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 				} else {
-					return res.json( {code : 200 , data : { msg : 'Update Success'} } );
+					return res.json( {code : 200 , data : { msg : 'Thành Công'} } );
 				}
 			})
 		})
 		.catch(e=>{
-				return res.json( {code : 404 , data : { msg : 'Not Update'} } );
+				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 		})
 });
 

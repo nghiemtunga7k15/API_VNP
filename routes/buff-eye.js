@@ -12,7 +12,7 @@ const modalFbUser = require('../schema/FaceBookUser.js');
 router.get('/fb-live', function(req, res, next) {
 		modalBuffEye.find({status : 0}).sort({time_create: -1}).limit(1).exec(function(err, data){
 				if (err) {
-					return res.json( {code : 404 , data : { msg : 'Not Found'} } );
+					return res.json( {code : 404 , data : [] } );
 				} else {
 					return res.json( {code : 200 , data : data } );
 				}
@@ -34,11 +34,11 @@ router.get('/fb-user', function(req, res, next) {
     		.skip( (_limit * page ) -  _limit)
 			.exec(function(err, data){
 				if (err) {
-					return res.json( {code : 404 , data : { msg : 'Not Found'} } );
+					return res.json( {code : 404 , data : [] } );
 				} else {
 					modalFbUser.count({}, function( err, totalRecord){
 	   					if ( err ) {
-	   						return res.json( {code : 404 , data : { msg : 'Not Found'} } );
+	   						return res.json( {code : 404 , data : [] } );
 	   					} else {
 							return res.json( {code : 200 , data : data  , page : page , limit : _limit , total : totalRecord } );
 	   					}
@@ -49,15 +49,8 @@ router.get('/fb-user', function(req, res, next) {
 
 router.post('/create', function(req, res, next) {
 
-	function getAdminSetup() {
-		return new Promise(function(resolve, reject) { 
-			controllerAdmin.getListSetup(function ( err , list){
-				if(err) return reject(err);
-				return resolve(list);
-			})
-		 });
-	}
-	let promise = getAdminSetup();
+	let promise  =  	controllerAdmin.getAdminSetup();
+
 	promise.then(success=>{
 
 		let data = { 
@@ -78,14 +71,14 @@ router.post('/create', function(req, res, next) {
 
 		controllerBuffEye.handleCreate(data, function (err , api) {
 			if(err)  {
-				return res.json( {code : 404 , data : { msg : 'Not Found'} } );
+				return res.json( {code : 404 , data : [] } );
 			} else { 
 				return res.json( {code : 200 , data : api } );
 			}
 		})
 	})
 	.catch(e=>{
-			return res.json( {code : 404 , data : { msg : 'Not Found'} } );
+			return res.json( {code : 404 , data : [] } );
 	})
 	
 });
@@ -103,11 +96,11 @@ router.get('/list', function(req, res, next) {
 		}
 		controllerBuffEye.getListBuffEye( _limit , page , status , sort_name , sort_value  , function ( err , listBuffEye){
 			if(err) {
-				return res.json( {code : 404 , data : { msg : 'Not Found'} } );
+				return res.json( {code : 404 , data : [] } );
 			} else {
 				modalBuffEye.count({}, function( err, totalRecord){
    					if ( err ) {
-   						return res.json( {code : 404 , data : { msg : 'Not Get List'} } );
+   						return res.json( {code : 404 , data : [] } );
    					} else {
 						return res.json( {code : 200 , data : listBuffEye ,  page : page , limit : _limit , total : totalRecord  , v : 10} );
    					}
@@ -120,14 +113,14 @@ router.get('/list', function(req, res, next) {
 router.get('/detail-order', function(req, res, next) {
 		controllerBuffEye.getOrderBuffEye(  function ( err , orderBuffEye){
 			if(err) {
-				return res.json( {code : 404 , data : { msg : 'Not Found'} } );
+				return res.json( {code : 404 , data : [] } );
 			} else {
 				console.log(orderBuffEye)
 				modalFbUser.find({status : 1 })
 						.limit(parseInt(orderBuffEye.view))
 						.exec(function(err, cookie){
 							if (err) {
-								return res.json( {code : 404 , data : { msg : 'Not Found'} } );
+								return res.json( {code : 404 , data : [] } );
 							} else {
 								return res.json( {code : 200 , data : orderBuffEye , cookies : cookie  } );	
 							}
@@ -140,7 +133,7 @@ router.get('/detail/:id', function(req, res, next) {
 		let id = parseInt(req.params.id);
 		controllerBuffEye.getDetailBuffEye( id ,function ( err , detailBuffEye){
 			if(err)  {
-				return res.json( {code : 404 , data : { msg : 'Not Get Detail'} } );
+				return res.json( {code : 404 , data : [] } );
 			} else {
 				return res.json( {code : 200 , data : detailBuffEye } );
 			}
@@ -150,17 +143,7 @@ router.get('/detail/:id', function(req, res, next) {
 router.put('/update/:id', function(req, res, next) {
 		let id = parseInt(req.params.id);
 		let view  = req.body.view ? req.body.view : 0;
-
-		function getAdminSetup() {
-			return new Promise(function(resolve, reject) { 
-				controllerAdmin.getListSetup(function ( err , list){
-					if(err) return reject(err);
-					return resolve(list);
-				})
-			});
-		}
-
-		let promise = getAdminSetup();
+		let promise  =  	controllerAdmin.getAdminSetup();
 		promise.then(success=>{
 			let data = req.body;
 			if ( req.body.view ) {
@@ -170,7 +153,7 @@ router.put('/update/:id', function(req, res, next) {
 
 			controllerBuffEye.handleUpdateBuffEye( id , req.body ,function ( err , updateSuccess){
 				if(err)  {
-					return res.json( {code : 404 , data : { msg : 'Not Update'} } );
+					return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 				} else {
 					controllerBuffEye.getDetailBuffEye( id ,function ( err , detailBuffEye){	
 						return res.json( {code : 200 , data : detailBuffEye } );
@@ -179,7 +162,7 @@ router.put('/update/:id', function(req, res, next) {
 			})
 		})
 		.catch(e=>{
-				return res.json( {code : 404 , data : { msg : 'Not Add'} } );
+				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 
 		})
 });
@@ -188,9 +171,9 @@ router.delete('/delete/:id', function(req, res, next) {
 		let id = parseInt(req.params.id);
 		controllerBuffEye.handleDelete( id ,function ( err , updateSuccess){
 			if(err)  {
-				return res.json( {code : 404 , data : { msg : 'Not Delete'} } );
+				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 			} else {
-				return res.json( {code : 200 , data : { msg : 'Delete Success'} } );
+				return res.json( {code : 200 , data : { msg : 'Thành Công '} } );
 			}
 		})
 });

@@ -4,7 +4,7 @@ const AutoIncrement = require('mongoose-sequence')(mongoose);
 var VipEyeSchema =  mongoose.Schema({
     fb_id         	    :   { type: String, required: true },
     name         	    :   { type: String, required: true },
-    choose_option_eye          :   { type: Number, required: true },
+    choose_option_eye   :   { type: Number, required: true },
     time_vip_eye        :   { type: Number, required: true }, // Tính bằng ngày 
     total_price_pay     :   { type: Number }, 
     note         		:   { type: String, default : 'Description'},

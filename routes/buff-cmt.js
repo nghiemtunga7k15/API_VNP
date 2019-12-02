@@ -9,17 +9,7 @@ const modalBuffComment = require('../schema/BuffComment.js');
 const modalFbUser = require('../schema/FaceBookUser.js');
 
 router.post('/create', function(req, res, next) {
-
-	function getAdminSetup() {
-		return new Promise(function(resolve, reject) { 
-			controllerAdmin.getListSetup(function ( err , list){
-				if(err) return reject(err);
-				return resolve(list);
-			})
-		 });
-	}
-
-	let promise = getAdminSetup();
+	let promise  =  controllerAdmin.getAdminSetup();
 	promise.then(success=>{
 		let price;
 		if ( parseInt(req.body.type_buff) == 0 ) {
@@ -112,16 +102,7 @@ router.get('/detail/:id', function(req, res, next) {
 
 router.put('/update/:id', function(req, res, next) {
 		let id = parseInt(req.params.id);
-		function getAdminSetup() {
-			return new Promise(function(resolve, reject) { 
-				controllerAdmin.getListSetup(function ( err , list){
-					if(err) return reject(err);
-					return resolve(list);
-				})
-			});
-		}
-
-		let promise = getAdminSetup();
+		let promise  =  controllerAdmin.getAdminSetup();
 		promise.then(success=>{
 			let price;
 			if ( parseInt(req.body.type_buff) == 0 ) {

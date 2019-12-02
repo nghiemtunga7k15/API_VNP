@@ -1,5 +1,5 @@
 const modalBuffVipEye = require('../schema/VipEye.js');
-let BuffEyeController = {
+let BuffVipEyeController = {
 	handleCreate(data , cb ) {
 		let api = new modalBuffVipEye(data);
 		api.save(function (err, api) {
@@ -49,4 +49,4 @@ let BuffEyeController = {
 		});
 	}
 }
-module.exports = BuffEyeController ;
+module.exports = BuffVipEyeController ;
