@@ -9,9 +9,9 @@ var VipEyeSchema =  mongoose.Schema({
     total_price_pay     :   { type: Number }, 
     note         		:   { type: String, default : 'Description'},
     status              :   { type: Number, default : 0 },
-    time_expired        :   { type: Number},
+    time_expired        :   { type: String},
     time_done           :   { type: Number , default : 0},
-    time_create         :   { type: Number},
+    time_create         :   { type: String},
     time_update         :   { type: Number, default : 0 },
 });
 
