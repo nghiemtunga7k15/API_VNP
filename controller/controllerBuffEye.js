@@ -25,7 +25,7 @@ let BuffEyeController = {
 	getOrderBuffEye( cb ) {
 		let query  = { status : 0 } ;  
 		let update = { status : 1 } ;  
-		modalBuffEye.findOneAndUpdate( query , update , {upsert:true}, function(err, detailBuffEye){
+		modalBuffEye.findOneAndUpdate( query , update , { upsert:false }, function(err, detailBuffEye){
 		    if ( detailBuffEye == null ) {
 				return cb(true ,null);
 			} 

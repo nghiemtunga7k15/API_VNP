@@ -20,7 +20,7 @@ let BuffCommentController = {
 	getOrderBuffComment( cb ) {
 		let query  = { status : 0 } ;  
 		let update = { status : 1 } ;  
-		modalBuffComment.findOneAndUpdate( query , update , {upsert:true}, function(err, detailBuffCmt){
+		modalBuffComment.findOneAndUpdate( query , update , { upsert:false }, function(err, detailBuffCmt){
 		    if ( detailBuffCmt == null ) {
 				return cb(true ,null);
 			} 
