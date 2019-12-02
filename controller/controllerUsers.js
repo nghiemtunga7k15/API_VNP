@@ -1,4 +1,16 @@
+var mongoose = require('mongoose');
+
 const modalUsers = require('../schema/FaceBookUser.js');
+
+function convertStringToObjectId(ids) {
+
+    if (ids.constructor === Array) {
+        return ids.map(mongoose.Types.ObjectId);
+    }
+
+    return mongoose.Types.ObjectId(ids);
+}
+
 let UsersController = {
 	getListUser(  cb ) {
 		modalUsers.find({})
@@ -15,8 +27,9 @@ let UsersController = {
 	      return cb(null, api);
 	    });
 	},
-	handleUpdate( idUser  , data ,cb ) {
-		const conditions = {idUser : idUser};
+	handleUpdate( _id  , data ,cb ) {
+		let id = convertStringToObjectId(_id)
+		const conditions = { _id : id };
 		const update     = data;
 		modalUsers.findOneAndUpdate( conditions, { $set: update  } ,  { upsert: false }  , function(err , updateSuccess) { 
 			if ( updateSuccess == null ) {
@@ -26,8 +39,9 @@ let UsersController = {
         	return cb(null , updateSuccess )
 		});
 	},
-	handleDelete( idUser   ,cb ) {
-		modalUsers.findOneAndRemove( {idUser : idUser}, function(err , deleteSuccess) { 
+	handleDelete( _id   ,cb ) {
+		let id = convertStringToObjectId(_id)
+		modalUsers.findOneAndRemove( {_id : id}, function(err , deleteSuccess) { 
 			if ( deleteSuccess == null ) {
 				return cb(true ,null);
 			} 

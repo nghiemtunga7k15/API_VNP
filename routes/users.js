@@ -45,6 +45,13 @@ router.get('/list', function(req, res, next) {
   })
 });
 
+router.get('/detail/:id', function(req, res, next) {
+	let id = req.params.id;
+  controllerUser.getDetail(id , function (err ,  listUser) {
+  		
+  })
+});
+
 router.post('/create', function(req, res, next) {
 	let data = { 
 			user_id             : 		req.body.user_id ,	
@@ -68,9 +75,9 @@ router.post('/create', function(req, res, next) {
 });
 
 router.put('/update/:id', function(req, res, next) {
-		let idUser = parseInt(req.params.id);
+		let id = req.params.id;
 		let data = req.body;
-		controllerUser.handleUpdate( idUser , data ,function ( err , updateSuccess){
+		controllerUser.handleUpdate( id , data ,function ( err , updateSuccess){
 				if(err)  {
 					return res.json( {code : 404 , data : { msg : 'Not Update'} } );
 				} else {
@@ -81,8 +88,9 @@ router.put('/update/:id', function(req, res, next) {
 });
 
 router.delete('/delete/:id', function(req, res, next) {
-		let idUser = parseInt(req.params.id);
-		controllerUser.handleDelete( idUser ,function ( err , updateSuccess){
+		let id = req.params.id;
+
+		controllerUser.handleDelete( id ,function ( err , updateSuccess){
 			if(err)  {
 				return res.json( {code : 404 , data : { msg : 'Not Delete'} } );
 			} else {
