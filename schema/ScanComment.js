@@ -11,6 +11,7 @@ var ScanCommentSchema =  mongoose.Schema({
         time_cmt    : { type: String },
         phone       : { type: String },
         email       : { type: String },
+        address     : { type: String },
     },   
     type_order               :   { type: String , default : 0 },   // 0 GÓI THƯỜNG 1 GÓI VIP
     total_price_pay          :   { type: Number , default : 0 }, 
