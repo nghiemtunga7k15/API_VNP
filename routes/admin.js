@@ -17,6 +17,10 @@ router.post('/create', function(req, res, next) {
 
 		let arrquantityVipEye  = quantityVipEye.split(";");
 
+		let quantityScanCmt = req.body.quantity_scan_cmt.toString();
+
+		let arrquantityScanCmt  = quantityScanCmt.split(";");
+
  
 		let data = { 
 			price_one_eye               :		req.body.price_one_eye ,
@@ -29,6 +33,8 @@ router.post('/create', function(req, res, next) {
 			time_option                 :       arrTimeOption , 
 			quantity_vip_eye            :       arrquantityVipEye , 
 			price_vip_eye               :		req.body.price_vip_eye ,
+			price_scan_cmt              :		req.body.price_scan_cmt ,
+			quantity_scan_cmt           :		arrquantityScanCmt ,
 			time_create     			: 		new Date().getTime() ,
 			time_update     			: 		req.body.time_update ,	
 		}

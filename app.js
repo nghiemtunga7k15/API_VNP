@@ -7,6 +7,7 @@ var usersRouter = require('./routes/users');
 var adminRouter = require('./routes/admin');
 var buffEyeRouter = require('./routes/buff-eye');
 var buffVipEyeRouter = require('./routes/buff-vip-eye');
+var scanCommentRouter = require('./routes/scan-cmt.js');
 var buffCommentRouter = require('./routes/buff-cmt');
 var buffLikeRouter = require('./routes/buff-like');
 var app = express();
@@ -37,6 +38,7 @@ app.use('/admin', adminRouter);
 app.use('/api/v1/buff-eye', buffEyeRouter);
 app.use('/api/v1/buff-vip-eye', buffVipEyeRouter);
 app.use('/api/v1/buff-cmt', buffCommentRouter);
+app.use('/api/v1/scan-cmt', scanCommentRouter);
 app.use('/api/v1/buff-like', buffLikeRouter);
 
 // catch 404 and forward to error handler
