@@ -44,6 +44,17 @@ let BuffVipEyeController = {
 			if (err) return cb(err ,null);
         	return cb(null , deleteSuccess )
 		});
-	}
+	},
+	handleUpdateByFaceId( fb_id  , data ,cb ) {
+		const conditions = { fb_id : fb_id };
+		const update     = data;
+		modalScanComment.findOneAndUpdate( conditions, { $set: update  } ,  { upsert: false }  ,  function(err , detailBuffEye) { 
+			if ( detailBuffEye == null ) {
+				return cb(true ,null);
+			} 
+			if (err) return cb(err ,null);
+        	return cb(null , detailBuffEye )
+		});
+	},
 }
 module.exports = BuffVipEyeController ;

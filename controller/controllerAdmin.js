@@ -33,7 +33,7 @@ let BuffCommentController = {
 				if(err) return reject(err);
 				return resolve(adminSetUp);
 			})
-		 });
+		});
 	}
 
 

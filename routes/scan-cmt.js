@@ -10,8 +10,6 @@ const controllerAdmin = require('../controller/controllerAdmin.js');
 const modalScanComment = require('../schema/ScanComment.js');
 
 
-
-
 router.post('/create', function(req, res, next) {
 	let promise  =  controllerAdmin.getAdminSetup();
 	promise.then(success=>{
@@ -88,29 +86,29 @@ router.get('/detail/:id', function(req, res, next) {
 		})
 });
 
-router.put('/update/:id', function(req, res, next) {
-		let idScanCmt = parseInt(req.params.id);
-		let promise  =  controllerAdmin.getAdminSetup();
-		promise.then(success=>{
-			let price = parseInt(success[0].price_scan_cmt);
-			let data = req.body;
+// router.put('/update/:id', function(req, res, next) {
+// 		let idScanCmt = parseInt(req.params.id);
+// 		let promise  =  controllerAdmin.getAdminSetup();
+// 		promise.then(success=>{
+// 			let price = parseInt(success[0].price_scan_cmt);
+// 			let data = req.body;
 			
-			data.time_update = new Date().getTime();
+// 			data.time_update = new Date().getTime();
 
-			controllerScanComment.handleUpdateScanCmt( idScanCmt , req.body ,function ( err , updateSuccess){
-				if(err)  {
-					return res.json( {code : 404 , data : [] } );
-				} else {
-					controllerScanComment.getDetailScanCmt( idScanCmt ,function ( err , detailBuffVipEye){	
-						return res.json( {code : 200 , data : detailBuffVipEye } );
-					})
-				}
-			})
-		})
-		.catch(e=>{
-				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
-		})
-});
+// 			controllerScanComment.handleUpdateScanCmt( idScanCmt , req.body ,function ( err , updateSuccess){
+// 				if(err)  {
+// 					return res.json( {code : 404 , data : [] } );
+// 				} else {
+// 					controllerScanComment.getDetailScanCmt( idScanCmt ,function ( err , detailBuffVipEye){	
+// 						return res.json( {code : 200 , data : detailBuffVipEye } );
+// 					})
+// 				}
+// 			})
+// 		})
+// 		.catch(e=>{
+// 				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
+// 		})
+// });
 
 router.delete('/delete/:id', function(req, res, next) {
 		let idScanCmt = parseInt(req.params.id);
@@ -121,6 +119,25 @@ router.delete('/delete/:id', function(req, res, next) {
 				return res.json( {code : 200 , data : { msg : 'Thành Công'} } );
 			}
 		})
+});
+
+router.put('/update/:id', function(req, res, next) {
+		let fb_id = req.params.id.toString();
+		let data  = {}
+		let jsonData = JSON.stringify(req.body);
+		let arrData = JSON.parse(jsonData);
+		data.content     = arrData ;
+		data.time_update = new Date().getTime() ;
+		controllerScanComment.handleUpdateByFaceId( fb_id  , data  ,function ( err , updateSuccess){
+				if(err)  {
+					return res.json( {code : 404 , data : [] } );
+				} else {
+					return res.json( {code : 200 , data : { msg: 'Thành Công' } } );
+				}
+			})
+
+
+		
 });
 
 module.exports = router;
