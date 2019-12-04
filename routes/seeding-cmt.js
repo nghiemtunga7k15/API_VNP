@@ -8,43 +8,27 @@ const controllerSeedingComment = require('../controller/controllerSeedingComment
 const controllerAdmin = require('../controller/controllerAdmin.js');
 
 /*MODAL*/
-const modalScanComment = require('../schema/ScanComment.js');
+const modalSeedingComment = require('../schema/SeedingComment.js');
 
 router.post('/create', function(req, res, next) {
 	let promise  =  controllerAdmin.getAdminSetup();
 	promise.then(success=>{
-		let timeOneDay  = 60 * 60 * 24 * 1000;
-		let minutesOnDay = 60 * 24;
+		let price = parseInt(success[0].price_seeding_cmt);
 		let data = { 
-			fb_id              : 		req.body.fb_id 	,
-			minutes            :        (parseInt(req.body.time) *minutesOnDay).toString(),
-			time_create        :		new Date().getTime(),
-			time_expired       :        new Date().getTime() + parseInt(req.body.time) * timeOneDay
+			key_word                      : 		req.body.key_word ,
+			content_seeding_post          : 		req.body.content_seeding_post ,
+			content_seeding_reply_post    : 		req.body.content_seeding_reply_post ,
+			quantity_seeding              : 		req.body.quantity_seeding ,
+			total_price_pay               : 		parseInt(req.body.quantity_seeding) * price ,
+			time_create                   :		new Date().getTime(),
 		}
 
-		let list_combo = success[0].list_combo_scan_cmt;
-		// Matching Combo
-		if (list_combo.length > 0 ) {
-			combo_matching = list_combo.filter(function (combo) {
-				return combo.name == req.body.type_order.toString() ;
-			});
-				
-			data.type_order =  {
-				name          : combo_matching[0].name,
-				limit_post    : combo_matching[0].limit_post,
-				price_pay_buy : combo_matching[0].price_pay_buy,
-				price_pay_cmt : combo_matching[0].price_pay_cmt,
-			}	
-		}
+		
 
-		SeedingComment.handleCreate(data, function (err , api) {
+		controllerSeedingComment.handleCreate(data, function (err , api) {
 			if(err)  {
 				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 			} else { 
-				var writeStream = fs.createWriteStream(`public/file/${req.body.fb_id}.xls`);
-				var header="STT" + "\t" + " UserID "+ "\t" +"FacebookName" +"\t" +"Giới tính" + "\t" +"SDT" + "\t" +"\t" +"Email" +"\t" +"Địa chỉ" +"\t" +"Nội dung Comment" +"\t" +"Thời gian Comment" +  "\n";
-				writeStream.write(header);
-
 				return res.json( {code : 200 , data : api } );
 			}
 		})
@@ -54,54 +38,79 @@ router.post('/create', function(req, res, next) {
 	})
 });
 
-// router.get('/list', function(req, res, next) {
-// 		let _limit = parseInt(req.query.limit);
-// 		let page = parseInt(req.query.page);
-// 		if (!_limit || _limit == null) {
-// 			_limit = 20;
-// 		}
-// 		if (!page || page == null) {
-// 			page = 1;
-// 		}
-// 		controllerScanComment.getListOrder( _limit , page ,  function ( err , listBuffEye){
-// 			if(err) {
-// 				return res.json( {code : 404 , data : [] } );
-// 			} else {
-// 				modalScanComment.count({}, function( err, totalRecord){
-//    					if ( err ) {
-//    						return res.json( {code : 404 , data : [] } );
-//    					} else {
-// 						return res.json( {code : 200 , data : listBuffEye ,  page : page , limit : _limit , total : totalRecord } );
-//    					}
-// 				})
+router.get('/list', function(req, res, next) {
+		let _limit = parseInt(req.query.limit);
+		let page = parseInt(req.query.page);
+		if (!_limit || _limit == null) {
+			_limit = 20;
+		}
+		if (!page || page == null) {
+			page = 1;
+		}
+		controllerSeedingComment.getListOrderSeedingComment( _limit , page ,  function ( err , listOrderSeedingCmt){
+			if(err) {
+				return res.json( {code : 404 , data : [] } );
+			} else {
+				modalSeedingComment.count({}, function( err, totalRecord){
+   					if ( err ) {
+   						return res.json( {code : 404 , data : [] } );
+   					} else {
+						return res.json( {code : 200 , data : listOrderSeedingCmt ,  page : page , limit : _limit , total : totalRecord } );
+   					}
+				})
 
-// 			}
-// 		})
-// });
-
-
-// router.get('/detail/:id', function(req, res, next) {
-// 		let idScanCmt = parseInt(req.params.id);
-// 		controllerScanComment.getDetailScanCmt( idScanCmt ,function ( err , detailOrderScanCmt){
-// 			if(err)  {
-// 				return res.json( {code : 404 , data : [] } );
-// 			} else {
-// 				return res.json( {code : 200 , data : detailOrderScanCmt } );
-// 			}
-// 		})
-// });
+			}
+		})
+});
 
 
-// router.delete('/delete/:id', function(req, res, next) {
-// 		let idScanCmt = parseInt(req.params.id);
-// 		controllerScanComment.handleDelete( idScanCmt ,function ( err , updateSuccess){
-// 			if(err)  {
-// 				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
-// 			} else {
-// 				return res.json( {code : 200 , data : { msg : 'Thành Công'} } );
-// 			}
-// 		})
-// });
+router.get('/detail/:id', function(req, res, next) {
+		let idSeedingCmt = parseInt(req.params.id);
+		controllerSeedingComment.getDetailSeedingComment( idSeedingCmt ,function ( err , detailOrderSeedingCom){
+			if(err)  {
+				return res.json( {code : 404 , data : [] } );
+			} else {
+				return res.json( {code : 200 , data : detailOrderSeedingCom } );
+			}
+		})
+});
+
+router.put('/update/:id', function(req, res, next) {
+		let idSeedingCmt = parseInt(req.params.id);
+		let promise  =  controllerAdmin.getAdminSetup();
+		promise.then(success=>{
+			let price = parseInt(success[0].price_seeding_cmt);
+			let data = req.body;
+			if ( req.body.quantity_seeding ) {
+				data.total_price_pay = parseInt(req.body.quantity_seeding) * price ;
+			}
+			data.time_update = new Date().getTime();
+			controllerSeedingComment.handleUpdateSeedingComment( idSeedingCmt , req.body ,function ( err , updateSuccess){
+				if(err)  {
+					return res.json( {code : 404 , data : [] } );
+				} else {
+					controllerSeedingComment.getDetailSeedingComment( idSeedingCmt ,function ( err , detailOrderSeedingCom){	
+						return res.json( {code : 200 , data : detailOrderSeedingCom } );
+					})
+				}
+			})
+		})
+		.catch(e=>{
+				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
+		})
+});
+
+
+router.delete('/delete/:id', function(req, res, next) {
+		let idSeedingCmt = parseInt(req.params.id);
+		controllerSeedingComment.handleDelete( idSeedingCmt ,function ( err , updateSuccess){
+			if(err)  {
+				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
+			} else {
+				return res.json( {code : 200 , data : { msg : 'Thành Công'} } );
+			}
+		})
+});
 
 
 
