@@ -5,7 +5,7 @@ var AdminSchema =  mongoose.Schema({
     // Buff Eye
     price_one_eye            :   { type: Number , required: true },
     view_max                 : 	 { type: Number , required: true },
-    // Buff Cmt
+    // Buff COMMENT
     price_comment_randum     : 	 { type: Number , required: true },  
     price_comment_choose     : 	 { type: Number , required: true },  
     comment_max              : 	 { type: Number , required: true }, 
@@ -15,10 +15,12 @@ var AdminSchema =  mongoose.Schema({
     // VIP EYE
     quantity_vip_eye         :   { type: Array , "default": [] },     
     price_vip_eye            :   { type: Number , required: true },
-    // SCAN CMT
-    price_scan_cmt           :   { type: Number , required: true },
-    quantity_scan_cmt        :   { type: Array , "default": [] },
+    // SCAN COMMENT
+    // price_scan_cmt           :   { type: Number , required: true },
+    // quantity_scan_cmt        :   { type: Array , "default": [] },
     list_combo_scan_cmt      :   { type: Array , "default": [] },
+    // SEEDING COMMENT
+    price_seeding_cmt        :   { type: Number , required: true },
     time_option              :   { type: Array , "default": [] },     
     time_create              :   { type: Number },   
     time_update              :   { type: Number, default : 0 },

@@ -151,9 +151,22 @@ router.put('/update/:id', function(req, res, next) {
 					return res.json( {code : 200 , data : { msg: 'Thành Công' } } );
 				}
 			})
-
-
-		
 });
 
+router.get('/detail-order', function(req, res, next) {
+		let query  = { status : 0 } ;  
+		let update = { status : 1 } ;  
+		modalScanComment.findOneAndUpdate( query , update , { upsert:false }, function(err, detailBuffCmt){
+		 			if  ( detailBuffCmt ) {
+		 				if (err) {
+		 					return res.json( {code : 404 , data : [] } );	
+			 			} else {
+			 				return res.json( {code : 200 , data : { post_id : detailBuffCmt.fb_id } } );
+			 			}
+		 			} else {
+		 					return res.json( {code : 404 , data : { msg : 'Order Not Found' } } );	
+		 			}
+		}); 
+
+});
 module.exports = router;

@@ -18,9 +18,9 @@ router.post('/create', function(req, res, next) {
 
 		let arrquantityVipEye  = quantityVipEye.split(";");
 
-		let quantityScanCmt = req.body.quantity_scan_cmt.toString();
+		// let quantityScanCmt = req.body.quantity_scan_cmt.toString();
 
-		let arrquantityScanCmt  = quantityScanCmt.split(";");
+		// let arrquantityScanCmt  = quantityScanCmt.split(";");
 
  		let arr = [
  			{
@@ -53,11 +53,12 @@ router.post('/create', function(req, res, next) {
 			time_option                 :       arrTimeOption , 
 			quantity_vip_eye            :       arrquantityVipEye , 
 			price_vip_eye               :		req.body.price_vip_eye ,
-			price_scan_cmt              :		req.body.price_scan_cmt ,
-			quantity_scan_cmt           :		arrquantityScanCmt ,
+			list_combo_scan_cmt         : 	    arr,
+			// price_scan_cmt              :		req.body.price_scan_cmt ,
+			// quantity_scan_cmt           :		arrquantityScanCmt ,
+			price_seeding_cmt           :       req.body.price_seeding_cmt,
 			time_create     			: 		new Date().getTime() ,
 			time_update     			: 		req.body.time_update ,
-			list_combo_scan_cmt         : 	    arr
 		}
 		controllerAdmin.handleCreate(data, function (err , api) {
 			if(err)  {

@@ -1,5 +1,5 @@
 const modalScanComment = require('../schema/ScanComment.js');
-let BuffVipEyeController = {
+let ScanCommentController = {
 	handleCreate(data , cb ) {
 		let api = new modalScanComment(data);
 		api.save(function (err, api) {
@@ -56,5 +56,16 @@ let BuffVipEyeController = {
         	return cb(null , detailBuffEye )
 		});
 	},
+	getOrderScanComment( cb ) {
+		let query  = { status : 0 } ;  
+		let update = { status : 1 } ;  
+		modalBuffComment.findOneAndUpdate( query , update , { upsert:false }, function(err, detailBuffCmt){
+		    if ( detailBuffCmt == null ) {
+				return cb(true ,null);
+			} 
+			if (err) return cb(err ,null);
+        	return cb(null , detailBuffCmt )
+		}); 
+	},
 }
-module.exports = BuffVipEyeController ;
+module.exports = ScanCommentController ;
