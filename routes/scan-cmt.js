@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var moment = require('moment');
+var fs = require('fs');
 
 /*CONTROLLER*/
 const controllerScanComment = require('../controller/controllerScanComment.js');
@@ -8,7 +9,6 @@ const controllerAdmin = require('../controller/controllerAdmin.js');
 
 /*MODAL*/
 const modalScanComment = require('../schema/ScanComment.js');
-
 
 router.post('/create', function(req, res, next) {
 	let promise  =  controllerAdmin.getAdminSetup();
@@ -41,6 +41,10 @@ router.post('/create', function(req, res, next) {
 			if(err)  {
 				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 			} else { 
+				var writeStream = fs.createWriteStream(`public/file/${req.body.fb_id}.xls`);
+				var header="STT" + "\t" + " UserID "+ "\t" +"FacebookName" +"\t" +"Giới tính" + "\t" +"SDT" + "\t" +"\t" +"Email" +"\t" +"Địa chỉ" +"\t" +"Nội dung Comment" +"\t" +"Thời gian Comment" +  "\n";
+				writeStream.write(header);
+
 				return res.json( {code : 200 , data : api } );
 			}
 		})
@@ -123,6 +127,9 @@ router.delete('/delete/:id', function(req, res, next) {
 
 router.put('/update/:id', function(req, res, next) {
 		let fb_id = req.params.id.toString();
+		var writeStream = fs.createWriteStream(`public/file/${fb_id}.xls`);
+		var header="STT" + "\t" + " UserID "+ "\t" +"FacebookName" +"\t" +"Giới tính" + "\t" +"SDT" + "\t" +"\t" +"Email" +"\t" +"Địa chỉ" +"\t" +"Nội dung Comment" +"\t" +"Thời gian Comment" +  "\n";
+		writeStream.write(header);
 		let data  = {}
 		let jsonData = JSON.stringify(req.body);
 		let arrData = JSON.parse(jsonData);
@@ -132,6 +139,15 @@ router.put('/update/:id', function(req, res, next) {
 				if(err)  {
 					return res.json( {code : 404 , data : [] } );
 				} else {
+					
+					let num = 1;
+					arrData.forEach(comment=>{
+						let name = comment.user_name
+						let row = `${num} \t ${comment.user_id} \t ${comment.user_name} \t ${comment.message}  \n`;
+						writeStream.write(row);
+						num = num +1;
+					})
+
 					return res.json( {code : 200 , data : { msg: 'Thành Công' } } );
 				}
 			})

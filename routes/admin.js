@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+var fs = require('fs');
+
 /*CONTROLLER*/
 const controllerAdmin = require('../controller/controllerAdmin.js');
 /*MODAL*/
@@ -88,7 +90,60 @@ router.delete('/delete/:id', function(req, res, next) {
 			}
 		})
 });
+// router.get('/create-file', function(req, res, next) {
+// 		var writeStream = fs.createWriteStream("public/file/file.xls");
+// 		var header="STT" + "\t" + " UserID "+ "\t" +"FacebookName" +"\t" +"Giới tính" + "\t" +"SDT" + "\t" +"\t" +"Email" +"\t" +"Địa chỉ" +"\t" +"Nội dung Comment" +"\t" +"Thời gian Comment" +  "\n";
+// 		let arr = [
+// 				{
+// 					"comment_id": "1119515925047193",
+// 					"created_time": "2019-12-03T01:50:28+0000",
+// 					"user_name": "Tr?n Phan T?n",
+// 					"user_id": "100002933922521",
+// 					"message": "Mình luôn kéo t? du?i lên d? có d?ng l?c ^^",
+// 					"like_count": "0",
+// 					"is_post": true
+// 				},
+// 				{
+// 					"comment_id": "1119515081713944",
+// 					"created_time": "2019-12-03T01:48:48+0000",
+// 					"user_name": "Ph?m Van Long",
+// 					"user_id": "100003485657336",
+// 					"message": "mai chuyên co c?a bà nguy?n th? kim ngân s? ch? m?y ngu?i sang tr?n ? l?i dây",
+// 					"like_count": "0",
+// 					"is_post": true
+// 				},
+// 				{
+// 					"comment_id": "1119484221717030",
+// 					"created_time": "2019-12-03T00:55:32+0000",
+// 					"user_name": "Ng?c Anh",
+// 					"user_id": "100004285771885",
+// 					"message": "Ui... x?n quá ?",
+// 					"like_count": "0",
+// 					"is_post": true
+// 				},
+// 				{
+// 					"comment_id": "1119482318383887",
+// 					"created_time": "2019-12-03T00:52:41+0000",
+// 					"user_name": "Ngô Kim Ngân",
+// 					"user_id": "100009812643937",
+// 					"message": "",
+// 					"like_count": "0",
+// 					"is_post": true
+// 				}
+// 		]
+	
+// 		writeStream.write(header);
+// 		let num  = 1;
+// 		arr.forEach(obj=>{
+// 			let name = obj.user_name
+// 			// let row = `${num}`+"\t"+" 21"+"\t"+"Rob"+"\n";
+// 			let row = `${num} \t ${obj.user_id} \t ${obj.user_name} \t ${obj.message}  \n`;
+// 			writeStream.write(row);
+// 			num = num +1;
+// 		})
 
+// 		writeStream.close();
+// });
 
 
 module.exports = router;
