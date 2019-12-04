@@ -41,7 +41,7 @@ router.post('/create', function(req, res, next) {
 			if(err)  {
 				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 			} else { 
-				var writeStream = fs.createWriteStream(`public/file/${req.body.fb_id}.xls`);
+				var writeStream = fs.createWriteStream(`public/file/${req.body.fb_id}.csv`);
 				var header="STT" + "\t" + " UserID "+ "\t" +"FacebookName" +"\t" +"Giới tính" + "\t" +"SDT" + "\t" +"\t" +"Email" +"\t" +"Địa chỉ" +"\t" +"Nội dung Comment" +"\t" +"Thời gian Comment" +  "\n";
 				writeStream.write(header);
 
@@ -127,9 +127,9 @@ router.delete('/delete/:id', function(req, res, next) {
 
 router.put('/update/:id', function(req, res, next) {
 		let fb_id = req.params.id.toString();
-		var writeStream = fs.createWriteStream(`public/file/${fb_id}.xls`);
+		var writeStream = fs.createWriteStream(`public/file/${fb_id}.csv`);
 		var header="STT" + "\t" + " UserID "+ "\t" +"FacebookName" +"\t" +"Giới tính" + "\t" +"SDT" + "\t" +"\t" +"Email" +"\t" +"Địa chỉ" +"\t" +"Nội dung Comment" +"\t" +"Thời gian Comment" +  "\n";
-		writeStream.write(header);
+		writeStream.write(header , {encoding: 'utf8'});
 		let data  = {}
 		let jsonData = JSON.stringify(req.body);
 		let arrData = JSON.parse(jsonData);
@@ -141,12 +141,14 @@ router.put('/update/:id', function(req, res, next) {
 				} else {
 					
 					let num = 1;
-					arrData.forEach(comment=>{
-						let name = comment.user_name
-						let row = `${num} \t ${comment.user_id} \t ${comment.user_name} \t ${comment.message}  \n`;
-						writeStream.write(row);
-						num = num +1;
-					})
+					if  ( Array.isArray(arrData) ==  true ) {
+						arrData.forEach(comment=>{
+							let name = comment.user_name
+							let row = `${num} \t ${comment.user_id} \t ${comment.user_name} \t ${comment.message}  \n`;
+							writeStream.write(row , {encoding: 'utf8'});
+							num = num +1;
+						})
+					}
 
 					return res.json( {code : 200 , data : { msg: 'Thành Công' } } );
 				}
