@@ -90,29 +90,29 @@ router.get('/detail/:id', function(req, res, next) {
 		})
 });
 
-// router.put('/update/:id', function(req, res, next) {
-// 		let idScanCmt = parseInt(req.params.id);
-// 		let promise  =  controllerAdmin.getAdminSetup();
-// 		promise.then(success=>{
-// 			let price = parseInt(success[0].price_scan_cmt);
-// 			let data = req.body;
+router.put('/update-status/:id', function(req, res, next) {
+		let idScanCmt = parseInt(req.params.id);
+		let promise  =  controllerAdmin.getAdminSetup();
+		promise.then(success=>{
+			let price = parseInt(success[0].price_scan_cmt);
+			let data = req.body;
 			
-// 			data.time_update = new Date().getTime();
+			data.time_update = new Date().getTime();
 
-// 			controllerScanComment.handleUpdateScanCmt( idScanCmt , req.body ,function ( err , updateSuccess){
-// 				if(err)  {
-// 					return res.json( {code : 404 , data : [] } );
-// 				} else {
-// 					controllerScanComment.getDetailScanCmt( idScanCmt ,function ( err , detailBuffVipEye){	
-// 						return res.json( {code : 200 , data : detailBuffVipEye } );
-// 					})
-// 				}
-// 			})
-// 		})
-// 		.catch(e=>{
-// 				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
-// 		})
-// });
+			controllerScanComment.handleUpdateScanCmt( idScanCmt , req.body ,function ( err , updateSuccess){
+				if(err)  {
+					return res.json( {code : 404 , data : [] } );
+				} else {
+					controllerScanComment.getDetailScanCmt( idScanCmt ,function ( err , detailBuffVipEye){	
+						return res.json( {code : 200 , data : detailBuffVipEye } );
+					})
+				}
+			})
+		})
+		.catch(e=>{
+				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
+		})
+});
 
 router.delete('/delete/:id', function(req, res, next) {
 		let idScanCmt = parseInt(req.params.id);
