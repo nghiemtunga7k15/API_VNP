@@ -7,8 +7,7 @@ const modalAdmin = require('../schema/AdminSetup.js');
 
 /* CREATE. */
 router.post('/create', function(req, res, next) {
-
-
+	
 		let timeOption = req.body.time_option.toString();
 
 		let arrTimeOption  = timeOption.split(";");
@@ -21,7 +20,26 @@ router.post('/create', function(req, res, next) {
 
 		let arrquantityScanCmt  = quantityScanCmt.split(";");
 
- 
+ 		let arr = [
+ 			{
+ 				name              : 'VIP1',
+ 				limit_post        : 10,
+ 				price_pay_buy     : 10000,
+ 				price_pay_cmt     : 10,
+ 			},
+ 			{
+ 				name              : 'VIP2',
+ 				limit_post        : 20,
+ 				price_pay_buy     : 20000,
+ 				price_pay_cmt     : 9,
+ 			},
+ 			{
+ 				name              : 'VIP3',
+ 				limit_post        : 30,
+ 				price_pay_buy     : 30000,
+ 				price_pay_cmt     : 8,
+ 			},
+ 		]
 		let data = { 
 			price_one_eye               :		req.body.price_one_eye ,
 			view_max                    :		req.body.view_max ,
@@ -36,7 +54,8 @@ router.post('/create', function(req, res, next) {
 			price_scan_cmt              :		req.body.price_scan_cmt ,
 			quantity_scan_cmt           :		arrquantityScanCmt ,
 			time_create     			: 		new Date().getTime() ,
-			time_update     			: 		req.body.time_update ,	
+			time_update     			: 		req.body.time_update ,
+			list_combo_scan_cmt         : 	    arr
 		}
 		controllerAdmin.handleCreate(data, function (err , api) {
 			if(err)  {

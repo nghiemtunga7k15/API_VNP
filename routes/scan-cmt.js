@@ -10,13 +10,33 @@ const controllerAdmin = require('../controller/controllerAdmin.js');
 const modalScanComment = require('../schema/ScanComment.js');
 
 
+
+
 router.post('/create', function(req, res, next) {
 	let promise  =  controllerAdmin.getAdminSetup();
-	// promise.then(success=>{
+	promise.then(success=>{
+		let timeOneDay  = 60 * 60 * 24 * 1000;
+		let minutesOnDay = 60 * 24;
 		let data = { 
 			fb_id              : 		req.body.fb_id 	,
-			type_order         :		req.body.type_order,
+			minutes            :        (parseInt(req.body.time) *minutesOnDay).toString(),
 			time_create        :		new Date().getTime(),
+			time_expired       :        new Date().getTime() + parseInt(req.body.time) * timeOneDay
+		}
+
+		let list_combo = success[0].list_combo_scan_cmt;
+		// Matching Combo
+		if (list_combo.length > 0 ) {
+			combo_matching = list_combo.filter(function (combo) {
+				return combo.name == req.body.type_order.toString() ;
+			});
+				
+			data.type_order =  {
+				name          : combo_matching[0].name,
+				limit_post    : combo_matching[0].limit_post,
+				price_pay_buy : combo_matching[0].price_pay_buy,
+				price_pay_cmt : combo_matching[0].price_pay_cmt,
+			}	
 		}
 
 		controllerScanComment.handleCreate(data, function (err , api) {
@@ -26,11 +46,10 @@ router.post('/create', function(req, res, next) {
 				return res.json( {code : 200 , data : api } );
 			}
 		})
-	// })
-	// .catch(e=>{
-	// 		return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
-	// })
-	
+	})
+	.catch(e=>{
+			return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
+	})
 });
 router.get('/list', function(req, res, next) {
 		let _limit = parseInt(req.query.limit);

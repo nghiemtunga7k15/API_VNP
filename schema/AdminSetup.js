@@ -18,7 +18,7 @@ var AdminSchema =  mongoose.Schema({
     // SCAN CMT
     price_scan_cmt           :   { type: Number , required: true },
     quantity_scan_cmt        :   { type: Array , "default": [] },
-
+    list_combo_scan_cmt      :   { type: Array , "default": [] },
     time_option              :   { type: Array , "default": [] },     
     time_create              :   { type: Number },   
     time_update              :   { type: Number, default : 0 },

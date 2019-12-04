@@ -4,7 +4,7 @@ const AutoIncrement = require('mongoose-sequence')(mongoose);
 var BuffLikeSchema =  mongoose.Schema({
     video_id            :   { type: String , required: true },
     type_buff           : 	{
-        like   :  { type: Number },
+        like   : { type: Number },
         love   : { type: Number },
         haha   : { type: Number },
         wow    : { type: Number },
