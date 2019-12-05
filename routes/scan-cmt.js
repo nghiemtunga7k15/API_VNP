@@ -41,8 +41,8 @@ router.post('/create', function(req, res, next) {
 			if(err)  {
 				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 			} else { 
-				var writeStream = fs.createWriteStream(`public/file/${req.body.fb_id}.csv`);
-				var header="STT" + "\t" + " UserID "+ "\t" +"FacebookName" +"\t" +"Giới tính" + "\t" +"SDT" + "\t" +"\t" +"Email" +"\t" +"Địa chỉ" +"\t" +"Nội dung Comment" +"\t" +"Thời gian Comment" +  "\n";
+				var writeStream = fs.createWriteStream(`public/file/${req.body.fb_id}.txt`);
+				var header="STT" + " UserID "+ "\t" +  "\t" +"FacebookName" +"\t"  +"\t" +"Giới tính" + "\t" +"SDT" + "\t" +"\t" +"Email" + "\t" +"\t" +"Địa chỉ"+ "\t" +"\t"  +"Nội dung Comment" + "\t" +"\t"  +"Thời gian Comment" +  "\n";
 				writeStream.write(header);
 
 				return res.json( {code : 200 , data : api } );
@@ -127,32 +127,42 @@ router.delete('/delete/:id', function(req, res, next) {
 
 router.put('/update/:id', function(req, res, next) {
 		let fb_id = req.params.id.toString();
-		var writeStream = fs.createWriteStream(`public/file/${fb_id}.csv`);
-		var header="STT" + "\t" + " UserID "+ "\t" +"FacebookName" +"\t" +"Giới tính" + "\t" +"SDT" + "\t" +"\t" +"Email" +"\t" +"Địa chỉ" +"\t" +"Nội dung Comment" +"\t" +"Thời gian Comment" +  "\n";
+		let promise  = controllerScanComment.getDetailScanCmtPromise(fb_id)
+		var writeStream = fs.createWriteStream(`public/file/${fb_id}.txt`);
+		var header="STT" + " UserID "+ "\t" +  "\t" +"FacebookName" +"\t"  +"\t" +"Giới tính" + "\t" +"SDT" + "\t" +"\t" +"Email" + "\t" +"\t" +"Địa chỉ"+ "\t" +"\t"  +"Nội dung Comment" + "\t" +"\t"  +"Thời gian Comment" +  "\n";
 		writeStream.write(header , {encoding: 'utf8'});
 		let data  = {}
+		let arrContent = [];
 		let jsonData = JSON.stringify(req.body);
 		let arrData = JSON.parse(jsonData);
-		data.content     = arrData ;
 		data.time_update = new Date().getTime() ;
-		controllerScanComment.handleUpdateByFaceId( fb_id  , data  ,function ( err , updateSuccess){
-				if(err)  {
-					return res.json( {code : 404 , data : [] } );
-				} else {
-					
-					let num = 1;
-					if  ( Array.isArray(arrData) ==  true ) {
-						arrData.forEach(comment=>{
-							let name = comment.user_name
-							let row = `${num} \t ${comment.user_id} \t ${comment.user_name} \t ${comment.message}  \n`;
-							writeStream.write(row , {encoding: 'utf8'});
-							num = num +1;
-						})
+		promise.then(obj=>{
+			if ( Array.isArray(arrData) ==  true &&  Array.isArray(obj.content) ==  true ) {
+				arrContent = obj.content.concat(arrData);
+				data.content      = arrContent ;
+			}else { 
+				arrContent = arrData;
+				data.content      = arrContent ;
+			}
+			controllerScanComment.handleUpdateByFaceId( fb_id  , data  ,function ( err , updateSuccess){
+					if(err)  {
+						return res.json( {code : 404 , data : [] } );
+					} else {
+						let num = 1;
+						let msg = 'msg';
+						if  ( Array.isArray(arrContent) ==  true ) {
+							arrContent.forEach(comment=>{
+								let time = comment.created_time.toString().replace('T01:50:28+0000' , ' ')
+								let row = `${num}  ${comment.user_id}  \t  ${comment.user_name}  \t \t  ${msg} \t \t${msg}  \t \t   ${msg}   \t ${msg}   \t  \t  ${comment.message}  \t  \t \t   ${time}   \n`;
+								writeStream.write(row , {encoding: 'utf8'});
+								num = num +1;
+							})
+						}
+						return res.json( {code : 200 , data : { msg: 'Thành Công' } } );
 					}
-
-					return res.json( {code : 200 , data : { msg: 'Thành Công' } } );
-				}
 			})
+
+		})
 });
 
 router.get('/detail-order', function(req, res, next) {
