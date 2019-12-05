@@ -4,11 +4,11 @@ var moment = require('moment');
 var fs = require('fs');
 
 /*CONTROLLER*/
-const controllerScanComment = require('../controller/controllerScanComment.js');
-const controllerAdmin = require('../controller/controllerAdmin.js');
+const controllerScanComment = require('../../controller/ST/controllerScanComment.js');
+const controllerAdmin = require('../../controller/controllerAdmin.js');
 
 /*MODAL*/
-const modalScanComment = require('../schema/ScanComment.js');
+const modalScanComment = require('../../schema/ScanComment.js');
 
 router.post('/create', function(req, res, next) {
 	let promise  =  controllerAdmin.getAdminSetup();
@@ -26,7 +26,7 @@ router.post('/create', function(req, res, next) {
 		// Matching Combo
 		if (list_combo.length > 0 ) {
 			combo_matching = list_combo.filter(function (combo) {
-				return combo.name == req.body.type_order.toString() ;
+				return combo.name == req.body.type_order.toString().toUpperCase() ;
 			});
 				
 			data.type_order =  {

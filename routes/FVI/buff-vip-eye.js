@@ -3,11 +3,11 @@ var router = express.Router();
 var moment = require('moment');
 
 /*CONTROLLER*/
-const controllerBuffVipEye = require('../controller/controllerBuffVipEye.js');
-const controllerAdmin = require('../controller/controllerAdmin.js');
+const controllerBuffVipEye = require('../../controller/FVI/controllerBuffVipEye.js');
+const controllerAdmin = require('../../controller/controllerAdmin.js');
 
 /*MODAL*/
-const modalBuffVipEye = require('../schema/VipEye.js');
+const modalBuffVipEye = require('../../schema/VipEye.js');
 
 
 router.post('/create', function(req, res, next) {

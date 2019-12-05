@@ -1,4 +1,4 @@
-const modalBuffLike = require('../schema/BuffLike.js');
+const modalBuffLike = require('../../schema/BuffLike.js');
 let BuffLikeController = {
 	handleCreate(data , cb ) {
 		let api = new modalBuffLike(data);

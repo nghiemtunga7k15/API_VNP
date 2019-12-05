@@ -1,4 +1,4 @@
-const modalBuffEye = require('../schema/BuffEye.js');
+const modalBuffEye = require('../../schema/BuffEye.js');
 let BuffEyeController = {
 	handleCreate(data , cb ) {
 		let api = new modalBuffEye(data);

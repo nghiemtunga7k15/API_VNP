@@ -4,11 +4,11 @@ var moment = require('moment');
 var fs = require('fs');
 
 /*CONTROLLER*/
-const controllerSeedingComment = require('../controller/controllerSeedingComment.js');
-const controllerAdmin = require('../controller/controllerAdmin.js');
+const controllerSeedingComment = require('../../controller/ST/controllerSeedingComment.js');
+const controllerAdmin = require('../../controller/controllerAdmin.js');
 
 /*MODAL*/
-const modalSeedingComment = require('../schema/SeedingComment.js');
+const modalSeedingComment = require('../../schema/SeedingComment.js');
 
 router.post('/create', function(req, res, next) {
 	let promise  =  controllerAdmin.getAdminSetup();

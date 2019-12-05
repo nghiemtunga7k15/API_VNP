@@ -13,7 +13,7 @@ var AdminSchema =  mongoose.Schema({
     price_like               :   { type: Number , required: true },  
     like_max                 :   { type: Number , required: true }, 
     // VIP EYE
-    quantity_vip_eye         :   { type: Array , "default": [] },     
+    combo_vip_eye            :   { type: Array , "default": [] },     
     price_vip_eye            :   { type: Number , required: true },
     // SCAN COMMENT
     // price_scan_cmt           :   { type: Number , required: true },

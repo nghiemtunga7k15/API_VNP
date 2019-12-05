@@ -1,12 +1,12 @@
 var express = require('express');
 var router = express.Router();
 /*CONTROLLER*/
-const controllerBuffLike = require('../controller/controllerBuffLike.js');
-const controllerAdmin = require('../controller/controllerAdmin.js');
+const controllerBuffLike = require('../../controller/FVI/controllerBuffLike.js');
+const controllerAdmin = require('../../controller/controllerAdmin.js');
 
 /*MODAL*/
-const modalBuffLike = require('../schema/BuffLike.js');
-const modalFbUser = require('../schema/FaceBookUser.js');
+const modalBuffLike = require('../../schema/BuffLike.js');
+const modalFbUser = require('../../schema/FaceBookUser.js');
 
 router.post('/create', function(req, res, next) {
 	let promise  =  controllerAdmin.getAdminSetup();

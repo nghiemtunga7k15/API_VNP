@@ -1,12 +1,12 @@
 var express = require('express');
 var router = express.Router();
 /*CONTROLLER*/
-const controllerBuffComment = require('../controller/controllerBuffComment.js');
-const controllerAdmin = require('../controller/controllerAdmin.js');
+const controllerBuffComment = require('../../controller/FVI/controllerBuffComment.js');
+const controllerAdmin = require('../../controller/controllerAdmin.js');
 
 /*MODAL*/
-const modalBuffComment = require('../schema/BuffComment.js');
-const modalFbUser = require('../schema/FaceBookUser.js');
+const modalBuffComment = require('../../schema/BuffComment.js');
+const modalFbUser = require('../../schema/FaceBookUser.js');
 
 router.post('/create', function(req, res, next) {
 	let promise  =  controllerAdmin.getAdminSetup();
@@ -25,7 +25,7 @@ router.post('/create', function(req, res, next) {
 		let data = { 
 			video_id             :		req.body.video_id ,
 			type_buff            :		req.body.type_buff ,   // 1 Chọn ngẫu nhiên   0 Chọn từ User
-			price                :		price ,                // 1 Chọn ngẫu nhiên  price = 1   0 Chọn từ User price =2
+			price                :		price ,                //  Chọn ngẫu nhiên  price = 10   0 Chọn từ User price = 15
 			comments             : 		arrComment ,	
 			comments_count       : 		req.body.comments_count ,	
 			total_price_pay      : 		parseInt(req.body.comments_count) * parseInt(price),

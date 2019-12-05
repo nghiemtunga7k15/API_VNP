@@ -1,4 +1,4 @@
-const modalSeedingComment = require('../schema/SeedingComment.js');
+const modalSeedingComment = require('../../schema/SeedingComment.js');
 let SeedingCommentController = {
 	handleCreate(data , cb ) {
 		let api = new modalSeedingComment(data);

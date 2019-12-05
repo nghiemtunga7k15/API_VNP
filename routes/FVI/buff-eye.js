@@ -1,13 +1,13 @@
 var express = require('express');
 var router = express.Router();
 /*CONTROLLER*/
-const controllerBuffEye = require('../controller/controllerBuffEye.js');
-const controllerAdmin = require('../controller/controllerAdmin.js');
+const controllerBuffEye = require('../../controller/FVI/controllerBuffEye.js');
+const controllerAdmin = require('../../controller/controllerAdmin.js');
 
 /*MODAL*/
-const modalBuffEye = require('../schema/BuffEye.js');
-const modalFbLive = require('../schema/FaceBookLive.js');
-const modalFbUser = require('../schema/FaceBookUser.js');
+const modalBuffEye = require('../../schema/BuffEye.js');
+const modalFbLive = require('../../schema/FaceBookLive.js');
+const modalFbUser = require('../../schema/FaceBookUser.js');
 /* GET LIVE */
 router.get('/fb-live', function(req, res, next) {
 		modalBuffEye.find({status : 0}).sort({time_create: -1}).limit(1).exec(function(err, data){
@@ -102,7 +102,7 @@ router.get('/list', function(req, res, next) {
    					if ( err ) {
    						return res.json( {code : 404 , data : [] } );
    					} else {
-						return res.json( {code : 200 , data : listBuffEye ,  page : page , limit : _limit , total : totalRecord  , v : 10} );
+						return res.json( {code : 200 , data : listBuffEye ,  page : page , limit : _limit , total : totalRecord  } );
    					}
 				})
 

@@ -1,4 +1,4 @@
-const modalBuffVipEye = require('../schema/VipEye.js');
+const modalBuffVipEye = require('../../schema/VipEye.js');
 let BuffVipEyeController = {
 	handleCreate(data , cb ) {
 		let api = new modalBuffVipEye(data);

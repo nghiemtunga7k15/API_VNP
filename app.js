@@ -5,12 +5,15 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var usersRouter = require('./routes/users');
 var adminRouter = require('./routes/admin');
-var buffEyeRouter = require('./routes/buff-eye');
-var buffVipEyeRouter = require('./routes/buff-vip-eye');
-var scanCommentRouter = require('./routes/scan-cmt.js');
-var seedingRouter = require('./routes/seeding-cmt.js');
-var buffCommentRouter = require('./routes/buff-cmt');
-var buffLikeRouter = require('./routes/buff-like');
+
+/*------------------------    FVI   ------------------------------*/
+var buffEyeRouter = require('./routes/FVI/buff-eye');
+var buffVipEyeRouter = require('./routes/FVI/buff-vip-eye');
+var buffCommentRouter = require('./routes/FVI/buff-cmt');
+var buffLikeRouter = require('./routes/FVI/buff-like');
+/*------------------------     ST    ------------------------------*/
+var scanCommentRouter = require('./routes/ST/scan-cmt.js');
+var seedingRouter = require('./routes/ST/seeding-cmt.js');
 var app = express();
 require('dotenv').config()
 
