@@ -133,7 +133,7 @@ router.put('/update/:id', function(req, res, next) {
 			}
 
 			data.time_update = new Date().getTime();			
-			controllerBuffLike.handleUpdate( idLike , data ,function ( err , updateSuccess){
+			controllerBuffLike.handleUpdate( idLike , data ,  true ,function ( err , updateSuccess){
 				if(err)  {
 					return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 				} else {
@@ -157,5 +157,16 @@ router.delete('/delete/:id', function(req, res, next) {
 		})
 });
 
+router.put('/update-result/:id', function(req, res, next) {
+	let video_id = req.params.id.toString();
+	let data     = req.body;
+	controllerBuffLike.handleUpdate( video_id , data , false ,function ( err , updateSuccess){
+				if(err)  {
+					return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
+				} else {
+					return res.json( {code : 404 , data : { msg : 'Thành Công'} } );
+				}
+	})
+});
 
 module.exports = router;

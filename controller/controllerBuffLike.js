@@ -35,8 +35,14 @@ let BuffLikeController = {
         	return cb(null , detailCmts )
 		});
 	},
-	handleUpdate( idLike  , data ,cb ) {
-		const conditions = {idLike : idLike};
+	handleUpdate( id  , data , status = true ,cb ) {
+		let conditions;
+		if ( status == false ) {
+			conditions = { video_id : id };
+		} else {
+			conditions = { idLike : id };
+		}
+		
 		const update     = data;
 		modalBuffLike.findOneAndUpdate( conditions, { $set: update  } ,  { upsert: false }  , function(err , updateSuccess) { 
 			if ( updateSuccess == null ) {
