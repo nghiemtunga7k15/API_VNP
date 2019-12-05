@@ -20,4 +20,4 @@ var BuffCommentSchema =  mongoose.Schema({
 
 BuffCommentSchema.plugin(AutoIncrement, {inc_field: 'idVideo'});
 
-module.exports = mongoose.model('buff-comment', BuffCommentSchema);
+module.exports = mongoose.model('buff_comment', BuffCommentSchema);

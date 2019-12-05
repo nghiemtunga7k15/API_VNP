@@ -19,4 +19,4 @@ var BuffEyeSchema =  mongoose.Schema({
 
 BuffEyeSchema.plugin(AutoIncrement, {inc_field: 'id'});
 
-module.exports = mongoose.model('buff-eye', BuffEyeSchema);
+module.exports = mongoose.model('buff_eye', BuffEyeSchema);

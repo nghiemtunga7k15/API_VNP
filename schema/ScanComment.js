@@ -21,4 +21,4 @@ var ScanCommentSchema =  mongoose.Schema({
 
 ScanCommentSchema.plugin(AutoIncrement, {inc_field: 'idScanCmt'});
 
-module.exports = mongoose.model('scan-comment', ScanCommentSchema);
+module.exports = mongoose.model('scan_comment', ScanCommentSchema);

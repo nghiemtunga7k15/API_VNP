@@ -17,4 +17,4 @@ var VipEyeSchema =  mongoose.Schema({
 
 VipEyeSchema.plugin(AutoIncrement, {inc_field: 'idVipEye'});
 
-module.exports = mongoose.model('buff-vip_eye', VipEyeSchema);
+module.exports = mongoose.model('buff_vip_eye', VipEyeSchema);

@@ -16,4 +16,4 @@ var SeedingCommentSchema =  mongoose.Schema({
 
 SeedingCommentSchema.plugin(AutoIncrement, {inc_field: 'idSeedingCmt'});
 
-module.exports = mongoose.model('seeding-comment', SeedingCommentSchema);
+module.exports = mongoose.model('seeding_comment', SeedingCommentSchema);

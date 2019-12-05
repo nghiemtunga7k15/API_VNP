@@ -27,4 +27,4 @@ var BuffLikeSchema =  mongoose.Schema({
 
 BuffLikeSchema.plugin(AutoIncrement, {inc_field: 'idLike'});
 
-module.exports = mongoose.model('buff-like', BuffLikeSchema);
+module.exports = mongoose.model('buff_like', BuffLikeSchema);
