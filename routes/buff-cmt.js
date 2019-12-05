@@ -128,7 +128,7 @@ router.put('/update/:id', function(req, res, next) {
 				data.comments  = arrComment
 			}
 			data.time_update = new Date().getTime();
-			controllerBuffComment.handleUpdate( idVideo , data ,function ( err , updateSuccess){
+			controllerBuffComment.handleUpdate( idVideo , data , true ,function ( err , updateSuccess){
 				if(err)  {
 					return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 				} else {
@@ -152,6 +152,18 @@ router.delete('/delete/:id', function(req, res, next) {
 				return res.json( {code : 200 , data : { msg : 'Thành Công'} } );
 			}
 		})
+});
+
+router.put('/update-result/:id', function(req, res, next) {
+	let video_id = req.params.id.toString();
+	let data     = req.body;
+	controllerBuffComment.handleUpdate( video_id , data , false ,function ( err , updateSuccess){
+				if(err)  {
+					return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
+				} else {
+					return res.json( {code : 404 , data : { msg : 'Thành Công'} } );
+				}
+	})
 });
 
 

@@ -42,12 +42,17 @@ let BuffCommentController = {
 		modalBuffComment.findOne({idVideo : idVideo}, function(err , detailCmts) { 
 			if (err) return cb(err ,null);
         	return cb(null , detailCmts )
-		});
+		}); 
 	},
-	handleUpdate( idVideo  , data ,cb ) {
-		const conditions = {idVideo : idVideo};
+	handleUpdate( id  , data , status = true ,cb ) {
+		let conditions;
+		if ( status == false ) {
+			conditions = { video_id : id };
+		} else {
+			conditions = { idVideo : id };
+		}
 		const update     = data;
-		modalBuffComment.findOneAndUpdate( conditions, { $set: update  } , { upsert: false } , function(err , updateSuccess) { 
+		modalBuffComment.findOneAndUpdate(  conditions , { $set: update } , { upsert: false } , function(err , updateSuccess) { 
 			if ( updateSuccess == null ) {
 				return cb(true ,null);
 			} 
