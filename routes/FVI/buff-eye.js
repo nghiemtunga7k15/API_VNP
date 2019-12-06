@@ -73,9 +73,6 @@ router.post('/create', function(req, res, next) {
 			time_update        :		req.body.time_update,
 			last_time_check    :		req.body.last_time_check,
 		}
-		console.log(data);
-		console.log(id_post);
-				return res.json( {code : 404 , data : id_post } );
 		controllerBuffEye.handleCreate(data, function (err , api) {
 			if(err)  {
 				return res.json( {code : 404 , data : [] } );

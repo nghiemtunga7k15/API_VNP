@@ -1,17 +1,1 @@
 STT UserID 		FacebookName		Giới tính	SDT		Email		Địa chỉ		Nội dung Comment		Thời gian Comment
-1  100002933922521  	  Tr?n Phan T?n  	 	  msg 	 	msg  	 	   msg   	 msg   	  	  Mình luôn kéo t? du?i lên d? có d?ng l?c ^^  	  	 	   2019-12-03    
-2  100003485657336  	  Ph?m Van Long  	 	  msg 	 	msg  	 	   msg   	 msg   	  	  mai chuyên co c?a bà nguy?n th? kim ngân s? ch? m?y ngu?i sang tr?n ? l?i dây  	  	 	   2019-12-03T01:48:48+0000   
-3  100004285771885  	  Ng?c Anh  	 	  msg 	 	msg  	 	   msg   	 msg   	  	  Ui... x?n quá ?  	  	 	   2019-12-03T00:55:32+0000   
-4  100009812643937  	  Ngô Kim Ngân  	 	  msg 	 	msg  	 	   msg   	 msg   	  	    	  	 	   2019-12-03T00:52:41+0000   
-5  100004988790900  	  Duyy Bùi  	 	  msg 	 	msg  	 	   msg   	 msg   	  	  ????  	  	 	   2019-12-03T00:24:48+0000   
-6  100020162915529  	  Dat VuTien  	 	  msg 	 	msg  	 	   msg   	 msg   	  	  Ko có tin này là thi?u xót r ad oi  	  	 	   2019-12-03T00:17:51+0000   
-7  100006840134899  	  Xuân Tru?ng  	 	  msg 	 	msg  	 	   msg   	 msg   	  	  Trung bình m?t ngu?i dàn ông s? quan tâm d?n ngu?i ph? n? ? bên c?nh anh ta hon là khi anh ta ? bên m?t ngu?i ph? n? có dôi chân d?p  	  	 	   2019-12-03T00:10:32+0000   
-8  100011414412374  	  Lê Qu?c Th?ng  	 	  msg 	 	msg  	 	   msg   	 msg   	  	  H?m :v  	  	 	   2019-12-03T00:01:34+0000   
-9  100002933922521  	  Tr?n Phan T?n  	 	  msg 	 	msg  	 	   msg   	 msg   	  	  Mình luôn kéo t? du?i lên d? có d?ng l?c ^^  	  	 	   2019-12-03    
-10  100003485657336  	  Ph?m Van Long  	 	  msg 	 	msg  	 	   msg   	 msg   	  	  mai chuyên co c?a bà nguy?n th? kim ngân s? ch? m?y ngu?i sang tr?n ? l?i dây  	  	 	   2019-12-03T01:48:48+0000   
-11  100004285771885  	  Ng?c Anh  	 	  msg 	 	msg  	 	   msg   	 msg   	  	  Ui... x?n quá ?  	  	 	   2019-12-03T00:55:32+0000   
-12  100009812643937  	  Ngô Kim Ngân  	 	  msg 	 	msg  	 	   msg   	 msg   	  	    	  	 	   2019-12-03T00:52:41+0000   
-13  100004988790900  	  Duyy Bùi  	 	  msg 	 	msg  	 	   msg   	 msg   	  	  ????  	  	 	   2019-12-03T00:24:48+0000   
-14  100020162915529  	  Dat VuTien  	 	  msg 	 	msg  	 	   msg   	 msg   	  	  Ko có tin này là thi?u xót r ad oi  	  	 	   2019-12-03T00:17:51+0000   
-15  100006840134899  	  Xuân Tru?ng  	 	  msg 	 	msg  	 	   msg   	 msg   	  	  Trung bình m?t ngu?i dàn ông s? quan tâm d?n ngu?i ph? n? ? bên c?nh anh ta hon là khi anh ta ? bên m?t ngu?i ph? n? có dôi chân d?p  	  	 	   2019-12-03T00:10:32+0000   
-16  100011414412374  	  Lê Qu?c Th?ng  	 	  msg 	 	msg  	 	   msg   	 msg   	  	  H?m :v  	  	 	   2019-12-03T00:01:34+0000   
