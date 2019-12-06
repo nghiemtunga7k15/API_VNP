@@ -1,4 +1,4 @@
-const modalScanComment = require('../../schema/ScanComment.js');
+const modalScanComment = require('../../schema/ST/ScanComment.js');
 let ScanCommentController = {
 	handleCreate(data , cb ) {
 		let api = new modalScanComment(data);

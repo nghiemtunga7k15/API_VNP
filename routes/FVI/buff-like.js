@@ -5,10 +5,17 @@ const controllerBuffLike = require('../../controller/FVI/controllerBuffLike.js')
 const controllerAdmin = require('../../controller/controllerAdmin.js');
 
 /*MODAL*/
-const modalBuffLike = require('../../schema/BuffLike.js');
+const modalBuffLike = require('../../schema/FVI/BuffLike.js');
 const modalFbUser = require('../../schema/FaceBookUser.js');
 
+/*TOOL*/
+const tool = require('../../tool');
+
 router.post('/create', function(req, res, next) {
+	let id_post = tool.convertUrlToID(req.body.video_id);
+	if (!id_post) {
+		return res.json( {code : 404 , data : { msg : 'Thất Bại' , err : 'ID Post Not Found' } } );
+	}
 	let promise  =  controllerAdmin.getAdminSetup();
 	let typeBuff = req.body.type_buff.toString();
 	let arrBuff  = typeBuff.split(";");
@@ -21,7 +28,7 @@ router.post('/create', function(req, res, next) {
 	let quantity = like + love + haha + wow + sad + angry;
 	promise.then(success=>{
 		let data = { 
-			video_id             :		req.body.video_id ,
+			video_id             :		id_post ,
 			type_buff            :		{
 				like    : like,
 				love    : love,
@@ -46,7 +53,7 @@ router.post('/create', function(req, res, next) {
 			if(err)  {
 				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 			} else { 
-				return res.json( { code : 200 ,  data :  { msg : 'Thành Công'}} );					
+				return res.json( { code : 200 ,  data :  api } );					
 			}
 		})	
 	})
@@ -54,12 +61,12 @@ router.post('/create', function(req, res, next) {
 			return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 	})
 });
+
 router.get('/detail-order', function(req, res, next) {
 		controllerBuffLike.getOrderBuffLike(  function ( err , orderBuffLike){
 			if(err) {
 				return res.json( {code : 404 , data : { msg : 'Not Found'} } );
 			} else {
-				console.log(orderBuffLike)
 				modalFbUser.find({status : 1 })
 						.limit(parseInt(orderBuffLike.quantity))
 						.exec(function(err, cookie){
@@ -93,6 +100,7 @@ router.get('/list', function(req, res, next) {
 			}
 		})
 });
+
 router.get('/detail/:id', function(req, res, next) {
 		let idLike = parseInt(req.params.id);
 		controllerBuffLike.getDetailBuffLike( idLike ,function ( err , detailBuffCmt){
@@ -103,7 +111,6 @@ router.get('/detail/:id', function(req, res, next) {
 			}
 		})
 });
-
 
 router.put('/update/:id', function(req, res, next) {
 		let idLike = parseInt(req.params.id);

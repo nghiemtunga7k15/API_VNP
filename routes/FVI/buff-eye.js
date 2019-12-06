@@ -5,9 +5,13 @@ const controllerBuffEye = require('../../controller/FVI/controllerBuffEye.js');
 const controllerAdmin = require('../../controller/controllerAdmin.js');
 
 /*MODAL*/
-const modalBuffEye = require('../../schema/BuffEye.js');
+const modalBuffEye = require('../../schema/FVI/BuffEye.js');
 const modalFbLive = require('../../schema/FaceBookLive.js');
 const modalFbUser = require('../../schema/FaceBookUser.js');
+
+/*TOOL*/
+const tool = require('../../tool');
+
 /* GET LIVE */
 router.get('/fb-live', function(req, res, next) {
 		modalBuffEye.find({status : 0}).sort({time_create: -1}).limit(1).exec(function(err, data){
@@ -48,13 +52,14 @@ router.get('/fb-user', function(req, res, next) {
 });
 
 router.post('/create', function(req, res, next) {
-
+	let id_post = tool.convertUrlToID(req.body.video_id);
+	if (!id_post) {
+		return res.json( {code : 404 , data : { msg : 'Thất Bại' , err : 'ID Post Not Found' } } );
+	}
 	let promise  =  	controllerAdmin.getAdminSetup();
-
 	promise.then(success=>{
-
 		let data = { 
-			video_id           : 		req.body.video_id 	,
+			video_id           : 		id_post	,
 			view               :		req.body.view,
 			price_one_eye      :		success[0].price_one_eye,
 			total_price_pay    :		parseInt(success[0].price_one_eye) * parseInt(req.body.view),
@@ -68,7 +73,6 @@ router.post('/create', function(req, res, next) {
 			time_update        :		req.body.time_update,
 			last_time_check    :		req.body.last_time_check,
 		}
-
 		controllerBuffEye.handleCreate(data, function (err , api) {
 			if(err)  {
 				return res.json( {code : 404 , data : [] } );
@@ -80,8 +84,8 @@ router.post('/create', function(req, res, next) {
 	.catch(e=>{
 			return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 	})
-	
 });
+
 router.get('/list', function(req, res, next) {
 		let _limit = parseInt(req.query.limit);
 		let page = parseInt(req.query.page);
@@ -105,7 +109,6 @@ router.get('/list', function(req, res, next) {
 						return res.json( {code : 200 , data : listBuffEye ,  page : page , limit : _limit , total : totalRecord  } );
    					}
 				})
-
 			}
 		})
 });
@@ -115,7 +118,6 @@ router.get('/detail-order', function(req, res, next) {
 			if(err) {
 				return res.json( {code : 404 , data : [] } );
 			} else {
-				console.log(orderBuffEye)
 				modalFbUser.find({status : 1 })
 						.limit(parseInt(orderBuffEye.view))
 						.exec(function(err, cookie){
@@ -163,7 +165,6 @@ router.put('/update/:id', function(req, res, next) {
 		})
 		.catch(e=>{
 				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
-
 		})
 });
 

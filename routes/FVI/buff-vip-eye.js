@@ -7,25 +7,31 @@ const controllerBuffVipEye = require('../../controller/FVI/controllerBuffVipEye.
 const controllerAdmin = require('../../controller/controllerAdmin.js');
 
 /*MODAL*/
-const modalBuffVipEye = require('../../schema/VipEye.js');
+const modalBuffVipEye = require('../../schema/FVI/VipEye.js');
+
+/*TOOL*/
+const tool = require('../../tool');
 
 
 router.post('/create', function(req, res, next) {
+	let id_post = tool.convertUrlToID(req.body.fb_id);
+	if (!id_post) {
+		return res.json( {code : 404 , data : { msg : 'Thất Bại' , err : 'ID Post Not Found' } } );
+	}
 	let promise  =  controllerAdmin.getAdminSetup();
 	promise.then(success=>{
 		let timeOneDay  = 60 * 60 * 24 * 1000;
-		let day  = moment(new Date().getTime()).format('DD-MM-YYYY');
-		let dayExpired  = moment(new Date().getTime() + parseInt(req.body.time_vip_eye) * timeOneDay).format('DD-MM-YYYY');
+		let dayExpired  = new Date().getTime() + parseInt(req.body.time_vip_eye) * timeOneDay;
 		let price = parseInt(success[0].price_vip_eye);
 		let data = { 
-			fb_id              : 		req.body.fb_id 	,
+			fb_id              : 		id_post 	,
 			name               :		req.body.name,
 			choose_option_eye  :		req.body.choose_option_eye,
 			time_vip_eye       :		req.body.time_vip_eye,
 			total_price_pay    :		req.body.choose_option_eye * price,
 			note               : 		req.body.note,
 			status             : 		req.body.status,
-			time_create        : 		day,
+			time_create        : 		new Date().getTime(),
 			time_expired       :		dayExpired,
 		}
 

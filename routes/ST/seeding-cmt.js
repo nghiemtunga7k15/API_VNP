@@ -8,7 +8,7 @@ const controllerSeedingComment = require('../../controller/ST/controllerSeedingC
 const controllerAdmin = require('../../controller/controllerAdmin.js');
 
 /*MODAL*/
-const modalSeedingComment = require('../../schema/SeedingComment.js');
+const modalSeedingComment = require('../../schema/ST/SeedingComment.js');
 
 router.post('/create', function(req, res, next) {
 	let promise  =  controllerAdmin.getAdminSetup();
@@ -22,9 +22,6 @@ router.post('/create', function(req, res, next) {
 			total_price_pay               : 		parseInt(req.body.quantity_seeding) * price ,
 			time_create                   :		new Date().getTime(),
 		}
-
-		
-
 		controllerSeedingComment.handleCreate(data, function (err , api) {
 			if(err)  {
 				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
@@ -58,11 +55,9 @@ router.get('/list', function(req, res, next) {
 						return res.json( {code : 200 , data : listOrderSeedingCmt ,  page : page , limit : _limit , total : totalRecord } );
    					}
 				})
-
 			}
 		})
 });
-
 
 router.get('/detail/:id', function(req, res, next) {
 		let idSeedingCmt = parseInt(req.params.id);
@@ -100,7 +95,6 @@ router.put('/update/:id', function(req, res, next) {
 		})
 });
 
-
 router.delete('/delete/:id', function(req, res, next) {
 		let idSeedingCmt = parseInt(req.params.id);
 		controllerSeedingComment.handleDelete( idSeedingCmt ,function ( err , updateSuccess){
@@ -111,7 +105,6 @@ router.delete('/delete/:id', function(req, res, next) {
 			}
 		})
 });
-
 
 
 module.exports = router;

@@ -5,10 +5,17 @@ const controllerBuffComment = require('../../controller/FVI/controllerBuffCommen
 const controllerAdmin = require('../../controller/controllerAdmin.js');
 
 /*MODAL*/
-const modalBuffComment = require('../../schema/BuffComment.js');
+const modalBuffComment = require('../../schema/FVI/BuffComment.js');
 const modalFbUser = require('../../schema/FaceBookUser.js');
 
+/*TOOL*/
+const tool = require('../../tool');
+
 router.post('/create', function(req, res, next) {
+	let id_post = tool.convertUrlToID(req.body.video_id);
+	if (!id_post) {
+		return res.json( {code : 404 , data : { msg : 'Thất Bại' , err : 'ID Post Not Found' } } );
+	}
 	let promise  =  controllerAdmin.getAdminSetup();
 	promise.then(success=>{
 		let price;
@@ -23,12 +30,12 @@ router.post('/create', function(req, res, next) {
 		let arrComment  = comments.split(";");
 
 		let data = { 
-			video_id             :		req.body.video_id ,
+			video_id             :		id_post ,
 			type_buff            :		req.body.type_buff ,   // 1 Chọn ngẫu nhiên   0 Chọn từ User
 			price                :		price ,                //  Chọn ngẫu nhiên  price = 10   0 Chọn từ User price = 15
 			comments             : 		arrComment ,	
-			comments_count       : 		req.body.comments_count ,	
-			total_price_pay      : 		parseInt(req.body.comments_count) * parseInt(price),
+			comments_count       : 		arrComment.length ,	
+			total_price_pay      : 		parseInt(arrComment.length) * parseInt(price),
 			time_type            : 		req.body.time_type ,	
 			time_value           : 		req.body.time_value ,	
 			note                 : 		req.body.note ,	
@@ -45,7 +52,7 @@ router.post('/create', function(req, res, next) {
 			if(err)  {
 				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 			} else { 
-				return res.json( {code : 200 , data : { msg : 'Thành Công'} } );
+				return res.json( {code : 200 , data : api } );
 			}
 		})	
 	})

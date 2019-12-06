@@ -8,15 +8,22 @@ const controllerScanComment = require('../../controller/ST/controllerScanComment
 const controllerAdmin = require('../../controller/controllerAdmin.js');
 
 /*MODAL*/
-const modalScanComment = require('../../schema/ScanComment.js');
+const modalScanComment = require('../../schema/ST/ScanComment.js');
+
+/*TOOL*/
+const tool = require('../../tool');
 
 router.post('/create', function(req, res, next) {
+	let id_post = tool.convertUrlToID(req.body.fb_id);
+	if (!id_post) {
+		return res.json( {code : 404 , data : { msg : 'Thất Bại' , err : 'ID Post Not Found' } } );
+	}
 	let promise  =  controllerAdmin.getAdminSetup();
 	promise.then(success=>{
 		let timeOneDay  = 60 * 60 * 24 * 1000;
 		let minutesOnDay = 60 * 24;
 		let data = { 
-			fb_id              : 		req.body.fb_id 	,
+			fb_id              : 		id_post	,
 			minutes            :        (parseInt(req.body.time) *minutesOnDay).toString(),
 			time_create        :		new Date().getTime(),
 			time_expired       :        new Date().getTime() + parseInt(req.body.time) * timeOneDay
@@ -41,7 +48,7 @@ router.post('/create', function(req, res, next) {
 			if(err)  {
 				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 			} else { 
-				var writeStream = fs.createWriteStream(`public/file/${req.body.fb_id}.txt`);
+				var writeStream = fs.createWriteStream(`public/file/${id_post}.txt`);
 				var header="STT" + " UserID "+ "\t" +  "\t" +"FacebookName" +"\t"  +"\t" +"Giới tính" + "\t" +"SDT" + "\t" +"\t" +"Email" + "\t" +"\t" +"Địa chỉ"+ "\t" +"\t"  +"Nội dung Comment" + "\t" +"\t"  +"Thời gian Comment" +  "\n";
 				writeStream.write(header);
 
@@ -53,6 +60,7 @@ router.post('/create', function(req, res, next) {
 			return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 	})
 });
+
 router.get('/list', function(req, res, next) {
 		let _limit = parseInt(req.query.limit);
 		let page = parseInt(req.query.page);
@@ -73,11 +81,9 @@ router.get('/list', function(req, res, next) {
 						return res.json( {code : 200 , data : listBuffEye ,  page : page , limit : _limit , total : totalRecord } );
    					}
 				})
-
 			}
 		})
 });
-
 
 router.get('/detail/:id', function(req, res, next) {
 		let idScanCmt = parseInt(req.params.id);

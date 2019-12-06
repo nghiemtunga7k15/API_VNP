@@ -1,4 +1,4 @@
-const modalBuffComment = require('../../schema/BuffComment.js');
+const modalBuffComment = require('../../schema/FVI/BuffComment.js');
 let BuffCommentController = {
 	handleCreate(data , cb ) {
 		let api = new modalBuffComment(data);

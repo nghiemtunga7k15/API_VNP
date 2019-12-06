@@ -1,4 +1,4 @@
-const modalSeedingComment = require('../../schema/SeedingComment.js');
+const modalSeedingComment = require('../../schema/ST//SeedingComment.js');
 let SeedingCommentController = {
 	handleCreate(data , cb ) {
 		let api = new modalSeedingComment(data);
@@ -12,6 +12,7 @@ let SeedingCommentController = {
 			query
 			.limit(_limit)
     		.skip((_limit * page ) - _limit)
+    		.sort({time_create : - 1 })
 			.exec(function(err, data){
 				if (err) return cb(err ,null);
         	return cb(null , data )
