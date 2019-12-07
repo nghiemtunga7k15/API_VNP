@@ -51,6 +51,9 @@ router.post('/create', function(req, res, next) {
 			if(err)  {
 				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 			} else { 
+				fs.writeFile(`public/file/${id_post}.html`, '', function(err){
+						            if (err) return console.log(err);
+				}); 
 				return res.json( {code : 200 , data : api } );
 			}
 		})

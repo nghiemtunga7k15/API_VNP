@@ -21,7 +21,7 @@ router.post('/create', function(req, res, next) {
 	let promise  =  controllerAdmin.getAdminSetup();
 	promise.then(success=>{
 		let timeOneDay  = 60 * 60 * 24 * 1000;
-		let dayExpired  = new Date().getTime() + parseInt(req.body.time_vip_eye) * timeOneDay;
+		let dayExpired  = new Date().getTime() + (timeOneDay * parseInt(req.body.time_vip_eye));
 		let price = parseInt(success[0].price_vip_eye);
 		let data = { 
 			fb_id              : 		id_post 	,
@@ -34,10 +34,6 @@ router.post('/create', function(req, res, next) {
 			time_create        : 		new Date().getTime(),
 			time_expired       :		dayExpired,
 		}
-
-	
-
-
 		controllerBuffVipEye.handleCreate(data, function (err , api) {
 			if(err)  {
 				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
@@ -108,7 +104,7 @@ router.put('/update/:id', function(req, res, next) {
 			}
 			data.time_update = new Date().getTime();
 
-			controllerBuffVipEye.handleUpdateBuffVipEye( idVipEye , req.body ,function ( err , updateSuccess){
+			controllerBuffVipEye.handleUpdateBuffVipEye( idVipEye , true , req.body ,function ( err , updateSuccess){
 				if(err)  {
 					return res.json( {code : 404 , data : [] } );
 				} else {
@@ -131,6 +127,28 @@ router.delete('/delete/:id', function(req, res, next) {
 				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 			} else {
 				return res.json( {code : 200 , data : { msg : 'Thành Công'} } );
+			}
+		})
+});
+
+router.get('/detail-order', function(req, res, next) {
+		controllerBuffVipEye.getDetailOrder(function(err , detailOrder){
+			if(err)  {
+				return res.json( {code : 404 , data : { msg : 'Order Not Found'} } );
+			} else {
+				let data = {};
+				data.last_time_use = new Date().getTime();
+				if ( detailOrder != null) {
+					controllerBuffVipEye.handleUpdateBuffVipEye(detailOrder.idVipEye , false , data , function(err , success) {
+						if(err)  {
+							return res.json( {code : 404 , data : { msg : 'Order Not Found'} } );
+						} else {
+							return res.json( {code : 200 , data : detailOrder } );
+						}
+					})	
+				} else { 
+					return res.json( {code : 200 , data : { msg : 'Order Not Found'} } );
+				}
 			}
 		})
 });

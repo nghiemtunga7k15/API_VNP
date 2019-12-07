@@ -7,11 +7,13 @@ var VipEyeSchema =  mongoose.Schema({
     choose_option_eye   :   { type: Number, required: true },
     time_vip_eye        :   { type: Number, required: true }, // Tính bằng ngày 
     total_price_pay     :   { type: Number }, 
+    id_vip              :   { type: Number  , default : 0 }, 
     note         		:   { type: String, default : 'Description'},
     status              :   { type: Number, default : 0 },
-    time_expired        :   { type: String},
+    time_expired        :   { type: Number},
     time_done           :   { type: Number , default : 0},
-    time_create         :   { type: String},
+    last_time_use       :   { type: Number , default : 0},
+    time_create         :   { type: Number},
     time_update         :   { type: Number, default : 0 },
 });
 

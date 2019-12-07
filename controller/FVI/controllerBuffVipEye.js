@@ -1,4 +1,5 @@
 const modalBuffVipEye = require('../../schema/FVI/VipEye.js');
+
 let BuffVipEyeController = {
 	handleCreate(data , cb ) {
 		let api = new modalBuffVipEye(data);
@@ -28,9 +29,12 @@ let BuffVipEyeController = {
         	return cb(null , detailBuffEye )
 		});
 	},
-	handleUpdateBuffVipEye( _idVipEye  , data ,cb ) {
+	handleUpdateBuffVipEye( _idVipEye ,  status = true , data ,cb ) {
 		const conditions = { idVipEye : _idVipEye };
 		const update     = data;
+		if ( status == false ) {
+			update.last_time_use =  new Date().getTime();
+		}
 		modalBuffVipEye.findOneAndUpdate( conditions, { $set: update  } ,  { upsert: false }  ,  function(err , detailBuffEye) { 
 			if ( detailBuffEye == null ) {
 				return cb(true ,null);
@@ -47,6 +51,19 @@ let BuffVipEyeController = {
 			if (err) return cb(err ,null);
         	return cb(null , deleteSuccess )
 		});
+	},
+	getDetailOrder( cb ) {
+		let data_now = Date.now();
+		let conditions = { $or : [ { 'last_time_use' :0}  , {'last_time_use': {$gt : 1}  }] , "time_expired": { $gt : parseInt(data_now) }};
+		let query  = modalBuffVipEye.findOne(conditions);
+			query
+			.limit(1)
+			.sort({ last_time_use :  1 })
+			.exec(function(err, detailOrder){
+				if (err) return cb(err ,null);
+        		return cb(null , detailOrder );
+		});
 	}
+
 }
 module.exports = BuffVipEyeController ;

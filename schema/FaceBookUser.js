@@ -7,6 +7,7 @@ var FaceBookUserSchema =  mongoose.Schema({
     fb_dtsg             :   { type: String, default : '' },     
     status              :   { type: Number, default : 0 },
     note         		:   { type: String, default : 'Description'},
+    type                :   { type: Number},
     last_time_use       :   { type: Number},
     last_time_check     :   { type: Number},
     time_create         :   { type: Number},
