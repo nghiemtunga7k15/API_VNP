@@ -13,6 +13,9 @@ const modalScanComment = require('../../schema/ST/ScanComment.js');
 /*TOOL*/
 const tool = require('../../tool');
 
+/*Axios*/
+const axios = require('../../axios')
+
 router.post('/create', function(req, res, next) {
 	let id_post = tool.convertUrlToID(req.body.fb_id);
 	if (!id_post) {
@@ -48,10 +51,6 @@ router.post('/create', function(req, res, next) {
 			if(err)  {
 				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 			} else { 
-				var writeStream = fs.createWriteStream(`public/file/${id_post}.txt`);
-				var header="STT" + " UserID "+ "\t" +  "\t" +"FacebookName" +"\t"  +"\t" +"Giới tính" + "\t" +"SDT" + "\t" +"\t" +"Email" + "\t" +"\t" +"Địa chỉ"+ "\t" +"\t"  +"Nội dung Comment" + "\t" +"\t"  +"Thời gian Comment" +  "\n";
-				writeStream.write(header);
-
 				return res.json( {code : 200 , data : api } );
 			}
 		})
@@ -134,15 +133,15 @@ router.delete('/delete/:id', function(req, res, next) {
 router.put('/update/:id', function(req, res, next) {
 		let fb_id = req.params.id.toString();
 		let promise  = controllerScanComment.getDetailScanCmtPromise(fb_id)
-		var writeStream = fs.createWriteStream(`public/file/${fb_id}.txt`);
-		var header="STT" + " UserID "+ "\t" +  "\t" +"FacebookName" +"\t"  +"\t" +"Giới tính" + "\t" +"SDT" + "\t" +"\t" +"Email" + "\t" +"\t" +"Địa chỉ"+ "\t" +"\t"  +"Nội dung Comment" + "\t" +"\t"  +"Thời gian Comment" +  "\n";
-		writeStream.write(header , {encoding: 'utf8'});
 		let data  = {}
 		let arrContent = [];
 		let jsonData = JSON.stringify(req.body);
 		let arrData = JSON.parse(jsonData);
 		data.time_update = new Date().getTime() ;
 		promise.then(obj=>{
+			if ( !obj || obj == null ) {
+				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
+			}
 			if ( Array.isArray(arrData) ==  true &&  Array.isArray(obj.content) ==  true ) {
 				arrContent = obj.content.concat(arrData);
 				data.content      = arrContent ;
@@ -154,21 +153,66 @@ router.put('/update/:id', function(req, res, next) {
 					if(err)  {
 						return res.json( {code : 404 , data : [] } );
 					} else {
-						let num = 1;
-						let msg = 'msg';
-						if  ( Array.isArray(arrContent) ==  true ) {
-							arrContent.forEach(comment=>{
-								let time = comment.created_time.toString().replace('T01:50:28+0000' , ' ')
-								let row = `${num}  ${comment.user_id}  \t  ${comment.user_name}  \t \t  ${msg} \t \t${msg}  \t \t   ${msg}   \t ${msg}   \t  \t  ${comment.message}  \t  \t \t   ${time}   \n`;
-								writeStream.write(row , {encoding: 'utf8'});
-								num = num +1;
-							})
-						}
-						return res.json( {code : 200 , data : { msg: 'Thành Công' } } );
+							/*--------OPEN TABLE HTML------------*/
+							let header =  `<table style="width:100%" cellpadding="10"  rules="all">
+							  <thead>
+							    <tr>
+							      <th>STT</th>
+							      <th>UserID</th>
+							      <th>FacebookName</th>
+							      <th>Giới tính</th>
+							      <th>Email</th>
+							      <th>SDT</th>
+							      <th>Dia chi</th>
+							      <th>Thời gian Comment</th>
+							      <th>Nội dung Comment</th>
+							    </tr>
+							  </thead>
+							  <tbody>`;
+							 /*----------MAIN TABLE-----------*/
+							let main = '';
+							/*----------FOOTER TABLE-----------*/
+							let footer =`</tbody>
+							</table>
+							`;
+							let num = 1;
+							if  ( Array.isArray(arrContent) ==  true ) {
+								arrContent.forEach(comment=>{
+									// axios.ApiGetPhone(comment.user_id , function(err , phone ){
+										if( parseInt(num) < 10 ){
+											num = `0${num}` 
+										}
+										// if ( !phone || phone == 'undefined') {
+										// 	phone = null;
+										// }
+										let time = 	comment.created_time.toString().slice(0,10)
+										let content  = `
+										 <tr>
+									      <td>${num}</td>
+									      <td>${comment.user_id}</td>
+									      <td>${comment.user_name}</td>
+									      <td>Nam</td>
+									      <td>email@gmail.com</td>
+									      <td>Phone</td>
+									      <td>Địa Chỉ</td>
+									      <td>${time}</td>
+									      <td>${comment.message}</td>
+									    </tr>`;
+									    main = `${main}${content}`;
+										num = parseInt(num) +1;
+									// });
+								});
+								let htmlTable = `${header}${main}${footer}`;
+								fs.writeFile(`public/file/${fb_id}.html`, htmlTable, function(err){
+						            if (err) return console.log(err);
+						        });  
+							}
+							return res.json( {code : 200 , data : { msg: 'Thành Công' } } );
 					}
 			})
 
 		})
+		
 });
 
 router.get('/detail-order', function(req, res, next) {
