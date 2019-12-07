@@ -1,4 +1,5 @@
 const modalBuffVipEye = require('../../schema/FVI/VipEye.js');
+const modalBuffEye = require('../../schema/FVI/BuffEye.js');
 
 let BuffVipEyeController = {
 	handleCreate(data , cb ) {
@@ -18,9 +19,9 @@ let BuffVipEyeController = {
 			.limit(_limit)
     		.skip((_limit * page ) - _limit)
     		.sort([[sort_where_name ,sort_where_value]] )
-			.exec(function(err, listBuffEye){
+			.exec(function(err, listBuffVipEye){
 				if (err) return cb(err ,null);
-        	return cb(null , listBuffEye )
+        	return cb(null , listBuffVipEye )
 		});
 	},
 	getDetailBuffVipEye( _idVipEye ,cb ) {
@@ -53,6 +54,7 @@ let BuffVipEyeController = {
 		});
 	},
 	getDetailOrder( cb ) {
+		let self = this;
 		let data_now = Date.now();
 		let conditions = { $or : [ { 'last_time_use' :0}  , {'last_time_use': {$gt : 1}  }] , "time_expired": { $gt : parseInt(data_now) }};
 		let query  = modalBuffVipEye.findOne(conditions);
@@ -60,8 +62,38 @@ let BuffVipEyeController = {
 			.limit(1)
 			.sort({ last_time_use :  1 })
 			.exec(function(err, detailOrder){
-				if (err) return cb(err ,null);
-        		return cb(null , detailOrder );
+				if ( detailOrder  ) {
+					let id = parseInt(detailOrder.idVipEye);
+					let data = {};
+					self.handleUpdateBuffVipEye(id, false , data , function(err , success) {
+							if(err)  {
+								return cb(err ,null);
+							} else {
+								modalBuffEye.find({ id_vip : { $in: detailOrder.fb_id.toString() }, status : { $nin: 1 } }, function (err, orderBuffEye) {
+							       	if ( orderBuffEye && orderBuffEye.length > 0 ) {
+							       		return cb(err ,null);
+							       	} else{
+							       		return cb(null , detailOrder );
+							       	}
+							    })
+								// return cb(null , detailOrder );
+							}
+					})
+				}else {
+					return cb(err ,null);
+				}
+				// if (err) return cb(err ,null);
+				// if (detailOrder != null) {	
+					 // modalBuffEye.find({ id_vip : { $in: detailOrder.fb_id.toString() }, status : { $nin: 1 } }, function (err, orderBuffEye) {
+				  //      	if ( orderBuffEye && orderBuffEye.length > 0 ) {
+				  //      		return cb(err ,null);
+				  //      	} else{
+				  //      		return cb(null , detailOrder );
+				  //      	}
+				  //   })	
+				// }else {
+				// 	return cb(err ,null);
+				// }
 		});
 	}
 

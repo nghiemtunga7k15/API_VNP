@@ -136,19 +136,7 @@ router.get('/detail-order', function(req, res, next) {
 			if(err)  {
 				return res.json( {code : 404 , data : { msg : 'Order Not Found'} } );
 			} else {
-				let data = {};
-				data.last_time_use = new Date().getTime();
-				if ( detailOrder != null) {
-					controllerBuffVipEye.handleUpdateBuffVipEye(detailOrder.idVipEye , false , data , function(err , success) {
-						if(err)  {
-							return res.json( {code : 404 , data : { msg : 'Order Not Found'} } );
-						} else {
 							return res.json( {code : 200 , data : detailOrder } );
-						}
-					})	
-				} else { 
-					return res.json( {code : 200 , data : { msg : 'Order Not Found'} } );
-				}
 			}
 		})
 });
