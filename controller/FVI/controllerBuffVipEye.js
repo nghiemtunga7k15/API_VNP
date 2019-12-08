@@ -69,31 +69,18 @@ let BuffVipEyeController = {
 							if(err)  {
 								return cb(err ,null);
 							} else {
-								modalBuffEye.find({ id_vip : { $in: detailOrder.fb_id.toString() }, status : { $nin: 1 } }, function (err, orderBuffEye) {
+								modalBuffEye.find({ id_vip : { $in: detailOrder.fb_id.toString() }, status : { $nin: [0,2,3] } }, function (err, orderBuffEye) {
 							       	if ( orderBuffEye && orderBuffEye.length > 0 ) {
-							       		return cb(err ,null);
+							       		return cb(true , null);
 							       	} else{
 							       		return cb(null , detailOrder );
 							       	}
 							    })
-								// return cb(null , detailOrder );
 							}
 					})
 				}else {
 					return cb(err ,null);
 				}
-				// if (err) return cb(err ,null);
-				// if (detailOrder != null) {	
-					 // modalBuffEye.find({ id_vip : { $in: detailOrder.fb_id.toString() }, status : { $nin: 1 } }, function (err, orderBuffEye) {
-				  //      	if ( orderBuffEye && orderBuffEye.length > 0 ) {
-				  //      		return cb(err ,null);
-				  //      	} else{
-				  //      		return cb(null , detailOrder );
-				  //      	}
-				  //   })	
-				// }else {
-				// 	return cb(err ,null);
-				// }
 		});
 	}
 
