@@ -176,4 +176,14 @@ router.put('/update-result/:id', function(req, res, next) {
 	})
 });
 
+router.get('/search',  function(req, res, next) {
+	let key_search = req.query.id;
+  	modalBuffLike.find({video_id:{'$regex' : `^.*${key_search}.*$`, '$options' : 'i'}} ,function(err,data) {
+   		if(err){
+   			return res.json( {code : 404 , data : [] } );
+   		}else{
+   			return res.json( {code : 200 , data : data } );
+   		}
+   	})	
+});
 module.exports = router;

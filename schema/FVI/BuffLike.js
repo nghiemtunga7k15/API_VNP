@@ -22,8 +22,10 @@ var BuffLikeSchema =  mongoose.Schema({
     time_create        	:   { type: Number },
     time_done           :   { type: Number, default : 0 },
     time_update         :   { type: Number, default : 0 },
-
 });
+
+// BuffLikeSchema.index({'$**': 'text'});
+
 
 BuffLikeSchema.plugin(AutoIncrement, {inc_field: 'idLike'});
 

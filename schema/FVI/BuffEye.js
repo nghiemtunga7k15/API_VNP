@@ -17,6 +17,7 @@ var BuffEyeSchema =  mongoose.Schema({
     time_update         :   { type: Number, default : 0 },
     last_time_check     :   { type: Number, default : 0 },
 });
+// BuffEyeSchema.index({'$**': 'text'});
 
 BuffEyeSchema.plugin(AutoIncrement, {inc_field: 'id'});
 
