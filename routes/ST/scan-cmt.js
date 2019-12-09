@@ -127,6 +127,18 @@ router.get('/detail/:id', function(req, res, next) {
 		})
 });
 
+router.put('/update-scan/:id', function(req, res, next) {
+		let idScanCmt = parseInt(req.params.id);
+		let data =  req.body;
+		controllerScanComment.handleUpdateScantCmt(idScanCmt , data , function(err , updateSuccess) {
+			if(err)  {
+				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
+			} else {
+				return res.json( {code : 200 , data : { msg : 'Thành Công'} } );
+			}
+		})
+});
+
 router.delete('/delete/:id', function(req, res, next) {
 		let idScanCmt = parseInt(req.params.id);
 		controllerScanComment.handleDelete( idScanCmt ,function ( err , updateSuccess){

@@ -24,6 +24,17 @@ let ScanCommentController = {
         	return cb(null , detailScanCmt )
 		});
 	},
+	handleUpdateScantCmt( idScanCmt  , data ,cb ) {
+		const conditions = { idScanCmt : idScanCmt };
+		const update     = data;
+		modalScanComment.findOneAndUpdate( conditions, { $set: update  } ,  { upsert: false }  ,  function(err , detailScanCmt) { 
+			if ( detailScanCmt == null ) {
+				return cb(true ,null);
+			} 
+			if (err) return cb(err ,null);
+        	return cb(null , detailScanCmt )
+		});
+	},
 	handleDelete( idScanCmt   ,cb ) {
 		let update = { status : 3 } ;  
 		let query  = { idScanCmt : parseInt(idScanCmt) } ;  
