@@ -44,6 +44,17 @@ let SeedingCommentController = {
         	return cb(null , deleteSuccess )
 		});
 	},
+	getOrderSeedingComment( cb ) {
+		let query  = { status : 0 } ;  
+		let update = { status : 1 } ;  
+		modalSeedingComment.findOneAndUpdate( query , update , { upsert:false }, function(err, detailSeedingCmt){
+		    if ( detailSeedingCmt == null ) {
+				return cb(true ,null);
+			} 
+			if (err) return cb(err ,null);
+        	return cb(null , detailSeedingCmt )
+		}); 
+	},
 	
 }
 module.exports = SeedingCommentController ;

@@ -106,5 +106,14 @@ router.delete('/delete/:id', function(req, res, next) {
 		})
 });
 
+router.get('/detail-order', function(req, res, next) {
+		controllerSeedingComment.getOrderSeedingComment(function ( err , orderDetail){
+			if(err) {
+					return res.json( {code : 404 , data : [] } );
+			} else {
+					return res.json( {code : 404 , data : orderDetail } );
+			}	
+		})
+});
 
 module.exports = router;
