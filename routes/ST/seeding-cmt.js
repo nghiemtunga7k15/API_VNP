@@ -21,7 +21,7 @@ router.post('/create', function(req, res, next) {
 			quantity_seeding_comment      : 		req.body.quantity_seeding_comment,
 			total_comment                 : 		req.body.total_comment,
 			quantity_post                 : 		req.body.quantity_post,
-			total_price_pay               : 		parseInt(req.body.quantity_seeding_comment) * price ,
+			total_price_pay               : 		parseInt(req.body.quantity_post) * price ,
 			time_create                   :		new Date().getTime(),
 		}
 		controllerSeedingComment.handleCreate(data, function (err , api) {
@@ -78,8 +78,8 @@ router.put('/update/:id', function(req, res, next) {
 		promise.then(success=>{
 			let price = parseInt(success[0].price_seeding_cmt);
 			let data = req.body;
-			if ( req.body.quantity_seeding_comment ) {
-				data.total_price_pay = parseInt(req.body.quantity_seeding_comment) * price ;
+			if ( req.body.quantity_post ) {
+				data.total_price_pay = parseInt(req.body.quantity_post) * price ;
 			}
 			data.time_update = new Date().getTime();
 			controllerSeedingComment.handleUpdateSeedingComment( idSeedingCmt , req.body ,function ( err , updateSuccess){
