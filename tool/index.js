@@ -1,7 +1,7 @@
 module.exports = {
     convertUrlToID: function(string) {
     	let result;
-		const regex_1 = /fbid=(.*?)&+/;
+		const regex_1 = /gm.(.*?)&+/;
 		const regex_2 = /videos\/(.*?)\//;
 		const regex_3 = /photos\/a.(.*?)\//;
 		const regex_4 = /permalink\/(.*?)\//;

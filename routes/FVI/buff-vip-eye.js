@@ -21,8 +21,8 @@ router.post('/create', function(req, res, next) {
 	let promise  =  controllerAdmin.getAdminSetup();
 	promise.then(success=>{
 		let timeOneDay  = 60 * 60 * 24 * 1000;
-		// let dayExpired  = new Date().getTime() + (timeOneDay * parseInt(req.body.time_vip_eye));
-		let dayExpired  = new Date().getTime() + (60 * 10 * 1000);
+		let dayExpired  = new Date().getTime() + (timeOneDay * parseInt(req.body.time_vip_eye));
+		// let dayExpired  = new Date().getTime() + (60 * 10 * 1000);
 		let price = parseInt(success[0].price_vip_eye);
 		let data = { 
 			fb_id              : 		id_post 	,
