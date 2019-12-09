@@ -49,6 +49,7 @@ router.post('/create', async function(req, res, next) {
 							price_pay_buy : combo_matching[0].price_pay_buy,
 							price_pay_cmt : combo_matching[0].price_pay_cmt,
 						}	
+						data.total_price_pay = combo_matching[0].price_pay_buy;
 					}
 
 					controllerScanComment.handleCreate(data, function (err , api) {
@@ -100,7 +101,7 @@ router.get('/list', function(req, res, next) {
 		if (!page || page == null) {
 			page = 1;
 		}
-		controllerScanComment.getListOrder( _limit , page ,  function ( err , listBuffEye){
+		controllerScanComment.getListOrder( _limit , page ,  function ( err , listScanCmt){
 			if(err) {
 				return res.json( {code : 404 , data : [] } );
 			} else {
@@ -108,7 +109,7 @@ router.get('/list', function(req, res, next) {
    					if ( err ) {
    						return res.json( {code : 404 , data : [] } );
    					} else {
-						return res.json( {code : 200 , data : listBuffEye ,  page : page , limit : _limit , total : totalRecord } );
+						return res.json( {code : 200 , data : listScanCmt ,  page : page , limit : _limit , total : totalRecord } );
    					}
 				})
 			}
@@ -123,30 +124,6 @@ router.get('/detail/:id', function(req, res, next) {
 			} else {
 				return res.json( {code : 200 , data : detailOrderScanCmt } );
 			}
-		})
-});
-
-router.put('/update-status/:id', function(req, res, next) {
-		let idScanCmt = parseInt(req.params.id);
-		let promise  =  controllerAdmin.getAdminSetup();
-		promise.then(success=>{
-			let price = parseInt(success[0].price_scan_cmt);
-			let data = req.body;
-			
-			data.time_update = new Date().getTime();
-
-			controllerScanComment.handleUpdateScanCmt( idScanCmt , req.body ,function ( err , updateSuccess){
-				if(err)  {
-					return res.json( {code : 404 , data : [] } );
-				} else {
-					controllerScanComment.getDetailScanCmt( idScanCmt ,function ( err , detailBuffVipEye){	
-						return res.json( {code : 200 , data : detailBuffVipEye } );
-					})
-				}
-			})
-		})
-		.catch(e=>{
-				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 		})
 });
 
@@ -242,24 +219,44 @@ router.put('/update/:id', function(req, res, next) {
 					}
 			})
 
-		})
-		
+		})		
 });
 
 router.get('/detail-order', function(req, res, next) {
 		let query  = { status : 0 } ;  
 		let update = { status : 1 } ;  
+		function checkIsExistArr(arr) {
+		  let isExist = (arr, x) => arr.includes(x);
+		  let ans = [];
+
+		  arr.forEach(element => {
+		    if(!isExist(ans, element)) ans.push(element);
+		  });
+
+		  return ans;
+		}
 		modalScanComment.findOneAndUpdate( query , update , { upsert:false }, function(err, detailBuffCmt){
 		 			if  ( detailBuffCmt ) {
 		 				if (err) {
 		 					return res.json( {code : 404 , data : [] } );	
 			 			} else {
-			 				return res.json( {code : 200 , data : { post_id : detailBuffCmt.fb_id } } );
+			 				let promise = controllerScanComment.getListOrderDelete();
+			 				let arrIdDelete = [];
+			 				promise.then(listOrderDelete=>{
+			 					listOrderDelete.forEach(order=>{
+										arrIdDelete.push(order.fb_id);
+								})
+								let stop_id = checkIsExistArr(arrIdDelete);
+								return res.json( {code : 200 , data : { post_id : detailBuffCmt.fb_id , stop_id : stop_id } } );
+			 				})
+			 				.catch(err=>{
+			 					return res.json( {code : 404 , data : { msg : 'Order Not Found' } } );
+			 				})
 			 			}
 		 			} else {
 		 					return res.json( {code : 404 , data : { msg : 'Order Not Found' } } );	
 		 			}
 		}); 
-
 });
+
 module.exports = router;

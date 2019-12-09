@@ -24,19 +24,10 @@ let ScanCommentController = {
         	return cb(null , detailScanCmt )
 		});
 	},
-	handleUpdateScanCmt( idScanCmt  , data ,cb ) {
-		const conditions = { idScanCmt : idScanCmt };
-		const update     = data;
-		modalScanComment.findOneAndUpdate( conditions, { $set: update  } ,  { upsert: false }  ,  function(err , detailScanCmt) { 
-			if ( detailScanCmt == null ) {
-				return cb(true ,null);
-			} 
-			if (err) return cb(err ,null);
-        	return cb(null , detailScanCmt )
-		});
-	},
 	handleDelete( idScanCmt   ,cb ) {
-		modalScanComment.findOneAndRemove( { idScanCmt :  idScanCmt }, function(err , deleteSuccess) { 
+		let update = { status : 3 } ;  
+		let query  = { idScanCmt : parseInt(idScanCmt) } ;  
+		modalScanComment.findOneAndUpdate( query , update , { upsert:false } , function(err , deleteSuccess) { 
 			if ( deleteSuccess == null ) {
 				return cb(true ,null);
 			} 
@@ -55,17 +46,6 @@ let ScanCommentController = {
         	return cb(null , detailScanCmt )
 		});
 	},
-	getOrderScanComment( cb ) {
-		let query  = { status : 0 } ;  
-		let update = { status : 1 } ;  
-		modalBuffComment.findOneAndUpdate( query , update , { upsert:false }, function(err, detailBuffCmt){
-		    if ( detailBuffCmt == null ) {
-				return cb(true ,null);
-			} 
-			if (err) return cb(err ,null);
-        	return cb(null , detailBuffCmt )
-		}); 
-	},
 	getDetailScanCmtPromise( fb_id  ) {
 		return new Promise(function(resolve, reject) { 
 			modalScanComment.findOne( { fb_id : fb_id }, function(err , detailScanCmt) { 
@@ -74,5 +54,15 @@ let ScanCommentController = {
 			});
 		});
 	},
+	getListOrderDelete( ){
+		return new Promise(function(resolve, reject) { 
+			let query  =  modalScanComment.find({ status : 3 });
+				query
+				.exec(function(err, listOrderScanCmt){
+					if (err) return reject(err);
+	        		return resolve(listOrderScanCmt)
+			});
+		});
+	}
 }
 module.exports = ScanCommentController ;
