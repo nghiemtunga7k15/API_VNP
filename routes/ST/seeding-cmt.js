@@ -11,15 +11,17 @@ const controllerAdmin = require('../../controller/controllerAdmin.js');
 const modalSeedingComment = require('../../schema/ST/SeedingComment.js');
 
 router.post('/create', function(req, res, next) {
+	var contents = JSON.parse(req.body.content_seeding_post);
 	let promise  =  controllerAdmin.getAdminSetup();
 	promise.then(success=>{
 		let price = parseInt(success[0].price_seeding_cmt);
 		let data = { 
 			key_word                      : 		req.body.key_word ,
-			content_seeding_post          : 		req.body.content_seeding_post ,
-			content_seeding_reply_post    : 		req.body.content_seeding_reply_post ,
-			quantity_seeding              : 		req.body.quantity_seeding ,
-			total_price_pay               : 		parseInt(req.body.quantity_seeding) * price ,
+			content_seeding_post          : 		contents ,
+			quantity_seeding_comment      : 		req.body.quantity_seeding_comment,
+			total_comment                 : 		req.body.total_comment,
+			quantity_post                 : 		req.body.quantity_post,
+			total_price_pay               : 		parseInt(req.body.quantity_seeding_comment) * price ,
 			time_create                   :		new Date().getTime(),
 		}
 		controllerSeedingComment.handleCreate(data, function (err , api) {
@@ -76,8 +78,8 @@ router.put('/update/:id', function(req, res, next) {
 		promise.then(success=>{
 			let price = parseInt(success[0].price_seeding_cmt);
 			let data = req.body;
-			if ( req.body.quantity_seeding ) {
-				data.total_price_pay = parseInt(req.body.quantity_seeding) * price ;
+			if ( req.body.quantity_seeding_comment ) {
+				data.total_price_pay = parseInt(req.body.quantity_seeding_comment) * price ;
 			}
 			data.time_update = new Date().getTime();
 			controllerSeedingComment.handleUpdateSeedingComment( idSeedingCmt , req.body ,function ( err , updateSuccess){
