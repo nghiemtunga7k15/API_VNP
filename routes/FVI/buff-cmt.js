@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+const axios = require('axios');
+
 /*CONTROLLER*/
 const controllerBuffComment = require('../../controller/FVI/controllerBuffComment.js');
 const controllerAdmin = require('../../controller/controllerAdmin.js');
@@ -11,54 +13,65 @@ const modalFbUser = require('../../schema/FaceBookUser.js');
 /*TOOL*/
 const tool = require('../../tool');
 
-router.post('/create', function(req, res, next) {
+router.post('/create', async function(req, res, next) {
 	let id_post = tool.convertUrlToID(req.body.video_id);
 	if (!id_post) {
-		return res.json( {code : 404 , data : { msg : 'Thất Bại' , err : 'ID Post Not Found' } } );
+		return res.json( {code : 404 , data : { msg : 'Thất Bại' , err : 'ID Sai' } } );
 	}
-	let promise  =  controllerAdmin.getAdminSetup();
-	promise.then(success=>{
-		let price;
-		if ( parseInt(req.body.type_buff) == 0 ) {
-			price = success[0].price_comment_randum;
-		} else {  
-			price = success[0].price_comment_choose;
-		}; 
 
-		let comments = req.body.comments.toString();
+	try {
+	   const response = await axios.get(`https://graph.facebook.com/${id_post}?access_token=EAAGNO4a7r2wBAB8XHEoc5xklAq4q2OTZCzW2rfAyt5OhJmp5xLS3PZC6z0qlzZBiAntZAub0PSUwQKon0gOqPqlCYIOqNCiheeFeqIEwDI37yjMsLVhbVT1SzTQPDPEXhRQyOqU5vaokjLii0WlhgO7LHmZAfH4CykeHDi4Y8wgZDZD`);
+	   	    if ( response && response.data.from ) {
+	   	    	let promise  =  controllerAdmin.getAdminSetup();
+				promise.then(success=>{
+					let price;
+					if ( parseInt(req.body.type_buff) == 0 ) {
+						price = success[0].price_comment_randum;
+					} else {  
+						price = success[0].price_comment_choose;
+					}; 
 
-		let arrComment  = comments.split(";");
+					let comments = req.body.comments.toString();
 
-		let data = { 
-			video_id             :		id_post ,
-			type_buff            :		req.body.type_buff ,   // 1 Chọn ngẫu nhiên   0 Chọn từ User
-			price                :		price ,                //  Chọn ngẫu nhiên  price = 10   0 Chọn từ User price = 15
-			comments             : 		arrComment ,	
-			comments_count       : 		arrComment.length ,	
-			total_price_pay      : 		parseInt(arrComment.length) * parseInt(price),
-			time_type            : 		req.body.time_type ,	
-			time_value           : 		req.body.time_value ,	
-			note                 : 		req.body.note ,	
-			status               :      req.body.status,
-			comment_max          :      success[0].comment_max,
-			time_create          : 		new Date().getTime() ,
-			time_done            : 		req.body.time_done ,	
-			time_update          : 		req.body.time_update ,	
-		}
+					let arrComment  = comments.split(";");
+
+					let data = { 
+						video_id             :		id_post ,
+						type_buff            :		req.body.type_buff ,   // 1 Chọn ngẫu nhiên   0 Chọn từ User
+						price                :		price ,                //  Chọn ngẫu nhiên  price = 10   0 Chọn từ User price = 15
+						comments             : 		arrComment ,	
+						comments_count       : 		arrComment.length ,	
+						total_price_pay      : 		parseInt(arrComment.length) * parseInt(price),
+						time_type            : 		req.body.time_type ,	
+						time_value           : 		req.body.time_value ,	
+						note                 : 		req.body.note ,	
+						status               :      req.body.status,
+						comment_max          :      success[0].comment_max,
+						time_create          : 		new Date().getTime() ,
+						time_done            : 		req.body.time_done ,	
+						time_update          : 		req.body.time_update ,	
+					}
 
 
 
-		controllerBuffComment.handleCreate(data, function (err , api) {
-			if(err)  {
-				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
-			} else { 
-				return res.json( {code : 200 , data : api } );
-			}
-		})	
-	})
-	.catch(e=>{
-			return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
-	})
+					controllerBuffComment.handleCreate(data, function (err , api) {
+						if(err)  {
+							return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
+						} else { 
+							return res.json( {code : 200 , data : api } );
+						}
+					})	
+				})
+				.catch(e=>{
+						return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
+				})
+		    }else{
+				return res.json( {code : 404 , data : { msg : 'Thất Bại' , err : 'ID Không Tồn Tại ' } } );
+		    }
+	} catch (error) {
+	  	return res.json( {code : 404 , data : { msg : 'Thất Bại' , err : 'ID Không Tồn Tại' } } );	  
+	}	
+
 });
 router.get('/list', function(req, res, next) {
 		let _limit = req.query.limit ?  parseInt(req.query.limit) : 20;

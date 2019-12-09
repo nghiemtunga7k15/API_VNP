@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var moment = require('moment');
 var fs = require('fs');
+const axios = require('axios');
 
 /*CONTROLLER*/
 const controllerScanComment = require('../../controller/ST/controllerScanComment.js');
@@ -14,70 +15,80 @@ const modalScanComment = require('../../schema/ST/ScanComment.js');
 const tool = require('../../tool');
 
 /*Axios*/
-const axios = require('../../axios')
+const axiosAPI = require('../../axios')
 
-router.post('/create', function(req, res, next) {
+router.post('/create', async function(req, res, next) {
 	let id_post = tool.convertUrlToID(req.body.fb_id);
 	if (!id_post) {
-		return res.json( {code : 404 , data : { msg : 'Thất Bại' , err : 'ID Post Not Found' } } );
+		return res.json( {code : 404 , data : { msg : 'Thất Bại' , err : 'ID Sai' } } );
 	}
-	let promise  =  controllerAdmin.getAdminSetup();
-	promise.then(success=>{
-		let timeOneDay  = 60 * 60 * 24 * 1000;
-		let minutesOnDay = 60 * 24;
-		let data = { 
-			fb_id              : 		id_post	,
-			minutes            :        (parseInt(req.body.time) *minutesOnDay).toString(),
-			time_create        :		new Date().getTime(),
-			time_expired       :        new Date().getTime() + parseInt(req.body.time) * timeOneDay
-		}
+	try {
+	   const response = await axios.get(`https://graph.facebook.com/${id_post}?access_token=EAAGNO4a7r2wBAB8XHEoc5xklAq4q2OTZCzW2rfAyt5OhJmp5xLS3PZC6z0qlzZBiAntZAub0PSUwQKon0gOqPqlCYIOqNCiheeFeqIEwDI37yjMsLVhbVT1SzTQPDPEXhRQyOqU5vaokjLii0WlhgO7LHmZAfH4CykeHDi4Y8wgZDZD`);
+	   	    if ( response && response.data.from ) {
+				let promise  =  controllerAdmin.getAdminSetup();
+				promise.then(success=>{
+					let timeOneDay  = 60 * 60 * 24 * 1000;
+					let minutesOnDay = 60 * 24;
+					let data = { 
+						fb_id              : 		id_post	,
+						minutes            :        (parseInt(req.body.time) *minutesOnDay).toString(),
+						time_create        :		new Date().getTime(),
+						time_expired       :        new Date().getTime() + parseInt(req.body.time) * timeOneDay
+					}
 
-		let list_combo = success[0].list_combo_scan_cmt;
-		// Matching Combo
-		if (list_combo.length > 0 ) {
-			combo_matching = list_combo.filter(function (combo) {
-				return combo.name == req.body.type_order.toString().toUpperCase() ;
-			});
-				
-			data.type_order =  {
-				name          : combo_matching[0].name,
-				limit_post    : combo_matching[0].limit_post,
-				price_pay_buy : combo_matching[0].price_pay_buy,
-				price_pay_cmt : combo_matching[0].price_pay_cmt,
-			}	
-		}
+					let list_combo = success[0].list_combo_scan_cmt;
+					// Matching Combo
+					if (list_combo.length > 0 ) {
+						combo_matching = list_combo.filter(function (combo) {
+							return combo.name == req.body.type_order.toString().toUpperCase() ;
+						});
+							
+						data.type_order =  {
+							name          : combo_matching[0].name,
+							limit_post    : combo_matching[0].limit_post,
+							price_pay_buy : combo_matching[0].price_pay_buy,
+							price_pay_cmt : combo_matching[0].price_pay_cmt,
+						}	
+					}
 
-		controllerScanComment.handleCreate(data, function (err , api) {
-			if(err)  {
-				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
-			} else { 
-				let html =  `<table style="width:100%" cellpadding="10"  rules="all">
-							<thead>
-							    <tr>
-							      <th>STT</th>
-							      <th>UserID</th>
-							      <th>FacebookName</th>
-							      <th>Giới tính</th>
-							      <th>Email</th>
-							      <th>SDT</th>
-							      <th>Dia chi</th>
-							      <th>Thời gian Comment</th>
-							      <th>Nội dung Comment</th>
-							    </tr>
-							</thead>
-							<tbody>
-							</tbody>
-							</table>`;
-				fs.writeFile(`public/file/${id_post}_${api.idScanCmt}.html`, html , function(err){
-						            if (err) return console.log(err);
-				}); 
-				return res.json( {code : 200 , data : api } );
-			}
-		})
-	})
-	.catch(e=>{
-			return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
-	})
+					controllerScanComment.handleCreate(data, function (err , api) {
+						if(err)  {
+							return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
+						} else { 
+							let html =  `<table style="width:100%" cellpadding="10"  rules="all">
+										<thead>
+										    <tr>
+										      <th>STT</th>
+										      <th>UserID</th>
+										      <th>FacebookName</th>
+										      <th>Giới tính</th>
+										      <th>Email</th>
+										      <th>SDT</th>
+										      <th>Dia chi</th>
+										      <th>Thời gian Comment</th>
+										      <th>Nội dung Comment</th>
+										    </tr>
+										</thead>
+										<tbody>
+										</tbody>
+										</table>`;
+							fs.writeFile(`public/file/${id_post}_${api.idScanCmt}.html`, html , function(err){
+									            if (err) return console.log(err);
+							}); 
+							return res.json( {code : 200 , data : api } );
+						}
+					})
+				})
+				.catch(e=>{
+						return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
+				})
+		    }else{
+				return res.json( {code : 404 , data : { msg : 'Thất Bại' , err : 'ID Không Tồn Tại' } } );
+		    }
+
+	} catch (error) {
+	  	return res.json( {code : 404 , data : { msg : 'Thất Bại' , err : 'ID Không Tồn Tại' } } );	  
+	}
 });
 
 router.get('/list', function(req, res, next) {

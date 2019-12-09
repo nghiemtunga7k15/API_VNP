@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var moment = require('moment');
+const axios = require('axios');
 
 /*CONTROLLER*/
 const controllerBuffVipEye = require('../../controller/FVI/controllerBuffVipEye.js');
@@ -13,40 +14,48 @@ const modalBuffVipEye = require('../../schema/FVI/VipEye.js');
 const tool = require('../../tool');
 
 
-router.post('/create', function(req, res, next) {
+router.post('/create', async function(req, res, next) {
 	let id_post = tool.convertUrlToID(req.body.fb_id);
 	if (!id_post) {
-		return res.json( {code : 404 , data : { msg : 'Thất Bại' , err : 'ID Post Not Found' } } );
+		return res.json( {code : 404 , data : { msg : 'Thất Bại' , err : 'ID Sai' } } );
 	}
-	let promise  =  controllerAdmin.getAdminSetup();
-	promise.then(success=>{
-		let timeOneDay  = 60 * 60 * 24 * 1000;
-		let dayExpired  = new Date().getTime() + (timeOneDay * parseInt(req.body.time_vip_eye));
-		// let dayExpired  = new Date().getTime() + (60 * 10 * 1000);
-		let price = parseInt(success[0].price_vip_eye);
-		let data = { 
-			fb_id              : 		id_post 	,
-			name               :		req.body.name,
-			choose_option_eye  :		req.body.choose_option_eye,
-			time_vip_eye       :		req.body.time_vip_eye,
-			total_price_pay    :		req.body.choose_option_eye * price,
-			note               : 		req.body.note,
-			status             : 		req.body.status,
-			time_create        : 		new Date().getTime(),
-			time_expired       :		dayExpired,
-		}
-		controllerBuffVipEye.handleCreate(data, function (err , api) {
-			if(err)  {
-				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
-			} else { 
-				return res.json( {code : 200 , data : api } );
-			}
-		})
-	})
-	.catch(e=>{
-			return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
-	})
-	
+	try {
+	   const response = await axios.get(`https://graph.facebook.com/${id_post}?access_token=EAAGNO4a7r2wBAB8XHEoc5xklAq4q2OTZCzW2rfAyt5OhJmp5xLS3PZC6z0qlzZBiAntZAub0PSUwQKon0gOqPqlCYIOqNCiheeFeqIEwDI37yjMsLVhbVT1SzTQPDPEXhRQyOqU5vaokjLii0WlhgO7LHmZAfH4CykeHDi4Y8wgZDZD`);
+	   	    if ( response && response.data.from ) {
+	   	    	let promise  =  controllerAdmin.getAdminSetup();
+				promise.then(success=>{
+					let timeOneDay  = 60 * 60 * 24 * 1000;
+					let dayExpired  = new Date().getTime() + (timeOneDay * parseInt(req.body.time_vip_eye));
+					// let dayExpired  = new Date().getTime() + (60 * 10 * 1000);
+					let price = parseInt(success[0].price_vip_eye);
+					let data = { 
+						fb_id              : 		id_post 	,
+						name               :		req.body.name,
+						choose_option_eye  :		req.body.choose_option_eye,
+						time_vip_eye       :		req.body.time_vip_eye,
+						total_price_pay    :		req.body.choose_option_eye * price,
+						note               : 		req.body.note,
+						status             : 		req.body.status,
+						time_create        : 		new Date().getTime(),
+						time_expired       :		dayExpired,
+					}
+					controllerBuffVipEye.handleCreate(data, function (err , api) {
+						if(err)  {
+							return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
+						} else { 
+							return res.json( {code : 200 , data : api } );
+						}
+					})
+				})
+				.catch(e=>{
+						return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
+				})
+		    }else{
+				return res.json( {code : 404 , data : { msg : 'Thất Bại' , err : 'ID Không Tồn Tại ' } } );
+		    }
+	} catch (error) {
+	  	return res.json( {code : 404 , data : { msg : 'Thất Bại' , err : 'ID Không Tồn Tại' } } );	  
+	}	
 });
 router.get('/list', function(req, res, next) {
 		let _limit = parseInt(req.query.limit);

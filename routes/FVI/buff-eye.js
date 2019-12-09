@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+const axios = require('axios');
+
 /*CONTROLLER*/
 const controllerBuffEye = require('../../controller/FVI/controllerBuffEye.js');
 const controllerAdmin = require('../../controller/controllerAdmin.js');
@@ -51,40 +53,49 @@ router.get('/fb-user', function(req, res, next) {
 		})
 });
 
-router.post('/create', function(req, res, next) {
+router.post('/create', async function(req, res, next) {
 	let id_post = tool.convertUrlToID(req.body.video_id);
 	if (!id_post) {
-		return res.json( {code : 404 , data : { msg : 'Thất Bại' , err : 'ID Post Not Found' } } );
+		return res.json( {code : 404 , data : { msg : 'Thất Bại' , err : 'ID Sai' } } );
 	}
-	let promise  =  	controllerAdmin.getAdminSetup();
-	promise.then(success=>{
-		let data = { 
-			video_id           : 		id_post	,
-			view               :		req.body.view,
-			price_one_eye      :		success[0].price_one_eye,
-			total_price_pay    :		parseInt(success[0].price_one_eye) * parseInt(req.body.view),
-			time_type          :		req.body.time_type,
-			time_value         :		req.body.time_value,
-			note               : 		req.body.note,
-			id_vip             : 		req.body.id_vip,
-			status             : 		req.body.status,
-			view_max           :		success[0].view_max,
-			time_create        : 		new Date().getTime() ,
-			time_done      	   :		req.body.time_done,
-			time_update        :		req.body.time_update,
-			last_time_check    :		req.body.last_time_check,
-		}
-		controllerBuffEye.handleCreate(data, function (err , api) {
-			if(err)  {
-				return res.json( {code : 404 , data : [] } );
-			} else { 
-				return res.json( {code : 200 , data : api } );
-			}
-		})
-	})
-	.catch(e=>{
-			return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
-	})
+	try {
+	   	const response = await axios.get(`https://graph.facebook.com/${id_post}?access_token=EAAGNO4a7r2wBAB8XHEoc5xklAq4q2OTZCzW2rfAyt5OhJmp5xLS3PZC6z0qlzZBiAntZAub0PSUwQKon0gOqPqlCYIOqNCiheeFeqIEwDI37yjMsLVhbVT1SzTQPDPEXhRQyOqU5vaokjLii0WlhgO7LHmZAfH4CykeHDi4Y8wgZDZD`);
+	   	if ( response && response.data.from ) {
+	   	    let promise  =  	controllerAdmin.getAdminSetup();
+			promise.then(success=>{
+				let data = { 
+					video_id           : 		id_post	,
+					view               :		req.body.view,
+					price_one_eye      :		success[0].price_one_eye,
+					total_price_pay    :		parseInt(success[0].price_one_eye) * parseInt(req.body.view),
+					time_type          :		req.body.time_type,
+					time_value         :		req.body.time_value,
+					note               : 		req.body.note,
+					id_vip             : 		req.body.id_vip,
+					status             : 		req.body.status,
+					view_max           :		success[0].view_max,
+					time_create        : 		new Date().getTime() ,
+					time_done      	   :		req.body.time_done,
+					time_update        :		req.body.time_update,
+					last_time_check    :		req.body.last_time_check,
+				}
+				controllerBuffEye.handleCreate(data, function (err , api) {
+					if(err)  {
+						return res.json( {code : 404 , data : [] } );
+					} else { 
+						return res.json( {code : 200 , data : api } );
+					}
+				})
+			})
+			.catch(e=>{
+					return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
+			})
+		}else{
+			return res.json( {code : 404 , data : { msg : 'Thất Bại' , err : 'ID Không Tồn Tại ' } } );
+	    }
+	} catch (error) {
+	  	return res.json( {code : 404 , data : { msg : 'Thất Bại' , err : 'ID Không Tồn Tại' } } );	  
+	}	
 });
 
 router.get('/list', function(req, res, next) {
