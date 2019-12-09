@@ -66,6 +66,7 @@ router.post('/create', function(req, res, next) {
 			time_type          :		req.body.time_type,
 			time_value         :		req.body.time_value,
 			note               : 		req.body.note,
+			id_vip             : 		req.body.id_vip,
 			status             : 		req.body.status,
 			view_max           :		success[0].view_max,
 			time_create        : 		new Date().getTime() ,
