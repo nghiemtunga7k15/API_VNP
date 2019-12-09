@@ -67,13 +67,29 @@ let ScanCommentController = {
 	},
 	getListOrderDelete( ){
 		return new Promise(function(resolve, reject) { 
-			let query  =  modalScanComment.find({ status : 3 });
+			let query  =  modalScanComment.find({ status : 3 , time_stop : 0 });
 				query
 				.exec(function(err, listOrderScanCmt){
 					if (err) return reject(err);
 	        		return resolve(listOrderScanCmt)
 			});
 		});
+	},
+	handleUpdateMutil( ){
+		let day_now = new Date().getTime();
+			return new Promise(function(resolve, reject) { 
+
+					let query  = { status : 3 , time_stop : 0 };  
+					let update = { time_stop :  1000 } ;  
+					modalScanComment.updateMany(query, update , { upsert:false } , function(err , updateSuccess ){
+						if(err) {
+							return reject(err);
+						}else{
+							return resolve(updateSuccess )
+						}
+					});
+			});
+
 	}
 }
 module.exports = ScanCommentController ;

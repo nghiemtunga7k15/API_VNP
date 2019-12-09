@@ -16,6 +16,7 @@ var ScanCommentSchema =  mongoose.Schema({
     time_create              :   { type: String },
     minutes                  :   { type: String },
     time_expired             :   { type: String },
+    time_stop                :   { type: Number , default : 0 },
     time_update              :   { type: Number, default : 0 },
 });
 

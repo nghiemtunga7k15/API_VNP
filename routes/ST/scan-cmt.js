@@ -247,28 +247,37 @@ router.get('/detail-order', function(req, res, next) {
 
 		  return ans;
 		}
+		let promise = controllerScanComment.getListOrderDelete();
+		let promise_update_mutil	 = controllerScanComment.handleUpdateMutil();
+		let arrIdDelete = [];
+		let result = [];
 		modalScanComment.findOneAndUpdate( query , update , { upsert:false }, function(err, detailBuffCmt){
-		 			if  ( detailBuffCmt ) {
-		 				if (err) {
-		 					return res.json( {code : 404 , data : [] } );	
-			 			} else {
-			 				let promise = controllerScanComment.getListOrderDelete();
-			 				let arrIdDelete = [];
-			 				promise.then(listOrderDelete=>{
-			 					listOrderDelete.forEach(order=>{
-										arrIdDelete.push(order.fb_id);
-								})
-								let stop_id = checkIsExistArr(arrIdDelete);
-								return res.json( {code : 200 , data : { post_id : detailBuffCmt.fb_id , stop_id : stop_id } } );
-			 				})
-			 				.catch(err=>{
-			 					return res.json( {code : 404 , data : { msg : 'Order Not Found' } } );
-			 				})
-			 			}
-		 			} else {
-		 					return res.json( {code : 404 , data : { msg : 'Order Not Found' } } );	
-		 			}
-		}); 
+			 			if  ( detailBuffCmt || detailBuffCmt != null ) {
+			 				if (err) {
+			 					return res.json( {code : 404 , data : [] } );	
+			 				}else {
+								return res.json( {code : 404 , data : { post_id : detailBuffCmt } } );	
+				 			}
+
+				} else {
+					promise.then(listOrderDelete=>{
+						listOrderDelete.forEach(order=>{
+							arrIdDelete.push(order.fb_id);
+						})
+						result = checkIsExistArr(arrIdDelete); 
+						if ( result && result.length > 0 ) {
+							promise_update_mutil.then(update=>{
+								console.log(update)
+								// return res.json( {code : 200 , data : { post_id : null , stop_id : result } } );	
+							})
+						} 
+					})
+					.catch(err=>{
+						return res.json( {code : 200 , data : { msg : 'Err' } } );
+					})
+			 	}
+		})
+			
 });
 
 module.exports = router;
