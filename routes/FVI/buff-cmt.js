@@ -84,7 +84,7 @@ router.get('/detail-order', function(req, res, next) {
 					return res.json( {code : 404 , data : [] } );
 
 			} else {
-					modalFbUser.find( { status : 1 })
+					modalFbUser.find( { status : 1  , type : 1 } )
 						.limit(parseInt(orderDetail.comments_count))
 						.exec(function(err, cookies){
 							if (err) {

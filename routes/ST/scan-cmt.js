@@ -51,7 +51,24 @@ router.post('/create', function(req, res, next) {
 			if(err)  {
 				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 			} else { 
-				fs.writeFile(`public/file/${id_post}.html`, '', function(err){
+				let html =  `<table style="width:100%" cellpadding="10"  rules="all">
+							<thead>
+							    <tr>
+							      <th>STT</th>
+							      <th>UserID</th>
+							      <th>FacebookName</th>
+							      <th>Giới tính</th>
+							      <th>Email</th>
+							      <th>SDT</th>
+							      <th>Dia chi</th>
+							      <th>Thời gian Comment</th>
+							      <th>Nội dung Comment</th>
+							    </tr>
+							</thead>
+							<tbody>
+							</tbody>
+							</table>`;
+				fs.writeFile(`public/file/${id_post}_${api.idScanCmt}.html`, html , function(err){
 						            if (err) return console.log(err);
 				}); 
 				return res.json( {code : 200 , data : api } );
@@ -206,7 +223,7 @@ router.put('/update/:id', function(req, res, next) {
 									// });
 								});
 								let htmlTable = `${header}${main}${footer}`;
-								fs.writeFile(`public/file/${fb_id}.html`, htmlTable, function(err){
+								fs.writeFile(`public/file/${fb_id}_${updateSuccess.idScanCmt}.html`, htmlTable, function(err){
 						            if (err) return console.log(err);
 						        });  
 							}
