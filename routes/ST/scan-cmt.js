@@ -35,14 +35,13 @@ router.post('/create', async function(req, res, next) {
 						time_create        :		new Date().getTime(),
 						time_expired       :        new Date().getTime() + parseInt(req.body.time) * timeOneDay
 					}
-
+					console.log(data)
 					let list_combo = success[0].list_combo_scan_cmt;
 					// Matching Combo
 					if (list_combo.length > 0 ) {
 						combo_matching = list_combo.filter(function (combo) {
 							return combo.name == req.body.type_order.toString().toUpperCase() ;
-						});
-							
+						});							
 						data.type_order =  {
 							name          : combo_matching[0].name,
 							limit_post    : combo_matching[0].limit_post,
@@ -51,7 +50,6 @@ router.post('/create', async function(req, res, next) {
 						}	
 						data.total_price_pay = combo_matching[0].price_pay_buy;
 					}
-
 					controllerScanComment.handleCreate(data, function (err , api) {
 						if(err)  {
 							return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
@@ -250,27 +248,40 @@ router.get('/detail-order', function(req, res, next) {
 		let promise = controllerScanComment.getListOrderDelete();
 		let promise_update_mutil	 = controllerScanComment.handleUpdateMutil();
 		let arrIdDelete = [];
-		let result = [];
+		let result;
 		modalScanComment.findOneAndUpdate( query , update , { upsert:false }, function(err, detailBuffCmt){
 			 			if  ( detailBuffCmt || detailBuffCmt != null ) {
 			 				if (err) {
 			 					return res.json( {code : 404 , data : [] } );	
 			 				}else {
-								return res.json( {code : 404 , data : { post_id : detailBuffCmt } } );	
+			 					promise.then(listOrderDelete=>{
+			 						let arrIdDelete = [];
+						 			if (listOrderDelete && listOrderDelete .length ) {
+				 						listOrderDelete.forEach(order=>{
+				 							arrIdDelete.push(order.fb_id);
+				 						})
+				 						let result = checkIsExistArr(arrIdDelete);
+				 						promise_update_mutil.then(update=>{
+											return res.json( {code : 200 , data :  { post_id : detailBuffCmt.fb_id  ,  stop_id : result } } );
+				 						})
+									}else{
+										return res.json( {code : 200 , data :  { post_id : detailBuffCmt.fb_id  ,  stop_id : null } } );
+									}	
+			 					})
 				 			}
-
 				} else {
 					promise.then(listOrderDelete=>{
-						listOrderDelete.forEach(order=>{
-							arrIdDelete.push(order.fb_id);
-						})
-						result = checkIsExistArr(arrIdDelete); 
-						if ( result && result.length > 0 ) {
-							promise_update_mutil.then(update=>{
-								console.log(update)
-								// return res.json( {code : 200 , data : { post_id : null , stop_id : result } } );	
-							})
-						} 
+						if (listOrderDelete && listOrderDelete .length > 0) {
+							listOrderDelete.forEach(order=>{
+				 				arrIdDelete.push(order.fb_id);
+				 			})
+				 			let result = checkIsExistArr(arrIdDelete);
+				 			promise_update_mutil.then(update=>{
+								return res.json( {code : 200 , data :  { post_id : null  ,  stop_id : result } } );
+				 			})
+						}else{
+							return res.json( {code : 200 , data :  { post_id : null  ,  stop_id : null } } );
+						}
 					})
 					.catch(err=>{
 						return res.json( {code : 200 , data : { msg : 'Err' } } );

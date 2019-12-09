@@ -78,9 +78,8 @@ let ScanCommentController = {
 	handleUpdateMutil( ){
 		let day_now = new Date().getTime();
 			return new Promise(function(resolve, reject) { 
-
 					let query  = { status : 3 , time_stop : 0 };  
-					let update = { time_stop :  1000 } ;  
+					let update = { time_stop :  day_now } ;  
 					modalScanComment.updateMany(query, update , { upsert:false } , function(err , updateSuccess ){
 						if(err) {
 							return reject(err);
