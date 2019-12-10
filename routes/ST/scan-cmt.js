@@ -123,7 +123,13 @@ router.get('/detail/:id', function(req, res, next) {
 			if(err)  {
 				return res.json( {code : 404 , data : [] } );
 			} else {
-				return res.json( {code : 200 , data : detailOrderScanCmt } );
+				// detailOrderScanCmt.content.forEach(comment=>{
+				// 	let time = 	comment.created_time.toString().slice(0,10);
+				// 	time=time.split("-");
+				// 	var newDate2=time[1]+"/"+time[2]+"/"+time[0];
+				// })
+					return res.json( {code : 200 , data : detailOrderScanCmt } );
+
 			}
 		})
 });
@@ -206,7 +212,12 @@ router.put('/update/:id', function(req, res, next) {
 										// if ( !phone || phone == 'undefined') {
 										// 	phone = null;
 										// }
-										let time = 	comment.created_time.toString().slice(0,10)
+										let time;
+										try {
+											comment.created_time.toString().slice(0,10);
+										}catch(err){
+											console.log(err)
+										}
 										let content  = `
 										 <tr>
 									      <td>${num}</td>
