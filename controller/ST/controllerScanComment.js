@@ -38,20 +38,20 @@ let ScanCommentController = {
 	handleDelete( idScanCmt   ,cb ) {
 		let update = { status : 3 } ;  
 		let query  = { idScanCmt : parseInt(idScanCmt) } ;  
-		// modalScanComment.findOneAndUpdate( query , update , { upsert:false } , function(err , deleteSuccess) { 
-		// 	if ( deleteSuccess == null ) {
-		// 		return cb(true ,null);
-		// 	} 
-		// 	if (err) return cb(err ,null);
-  //       	return cb(null , deleteSuccess )
-		// });
-		modalScanComment.findOneAndRemove( {idScanCmt : idScanCmt}, function(err , deleteSuccess) { 
+		modalScanComment.findOneAndUpdate( query , update , { upsert:false } , function(err , deleteSuccess) { 
 			if ( deleteSuccess == null ) {
 				return cb(true ,null);
 			} 
 			if (err) return cb(err ,null);
         	return cb(null , deleteSuccess )
 		});
+		// modalScanComment.findOneAndRemove( {idScanCmt : idScanCmt}, function(err , deleteSuccess) { 
+		// 	if ( deleteSuccess == null ) {
+		// 		return cb(true ,null);
+		// 	} 
+		// 	if (err) return cb(err ,null);
+  //       	return cb(null , deleteSuccess )
+		// });
 	},
 	handleUpdateByFaceId( fb_id  , data ,cb ) {
 		const conditions = { fb_id : fb_id };
