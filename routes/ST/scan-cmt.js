@@ -18,9 +18,11 @@ const tool = require('../../tool');
 const axiosAPI = require('../../axios')
 
 router.post('/create', async function(req, res, next) {
-	let id_post = tool.convertUrlToID(req.body.fb_id);
-	if (!id_post) {
-		return res.json( {code : 404 , data : { msg : 'Thất Bại' , err : 'ID Sai' } } );
+	let id_post;
+	if (req.body.fb_id) {
+		id_post = tool.convertUrlToID(req.body.fb_id);
+	}else{
+		return res.json( {code : 404 , data : { err : 'Chưa điền ID' } } );
 	}
 	try {
 	   const response = await axios.get(`https://graph.facebook.com/${id_post}?access_token=EAACW5Fg5N2IBACXGG8K3E2Hp6EXJRLaPRZApRQqmZBafGvzFpb3KU54AZBTqHZAWZCsn9AbJrVmt7aE0MBSg8uWY7cB8zcKZA9bfVoJr0K9jE5tj1NnQJZA0ZAkI82u3RfZAnMCV8zTSAZBL0SZBvxA3YfZCyD3uNZAEgZBCI08b9P2lng59p2O5DVccYN`);
@@ -31,11 +33,12 @@ router.post('/create', async function(req, res, next) {
 					let minutesOnDay = 60 * 24;
 					let data = { 
 						fb_id              : 		id_post	,
+						name_fanpage       :        req.body.name_fanpage,
+						note               :        req.body.note,
 						minutes            :        (parseInt(req.body.time) *minutesOnDay).toString(),
 						time_create        :		new Date().getTime(),
 						time_expired       :        new Date().getTime() + parseInt(req.body.time) * timeOneDay
 					}
-					console.log(data)
 					let list_combo = success[0].list_combo_scan_cmt;
 					// Matching Combo
 					if (list_combo.length > 0 ) {

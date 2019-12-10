@@ -15,9 +15,11 @@ const tool = require('../../tool');
 
 
 router.post('/create', async function(req, res, next) {
-	let id_post = tool.convertUrlToID(req.body.fb_id);
-	if (!id_post) {
-		return res.json( {code : 404 , data : { msg : 'Thất Bại' , err : 'ID Sai' } } );
+	let id_post;
+	if (req.body.fb_id) {
+		id_post = tool.convertUrlToID(req.body.fb_id);
+	}else{
+		return res.json( {code : 404 , data : {  err : 'Chưa điền ID' } } );
 	}
 	try {
 	   const response = await axios.get(`https://graph.facebook.com/${id_post}?access_token=EAACW5Fg5N2IBACXGG8K3E2Hp6EXJRLaPRZApRQqmZBafGvzFpb3KU54AZBTqHZAWZCsn9AbJrVmt7aE0MBSg8uWY7cB8zcKZA9bfVoJr0K9jE5tj1NnQJZA0ZAkI82u3RfZAnMCV8zTSAZBL0SZBvxA3YfZCyD3uNZAEgZBCI08b9P2lng59p2O5DVccYN`);
