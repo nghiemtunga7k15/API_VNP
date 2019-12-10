@@ -143,39 +143,62 @@ router.get('/detail/:id', function(req, res, next) {
 								}
 							}
 							// Time satrt and time and
-							else if ( timeStart &&  textEnd )  {
+							 if ( timeStart &&  textEnd )  {
 								if (  parseInt(time_curent) < parseInt(time_end) &&   parseInt(time_curent) > parseInt(time_start) ) {
 									result.push(obj);
 								}
 							}
 							// Text
-							else if ( text ) {
+							 if ( text ) {
 								if (  obj.message.includes(text) == true ) {
 									result.push(obj);
 								}
-							}else{
-								return res.json( {code : 200 , data : detailOrderScanCmt } );
 							}
+							
 						})
-						return res.json( {code : 200 , data : result } );
+						return res.json( {code : 200 , data : result.length > 0 ? result :  detailOrderScanCmt  } );
 					}else{
 						return res.json( {code : 400 , data : [] } );
-
 					}
 			}
 		})
 });
 
-router.put('/update-scan/:id', function(req, res, next) {
+router.put('/update-scan-cmt/:id', function(req, res, next) {
 		let idScanCmt = parseInt(req.params.id);
 		let data =  req.body;
-		controllerScanComment.handleUpdateScantCmt(idScanCmt , data , function(err , updateSuccess) {
-			if(err)  {
-				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
-			} else {
-				return res.json( {code : 200 , data : { msg : 'Thành Công'} } );
-			}
-		})
+		function PromiseDetailScanCmt(idScanCmt) {
+			let arr = [];
+			let obj = {};
+			let time_curent = new Date().getTime();
+			return new Promise(function(resolve, reject) { 
+				controllerScanComment.getDetailScanCmt( idScanCmt ,function ( err , detailOrderScanCmt){
+					if ( err || !detailOrderScanCmt || detailOrderScanCmt == null || detailOrderScanCmt == undefined ) {
+						return reject(err);
+					}else{
+						obj.log_time   = time_curent;
+						obj.total_post = detailOrderScanCmt.content.length;
+						arr = detailOrderScanCmt.log_time;
+						arr.push(obj)
+						resolve(arr)
+					}
+				})
+			})
+		}
+		if ( req.body.update_log ) {
+			PromiseDetailScanCmt(idScanCmt).then(dataPromise=>{
+				data.log_time = dataPromise;
+				controllerScanComment.handleUpdateScantCmt(idScanCmt , data , function(err , updateSuccess) {
+					if(err)  {
+						return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
+					} else {
+
+						return res.json( {code : 200 , data : { msg : 'Thành Công'} } );
+					}
+				})
+			})
+		} 
+		
 });
 
 router.delete('/delete/:id', function(req, res, next) {
