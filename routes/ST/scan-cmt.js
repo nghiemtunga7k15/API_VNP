@@ -143,16 +143,18 @@ router.get('/detail/:id', function(req, res, next) {
 								}
 							}
 							// Time satrt and time and
-							if ( timeStart &&  textEnd )  {
+							else if ( timeStart &&  textEnd )  {
 								if (  parseInt(time_curent) < parseInt(time_end) &&   parseInt(time_curent) > parseInt(time_start) ) {
 									result.push(obj);
 								}
 							}
 							// Text
-							if ( text ) {
+							else if ( text ) {
 								if (  obj.message.includes(text) == true ) {
 									result.push(obj);
 								}
+							}else{
+								return res.json( {code : 200 , data : detailOrderScanCmt } );
 							}
 						})
 						return res.json( {code : 200 , data : result } );
