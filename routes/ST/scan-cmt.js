@@ -132,29 +132,34 @@ router.get('/detail/:id', function(req, res, next) {
 					let time_end = `{${textEnd}T00:00:00+0000`;    
 					time_end=(time_end).toString().replace(/[^\d]/g,'').slice(0, -9);
 					let result=[];
-					detailOrderScanCmt.content.forEach(obj=>{
-						let time_curent = (obj.created_time).toString().replace(/[^\d]/g,'').slice(0, -9);
+					if (  detailOrderScanCmt ) {
+						detailOrderScanCmt.content.forEach(obj=>{
+							let time_curent = (obj.created_time).toString().replace(/[^\d]/g,'').slice(0, -9);
 
-						// Full 
-						if ( timeStart &&  textEnd &&  text ) {
-							if (  parseInt(time_curent) < parseInt(time_end) &&   parseInt(time_curent) > parseInt(time_start) &&  (obj.message.includes(text) == true) ) {
-								result.push(obj);
+							// Full 
+							if ( timeStart &&  textEnd &&  text ) {
+								if (  parseInt(time_curent) < parseInt(time_end) &&   parseInt(time_curent) > parseInt(time_start) &&  (obj.message.includes(text) == true) ) {
+									result.push(obj);
+								}
 							}
-						}
-						// Time satrt and time and
-						if ( timeStart &&  textEnd )  {
-							if (  parseInt(time_curent) < parseInt(time_end) &&   parseInt(time_curent) > parseInt(time_start) ) {
-								result.push(obj);
+							// Time satrt and time and
+							if ( timeStart &&  textEnd )  {
+								if (  parseInt(time_curent) < parseInt(time_end) &&   parseInt(time_curent) > parseInt(time_start) ) {
+									result.push(obj);
+								}
 							}
-						}
-						// Text
-						if ( text ) {
-							if (  obj.message.includes(text) == true ) {
-								result.push(obj);
+							// Text
+							if ( text ) {
+								if (  obj.message.includes(text) == true ) {
+									result.push(obj);
+								}
 							}
-						}
-					})
-					return res.json( {code : 200 , data : result } );
+						})
+						return res.json( {code : 200 , data : result } );
+					}else{
+						return res.json( {code : 400 , data : [] } );
+
+					}
 			}
 		})
 });
