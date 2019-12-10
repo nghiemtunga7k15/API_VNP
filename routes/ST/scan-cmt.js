@@ -119,17 +119,42 @@ router.get('/list', function(req, res, next) {
 
 router.get('/detail/:id', function(req, res, next) {
 		let idScanCmt = parseInt(req.params.id);
+		let text = req.query.text;
+		let timeStart = req.query.time_start;
+		let textEnd = req.query.time_end;
 		controllerScanComment.getDetailScanCmt( idScanCmt ,function ( err , detailOrderScanCmt){
 			if(err)  {
 				return res.json( {code : 404 , data : [] } );
 			} else {
-				// detailOrderScanCmt.content.forEach(comment=>{
-				// 	let time = 	comment.created_time.toString().slice(0,10);
-				// 	time=time.split("-");
-				// 	var newDate2=time[1]+"/"+time[2]+"/"+time[0];
-				// })
-					return res.json( {code : 200 , data : detailOrderScanCmt } );
+					let time_start = `${timeStart}T00:00:00+0000`; 
+					time_start=(time_start).toString().replace(/[^\d]/g,'').slice(0, -9);
 
+					let time_end = `{${textEnd}T00:00:00+0000`;    
+					time_end=(time_end).toString().replace(/[^\d]/g,'').slice(0, -9);
+					let result=[];
+					detailOrderScanCmt.content.forEach(obj=>{
+						let time_curent = (obj.created_time).toString().replace(/[^\d]/g,'').slice(0, -9);
+
+						// Full 
+						if ( timeStart &&  textEnd &&  text ) {
+							if (  parseInt(time_curent) < parseInt(time_end) &&   parseInt(time_curent) > parseInt(time_start) &&  (obj.message.includes(text) == true) ) {
+								result.push(obj);
+							}
+						}
+						// Time satrt and time and
+						if ( timeStart &&  textEnd )  {
+							if (  parseInt(time_curent) < parseInt(time_end) &&   parseInt(time_curent) > parseInt(time_start) ) {
+								result.push(obj);
+							}
+						}
+						// Text
+						if ( text ) {
+							if (  obj.message.includes(text) == true ) {
+								result.push(obj);
+							}
+						}
+					})
+					return res.json( {code : 200 , data : result } );
 			}
 		})
 });
@@ -227,7 +252,7 @@ router.put('/update/:id', function(req, res, next) {
 									      <td>email@gmail.com</td>
 									      <td>Phone</td>
 									      <td>Địa Chỉ</td>
-									      <td>${time}</td>
+									      <td>${comment.created_time}</td>
 									      <td>${comment.message}</td>
 									    </tr>`;
 									    main = `${main}${content}`;
