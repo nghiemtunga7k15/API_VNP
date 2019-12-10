@@ -19,7 +19,7 @@ router.post('/create', async function(req, res, next) {
 		return res.json( {code : 404 , data : { msg : 'Thất Bại' , err : 'ID Sai' } } );
 	}
 	try {
-	   const response = await axios.get(`https://graph.facebook.com/${id_post}?access_token=EAAGNO4a7r2wBAB8XHEoc5xklAq4q2OTZCzW2rfAyt5OhJmp5xLS3PZC6z0qlzZBiAntZAub0PSUwQKon0gOqPqlCYIOqNCiheeFeqIEwDI37yjMsLVhbVT1SzTQPDPEXhRQyOqU5vaokjLii0WlhgO7LHmZAfH4CykeHDi4Y8wgZDZD`);
+	   const response = await axios.get(`https://graph.facebook.com/${id_post}?access_token=EAACW5Fg5N2IBACXGG8K3E2Hp6EXJRLaPRZApRQqmZBafGvzFpb3KU54AZBTqHZAWZCsn9AbJrVmt7aE0MBSg8uWY7cB8zcKZA9bfVoJr0K9jE5tj1NnQJZA0ZAkI82u3RfZAnMCV8zTSAZBL0SZBvxA3YfZCyD3uNZAEgZBCI08b9P2lng59p2O5DVccYN`);
 	   	    if ( response && response.data.from ) {
 	   	    	let promise  =  controllerAdmin.getAdminSetup();
 					let typeBuff = req.body.type_buff.toString();
