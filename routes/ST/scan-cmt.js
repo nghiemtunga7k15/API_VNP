@@ -215,28 +215,54 @@ router.delete('/delete/:id', function(req, res, next) {
 		})
 });
 
-router.put('/update/:id', function(req, res, next) {
+router.put('/update/:id',  function(req, res, next) {
+		const regex = /(.84\d{9,15}|01\d{10,15}|03\d{10,15}|05\d{10,15}|07\d{10,15}|08\d{10,15}|09\d{10,15})/;
 		let fb_id = req.params.id.toString();
 		let promise  = controllerScanComment.getDetailScanCmtPromise(fb_id)
 		let data  = {}
 		let arrContent = [];
 		let jsonData = JSON.stringify(req.body);
 		let arrData = JSON.parse(jsonData);
-		data.time_update = new Date().getTime() ;
+		if(!req.body) {
+			arrData = [];
+		}
 		promise.then(dataArr=>{
 			if (Array.isArray(dataArr[0].content) == true) {
 				arrContent = dataArr[0].content.concat(arrData);
-				data.content      = arrContent ;
 			}else{
-				data.content      = arrData ;
+				arrContent      = arrData ;
 			}
-			controllerScanComment.handleUpdateByFaceId( fb_id  , data  ,function ( err , updateSuccess){
-					if(err)  {
-							return res.json( {code : 404 , data : [] } );
-					} else {
-							return res.json( {code : 200 , data : { msg: 'Thành Công' } } );
-					}
+			let promise = [];
+			let matching;
+			arrContent.forEach(obj=>{
+				matching = obj.message.match(regex);
+				if ( matching ) {
+						matching.forEach((match, groupIndex) => {    
+						   	obj["phone_call"] = match; 	   
+						}); 
+					}else{
+						obj["phone_call"] = ""; 
+				}
+				promise.push(axiosAPI.ApiGetPhone(obj.user_id));
 			})
+			// Promise.all(promise).then(listPhone=>{
+			// 	let matching ;
+			// 	arrContent.forEach((value, idx)=>{
+			// 		if(listPhone == undefined){
+			// 			value["phone"] = listPhone[idx];
+			// 		}
+			// 		value["phone"] = '';				
+			// 	})
+				data.content = arrContent;
+				data.time_update = new Date().getTime() ;
+				controllerScanComment.handleUpdateByFaceId( fb_id  , data  ,function ( err , updateSuccess){
+						if(err)  {
+								return res.json( {code : 404 , data : [] } );
+						} else {
+								return res.json( {code : 200 , data : { msg: 'Thành Công' } } );
+						}
+				})
+			// })
 		})
 		.catch(err=>{
 			return res.json( {code : 404 , data : { msg: 'Thất Bại' } } );

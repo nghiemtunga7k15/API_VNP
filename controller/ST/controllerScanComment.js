@@ -65,7 +65,7 @@ let ScanCommentController = {
 		});
 	},
 	getDetailScanCmtPromise( fb_id  ) {
-		const conditions = { fb_id : fb_id  , status : 1 };
+		const conditions = { fb_id : fb_id  , status : 0 };
 		return new Promise(function(resolve, reject) { 
 			modalScanComment.find( conditions, function(err , detailScanCmt) { 
 				if (err) return reject(err);
