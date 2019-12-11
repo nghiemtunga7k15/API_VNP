@@ -103,61 +103,60 @@ router.get('/list', function(req, res, next) {
 
 router.get('/detail/:id', function(req, res, next) {
 		let idScanCmt = parseInt(req.params.id);
-		let text = req.query.text ? req.query.text : '';
+		let text = req.query.text ? req.query.text : '1212';
 		let timeStart = req.query.time_start ? req.query.time_start : '' ;
-		let textEnd = req.query.time_end ? req.query.time_end : ''
+		let timeEnd = req.query.time_end ? req.query.time_end : '';
+
 		controllerScanComment.getDetailScanCmt( idScanCmt ,function ( err , detailOrderScanCmt){
 			if(err)  {
 				return res.json( {code : 404 , data : [] } );
 			} else {  		
-					// timeStart = req.query.time_start;
-					// textEnd = req.query.time_end;
-					// var myDate="26-02-2012";
-					// let time_start = `${timeStart}T00:00:00+0000`; 
-					// time_start=(time_start).toString().replace(/[^\d]/g,'').slice(0, -9);
+					// Time Start
+					let  myDateTimeStart=timeStart.split("-");
+					let newDateTimeStart =myDateTimeStart[1]+"/"+myDateTimeStart[2]+"/"+myDateTimeStart[0];
+					timeStart = new Date(newDateTimeStart).getTime()
 
-					// let time_end = `{${textEnd}T00:00:00+0000`;    
-					// time_end=(time_end).toString().replace(/[^\d]/g,'').slice(0, -9);
-				
-
-					// myDate=myDate.split("-");
-					// var newDate=myDate[1]+"/"+myDate[0]+"/"+myDate[2];
-					// alert(new Date(newDate).getTime()); 
-
+					// Time End
+					let myDateTimeEnd=timeEnd.split("-");
+					var newDateTimeEnd=myDateTimeEnd[1]+"/"+myDateTimeEnd[2]+"/"+myDateTimeEnd[0];
+					timeEnd = new Date(newDateTimeEnd).getTime();				
 
 					let result=[];
-					// return;
 					if (  detailOrderScanCmt ) {
 						detailOrderScanCmt.content.forEach(obj=>{
-							// let time_curent = (obj.created_time).toString().replace(/[^\d]/g,'').slice(0, -9);
+							let time_curent  = obj.created_time.toString().slice(0, 10);
+							myDate=time_curent.split("-");
+							var newDate=myDate[1]+"/"+myDate[2]+"/"+myDate[0];
+							time_curent = new Date(newDate).getTime();	
 
-							// Full 
-							// if ( timeStart &&  textEnd &&  text ) {
-							// 	if (  parseInt(time_curent) < parseInt(time_end) &&   parseInt(time_curent) > parseInt(time_start) &&  (obj.message.includes(text) == true) ) {
-							// 		result.push(obj);
-							// 	}
-							// }
-							// // Time satrt and time and
-							//  if ( timeStart &&  textEnd )  {
-							// 	if (  parseInt(time_curent) < parseInt(time_end) &&   parseInt(time_curent) > parseInt(time_start) ) {
-							// 		result.push(obj);
-							// 	}
-							// }
-							// Text
-							 if ( text ) {
+							/*Full field*/
+							if ( req.query.text &&  req.query.time_start && req.query.time_end )  {
+								if ( parseInt(time_curent) > parseInt(timeStart ) && parseInt(time_curent) < parseInt(timeEnd) && obj.message.includes(text) == true  ) {
+									result.push(obj)
+								}
+
+							/*Time Start and Time End*/
+							}else if (req.query.time_start && req.query.time_end) {
+								if ( parseInt(time_curent) > parseInt(timeStart ) && parseInt(time_curent) < parseInt(timeEnd) ) {
+									result.push(obj)
+							}
+							/*Key Word*/
+							} else if ( req.query.text ) {
 								if (  obj.message.includes(text) == true ) {
 									result.push(obj);
 								}
+							}else{
+								result = detailOrderScanCmt;
 							}
 						})
 						let post        = detailOrderScanCmt.content.length;
 						let fanpageName = detailOrderScanCmt.name_fanpage;
+						
 						return res.json( 
 							{
 								code : 200 , 
-								data : { result : text.length > 0 ||  timeStart.length > 0 || textEnd.length > 0  ? result :   detailOrderScanCmt , post : post , fanpageName:   fanpageName },
-								// data : { result : result.length > 0 ? data  :  detailOrderScanCmt },
-							} );
+								data : { result : result  , post : post , fanpageName:   fanpageName },
+							});
 					}else{
 						return res.json( {code : 400 , data : [] } );
 					}
