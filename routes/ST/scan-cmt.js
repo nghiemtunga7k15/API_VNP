@@ -240,11 +240,10 @@ router.put('/update/:id', function(req, res, next) {
 		let arrData = JSON.parse(jsonData);
 		data.time_update = new Date().getTime() ;
 		promise.then(dataArr=>{
-			if (Array.isArray(dataArr[0].content) == true && dataArr[0].content.length > 0) {
+			if (Array.isArray(dataArr[0].content) == true) {
 				arrContent = dataArr[0].content.concat(arrData);
 				data.content      = arrContent ;
-			}
-			if (arrData.length > 0) {
+			}else{
 				data.content      = arrData ;
 			}
 			controllerScanComment.handleUpdateByFaceId( fb_id  , data  ,function ( err , updateSuccess){
