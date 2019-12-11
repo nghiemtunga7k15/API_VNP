@@ -240,14 +240,12 @@ router.put('/update/:id', function(req, res, next) {
 		let arrData = JSON.parse(jsonData);
 		data.time_update = new Date().getTime() ;
 		promise.then(dataArr=>{
-			if ( !dataArr  || dataArr.length == 0 ) {
-				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
-			}
-			if (Array.isArray(dataArr[0].content) == true || dataArr[0].content.length > 0 || arrData.length > 0) {
+			if (Array.isArray(dataArr[0].content) == true && dataArr[0].content.length > 0) {
 				arrContent = dataArr[0].content.concat(arrData);
 				data.content      = arrContent ;
-			}else{
-				data.content      = arrContent ;
+			}
+			if (arrData.length > 0) {
+				data.content      = arrData ;
 			}
 			controllerScanComment.handleUpdateByFaceId( fb_id  , data  ,function ( err , updateSuccess){
 					if(err)  {
@@ -256,7 +254,11 @@ router.put('/update/:id', function(req, res, next) {
 							return res.json( {code : 200 , data : { msg: 'Thành Công' } } );
 					}
 			})
-		})		
+		})
+		.catch(err=>{
+			return res.json( {code : 404 , data : { msg: 'Thất Bại' } } );
+
+		})	
 });
 
 router.get('/detail-order', function(req, res, next) {
