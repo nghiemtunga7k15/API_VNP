@@ -185,9 +185,10 @@ router.put('/update-scan-cmt/:id', function(req, res, next) {
 				})
 			})
 		}
-		if ( req.body.update_log ) {
+
 			PromiseDetailScanCmt(idScanCmt).then(dataPromise=>{
-				data.log_time = dataPromise;
+				let time_log_data = req.body.update_log ? dataPromise : dataPromise;
+ 				data.log_time = time_log_data;
 				controllerScanComment.handleUpdateScantCmt(idScanCmt , data , function(err , updateSuccess) {
 					if(err)  {
 						return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
@@ -197,8 +198,10 @@ router.put('/update-scan-cmt/:id', function(req, res, next) {
 					}
 				})
 			})
-		} 
-		
+			.catch(err=>{
+				return res.json( {code : 404 , data : { msg : 'ID Error'} } );
+
+			})	
 });
 
 router.delete('/delete/:id', function(req, res, next) {
