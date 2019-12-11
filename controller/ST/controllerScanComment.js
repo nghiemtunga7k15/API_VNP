@@ -56,7 +56,7 @@ let ScanCommentController = {
 	handleUpdateByFaceId( fb_id  , data ,cb ) {
 		const conditions = { fb_id : fb_id };
 		const update     = data;
-		modalScanComment.findOneAndUpdate( conditions, { $set: update  } ,  { upsert: false }  ,  function(err , detailScanCmt) { 
+		modalScanComment.updateMany( conditions, { $set: update  } ,  { upsert: false }  ,  function(err , detailScanCmt) { 
 			if ( detailScanCmt == null ) {
 				return cb(true ,null);
 			} 
@@ -65,8 +65,9 @@ let ScanCommentController = {
 		});
 	},
 	getDetailScanCmtPromise( fb_id  ) {
+		const conditions = { fb_id : fb_id  , status : 0 };
 		return new Promise(function(resolve, reject) { 
-			modalScanComment.findOne( { fb_id : fb_id }, function(err , detailScanCmt) { 
+			modalScanComment.find( conditions, function(err , detailScanCmt) { 
 				if (err) return reject(err);
 	        	return resolve(detailScanCmt)
 			});

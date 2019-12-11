@@ -61,26 +61,26 @@ router.post('/create', async function(req, res, next) {
 						if(err)  {
 							return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 						} else { 
-							let html =  `<table style="width:100%" cellpadding="10"  rules="all">
-										<thead>
-										    <tr>
-										      <th>STT</th>
-										      <th>UserID</th>
-										      <th>FacebookName</th>
-										      <th>Giới tính</th>
-										      <th>Email</th>
-										      <th>SDT</th>
-										      <th>Dia chi</th>
-										      <th>Thời gian Comment</th>
-										      <th>Nội dung Comment</th>
-										    </tr>
-										</thead>
-										<tbody>
-										</tbody>
-										</table>`;
-							fs.writeFile(`public/file/${id_post}_${api.idScanCmt}.html`, html , function(err){
-									            if (err) return console.log(err);
-							}); 
+							// let html =  `<table style="width:100%" cellpadding="10"  rules="all">
+							// 			<thead>
+							// 			    <tr>
+							// 			      <th>STT</th>
+							// 			      <th>UserID</th>
+							// 			      <th>FacebookName</th>
+							// 			      <th>Giới tính</th>
+							// 			      <th>Email</th>
+							// 			      <th>SDT</th>
+							// 			      <th>Dia chi</th>
+							// 			      <th>Thời gian Comment</th>
+							// 			      <th>Nội dung Comment</th>
+							// 			    </tr>
+							// 			</thead>
+							// 			<tbody>
+							// 			</tbody>
+							// 			</table>`;
+							// fs.writeFile(`public/file/${id_post}_${api.idScanCmt}.html`, html , function(err){
+							// 		            if (err) return console.log(err);
+							// }); 
 							return res.json( {code : 200 , data : api } );
 						}
 					})
@@ -129,13 +129,17 @@ router.get('/detail/:id', function(req, res, next) {
 		controllerScanComment.getDetailScanCmt( idScanCmt ,function ( err , detailOrderScanCmt){
 			if(err)  {
 				return res.json( {code : 404 , data : [] } );
-			} else {
-					let time_start = `${timeStart}T00:00:00+0000`; 
-					time_start=(time_start).toString().replace(/[^\d]/g,'').slice(0, -9);
+			} else {  
+					if ( timeStart && textEnd ) {			
+						let time_start = `${timeStart}T00:00:00+0000`; 
+						time_start=(time_start).toString().replace(/[^\d]/g,'').slice(0, -9);
 
-					let time_end = `{${textEnd}T00:00:00+0000`;    
-					time_end=(time_end).toString().replace(/[^\d]/g,'').slice(0, -9);
+						let time_end = `{${textEnd}T00:00:00+0000`;    
+						time_end=(time_end).toString().replace(/[^\d]/g,'').slice(0, -9);
+					}
 					let result=[];
+					// console.log(detailOrderScanCmt)
+					// return;
 					if (  detailOrderScanCmt ) {
 						detailOrderScanCmt.content.forEach(obj=>{
 							let time_curent = (obj.created_time).toString().replace(/[^\d]/g,'').slice(0, -9);
@@ -235,84 +239,23 @@ router.put('/update/:id', function(req, res, next) {
 		let jsonData = JSON.stringify(req.body);
 		let arrData = JSON.parse(jsonData);
 		data.time_update = new Date().getTime() ;
-		promise.then(obj=>{
-			if ( !obj || obj == null ) {
+		promise.then(dataArr=>{
+			if ( !dataArr  || dataArr.length == 0 ) {
 				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
 			}
-			if ( Array.isArray(arrData) ==  true &&  Array.isArray(obj.content) ==  true ) {
-				arrContent = obj.content.concat(arrData);
+			if (Array.isArray(dataArr[0].content) == true || dataArr[0].content.length > 0 || arrData.length > 0) {
+				arrContent = dataArr[0].content.concat(arrData);
 				data.content      = arrContent ;
-			}else { 
-				arrContent = arrData;
+			}else{
 				data.content      = arrContent ;
 			}
 			controllerScanComment.handleUpdateByFaceId( fb_id  , data  ,function ( err , updateSuccess){
 					if(err)  {
-						return res.json( {code : 404 , data : [] } );
+							return res.json( {code : 404 , data : [] } );
 					} else {
-							/*--------OPEN TABLE HTML------------*/
-							let header =  `<table style="width:100%" cellpadding="10"  rules="all">
-							  <thead>
-							    <tr>
-							      <th>STT</th>
-							      <th>UserID</th>
-							      <th>FacebookName</th>
-							      <th>Giới tính</th>
-							      <th>Email</th>
-							      <th>SDT</th>
-							      <th>Dia chi</th>
-							      <th>Thời gian Comment</th>
-							      <th>Nội dung Comment</th>
-							    </tr>
-							  </thead>
-							  <tbody>`;
-							 /*----------MAIN TABLE-----------*/
-							let main = '';
-							/*----------FOOTER TABLE-----------*/
-							let footer =`</tbody>
-							</table>
-							`;
-							let num = 1;
-							if  ( Array.isArray(arrContent) ==  true ) {
-								arrContent.forEach(comment=>{
-									// axios.ApiGetPhone(comment.user_id , function(err , phone ){
-										if( parseInt(num) < 10 ){
-											num = `0${num}` 
-										}
-										// if ( !phone || phone == 'undefined') {
-										// 	phone = null;
-										// }
-										let time;
-										try {
-											comment.created_time.toString().slice(0,10);
-										}catch(err){
-											console.log(err)
-										}
-										let content  = `
-										 <tr>
-									      <td>${num}</td>
-									      <td>${comment.user_id}</td>
-									      <td>${comment.user_name}</td>
-									      <td>Nam</td>
-									      <td>email@gmail.com</td>
-									      <td>Phone</td>
-									      <td>Địa Chỉ</td>
-									      <td>${comment.created_time}</td>
-									      <td>${comment.message}</td>
-									    </tr>`;
-									    main = `${main}${content}`;
-										num = parseInt(num) +1;
-									// });
-								});
-								let htmlTable = `${header}${main}${footer}`;
-								fs.writeFile(`public/file/${fb_id}_${updateSuccess.idScanCmt}.html`, htmlTable, function(err){
-						            if (err) return console.log(err);
-						        });  
-							}
 							return res.json( {code : 200 , data : { msg: 'Thành Công' } } );
 					}
 			})
-
 		})		
 });
 
