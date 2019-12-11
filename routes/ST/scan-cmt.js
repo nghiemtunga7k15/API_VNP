@@ -27,13 +27,17 @@ router.post('/create', async function(req, res, next) {
 	try {
 	   const response = await axios.get(`https://graph.facebook.com/${id_post}?access_token=EAACW5Fg5N2IBACXGG8K3E2Hp6EXJRLaPRZApRQqmZBafGvzFpb3KU54AZBTqHZAWZCsn9AbJrVmt7aE0MBSg8uWY7cB8zcKZA9bfVoJr0K9jE5tj1NnQJZA0ZAkI82u3RfZAnMCV8zTSAZBL0SZBvxA3YfZCyD3uNZAEgZBCI08b9P2lng59p2O5DVccYN`);
 	   	    if ( response && response.data.from ) {
+	   	    	let name_page;
 				let promise  =  controllerAdmin.getAdminSetup();
 				promise.then(success=>{
 					let timeOneDay  = 60 * 60 * 24 * 1000;
 					let minutesOnDay = 60 * 24;
+					if (response.data.from.name) {
+						name_page = response.data.from.name;
+					}
 					let data = { 
 						fb_id              : 		id_post	,
-						name_fanpage       :        req.body.name_fanpage,
+						name_fanpage       :        name_page,
 						note               :        req.body.note,
 						minutes            :        (parseInt(req.body.time) *minutesOnDay).toString(),
 						time_create        :		new Date().getTime(),
@@ -156,7 +160,18 @@ router.get('/detail/:id', function(req, res, next) {
 							}
 							
 						})
-						return res.json( {code : 200 , data : result.length > 0 ? result :  detailOrderScanCmt  } );
+						if (result.length > 0) {
+							var data = {
+								result : result,
+								fanpageName : detailOrderScanCmt.name_fanpage,
+								post : detailOrderScanCmt.content.length
+							}
+						}
+						return res.json( 
+							{
+								code : 200 , 
+								data : { result : result.length > 0 ? data  :  detailOrderScanCmt },
+							} );
 					}else{
 						return res.json( {code : 400 , data : [] } );
 					}
@@ -179,8 +194,8 @@ router.put('/update-scan-cmt/:id', function(req, res, next) {
 						obj.log_time   = time_curent;
 						obj.total_post = detailOrderScanCmt.content.length;
 						arr = detailOrderScanCmt.log_time;
-						arr.push(obj)
-						resolve(arr)
+						arr.push(obj);
+						resolve(arr);
 					}
 				})
 			})
