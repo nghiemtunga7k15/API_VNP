@@ -60,27 +60,7 @@ router.post('/create', async function(req, res, next) {
 					controllerScanComment.handleCreate(data, function (err , api) {
 						if(err)  {
 							return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
-						} else { 
-							// let html =  `<table style="width:100%" cellpadding="10"  rules="all">
-							// 			<thead>
-							// 			    <tr>
-							// 			      <th>STT</th>
-							// 			      <th>UserID</th>
-							// 			      <th>FacebookName</th>
-							// 			      <th>Giới tính</th>
-							// 			      <th>Email</th>
-							// 			      <th>SDT</th>
-							// 			      <th>Dia chi</th>
-							// 			      <th>Thời gian Comment</th>
-							// 			      <th>Nội dung Comment</th>
-							// 			    </tr>
-							// 			</thead>
-							// 			<tbody>
-							// 			</tbody>
-							// 			</table>`;
-							// fs.writeFile(`public/file/${id_post}_${api.idScanCmt}.html`, html , function(err){
-							// 		            if (err) return console.log(err);
-							// }); 
+						} else {  
 							return res.json( {code : 200 , data : api } );
 						}
 					})
@@ -124,21 +104,22 @@ router.get('/list', function(req, res, next) {
 router.get('/detail/:id', function(req, res, next) {
 		let idScanCmt = parseInt(req.params.id);
 		let text = req.query.text;
-		let timeStart = req.query.time_start;
-		let textEnd = req.query.time_end;
+		let timeStart;
+		let textEnd;
 		controllerScanComment.getDetailScanCmt( idScanCmt ,function ( err , detailOrderScanCmt){
 			if(err)  {
 				return res.json( {code : 404 , data : [] } );
-			} else {  
-					if ( timeStart && textEnd ) {			
-						let time_start = `${timeStart}T00:00:00+0000`; 
-						time_start=(time_start).toString().replace(/[^\d]/g,'').slice(0, -9);
+			} else {  		
+				if (req.query.time_start && req.query.time_end) {
+					 timeStart = req.query.time_start;
+					 textEnd = req.query.time_end;
+					let time_start = `${timeStart}T00:00:00+0000`; 
+					time_start=(time_start).toString().replace(/[^\d]/g,'').slice(0, -9);
 
-						let time_end = `{${textEnd}T00:00:00+0000`;    
-						time_end=(time_end).toString().replace(/[^\d]/g,'').slice(0, -9);
-					}
+					let time_end = `{${textEnd}T00:00:00+0000`;    
+					time_end=(time_end).toString().replace(/[^\d]/g,'').slice(0, -9);
+				}
 					let result=[];
-					// console.log(detailOrderScanCmt)
 					// return;
 					if (  detailOrderScanCmt ) {
 						detailOrderScanCmt.content.forEach(obj=>{
