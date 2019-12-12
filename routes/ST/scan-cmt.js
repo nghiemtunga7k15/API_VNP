@@ -292,26 +292,32 @@ router.get('/detail-order', function(req, res, next) {
 										return res.json( {code : 200 , data :  { post_id : detailBuffCmt.fb_id  ,  stop_id : null } } );
 									}	
 			 					})
+			 					.catch(err=>{
+									return res.json( {code : 200 , data : { msg : 'Err' } } );
+								})
 				 			}
-				} else {
-					promise.then(listOrderDelete=>{
-						if (listOrderDelete && listOrderDelete .length > 0) {
-							listOrderDelete.forEach(order=>{
-				 				arrIdDelete.push(order.fb_id);
-				 			})
-				 			let result = checkIsExistArr(arrIdDelete);
-				 			let promise_update_mutil	 = controllerScanComment.handleUpdateMutil();
-				 			promise_update_mutil.then(update=>{
-								return res.json( {code : 200 , data :  { post_id : null  ,  stop_id : result } } );
-				 			})
-						}else{
-							return res.json( {code : 200 , data :  { post_id : null  ,  stop_id : null } } );
-						}
-					})
-					.catch(err=>{
-						return res.json( {code : 200 , data : { msg : 'Err' } } );
-					})
-			 	}
+						} else {
+							promise.then(listOrderDelete=>{
+								if (listOrderDelete && listOrderDelete .length > 0) {
+									listOrderDelete.forEach(order=>{
+						 				arrIdDelete.push(order.fb_id);
+						 			})
+						 			let result = checkIsExistArr(arrIdDelete);
+						 			let promise_update_mutil	 = controllerScanComment.handleUpdateMutil();
+						 			promise_update_mutil.then(update=>{
+										return res.json( {code : 200 , data :  { post_id : null  ,  stop_id : result } } );
+						 			})
+						 			.catch(err=>{
+										return res.json( {code : 200 , data : { msg : 'Err' } } );
+									})
+								}else{
+									return res.json( {code : 200 , data :  { post_id : null  ,  stop_id : null } } );
+								}
+							})
+							.catch(err=>{
+								return res.json( {code : 200 , data : { msg : 'Err' } } );
+							})
+					 	}
 		})
 			
 });
