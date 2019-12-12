@@ -360,7 +360,6 @@ router.put('/update-comment-post/:id', function(req, res, next) {
 		}else{
 			dataArr = [];
 		}
-		console.log(dataArr)
 		controllerScanComment.getDetailScanCmt( idScanCmt ,function ( err , detailOrderScanCmt){
 			if(err) {
 				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
@@ -371,7 +370,6 @@ router.put('/update-comment-post/:id', function(req, res, next) {
 				let arr = detailOrderScanCmt.content;
 				function updateArray( array, index, _add_full , _add_county , _add_district , _phone ){
 					if (arr[index] && array[index].address_post ) {
-						console.log('Cosssssssssssssssssss')
 						array[index].address_post.add_full = _add_full;
 						array[index].address_post.add_county = _add_county;
 						array[index].address_post.add_district = _add_district;
@@ -382,22 +380,19 @@ router.put('/update-comment-post/:id', function(req, res, next) {
 
 					if (dataArr.length !=0 ) {
 						dataArr.forEach(obj=>{
-							arr = updateArray( arr, parseInt(obj.idex) , 
+							arr = updateArray( arr, parseInt(obj.idx) , 
 							 	obj.address        ? obj.address  : '' , 
 							 	obj.province.name  ? obj.province.name  : '',
 							 	obj.district.name  ? obj.district.name  : '',
 							 	obj.phone          ? obj.phone  : '',
 							);
+
 						})
 					}
 
 					data.content   = arr;
 					data.last_time =  date_now ;
 
-					console.log(arr);
-
-
-					console.log(data)
 					controllerScanComment.handleUpdateScantCmt(idScanCmt , data , function(err , updateSuccess) {
 						if(err)  {
 						} else {
