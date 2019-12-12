@@ -363,7 +363,8 @@ router.put('/update-comment-post/:id', function(req, res, next) {
 
 		console.log(req.body);
 
-		console.log(11111111111111111111111111)
+
+
 		controllerScanComment.getDetailScanCmt( idScanCmt ,function ( err , detailOrderScanCmt){
 			if(err) {
 				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
