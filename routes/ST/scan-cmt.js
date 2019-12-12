@@ -360,6 +360,10 @@ router.put('/update-comment-post/:id', function(req, res, next) {
 		}else{
 			dataArr = [];
 		}
+
+		console.log(req.body);
+
+		console.log(11111111111111111111111111)
 		controllerScanComment.getDetailScanCmt( idScanCmt ,function ( err , detailOrderScanCmt){
 			if(err) {
 				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
@@ -392,7 +396,7 @@ router.put('/update-comment-post/:id', function(req, res, next) {
 
 					data.content   = arr;
 					data.last_time =  date_now ;
-
+					console.log(arr)
 					controllerScanComment.handleUpdateScantCmt(idScanCmt , data , function(err , updateSuccess) {
 						if(err)  {
 						} else {
