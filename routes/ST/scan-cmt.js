@@ -351,7 +351,7 @@ router.get('/list-phone', function(req, res, next) {
 
 router.put('/update-comment-post/:id', function(req, res, next) {
 		let idScanCmt = parseInt(req.params.id);
-		let dataArr;
+		let dataArr = []
 		let date_now   = Date.now();
 		let data = {};
 		if( Array.isArray(req.body) == true) {
@@ -360,6 +360,7 @@ router.put('/update-comment-post/:id', function(req, res, next) {
 		}else{
 			dataArr = [];
 		}
+		console.log(dataArr)
 		controllerScanComment.getDetailScanCmt( idScanCmt ,function ( err , detailOrderScanCmt){
 			if(err) {
 				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
