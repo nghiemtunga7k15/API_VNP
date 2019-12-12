@@ -326,7 +326,7 @@ router.get('/list-phone', function(req, res, next) {
 				}else{
 					let arr = [];
 					if (detailOrder == null || detailOrder.length == 0) {
-						return res.json( {code : 404 , data : [] } );
+						return res.json( {code : 200 , data : [] } );
 					}
 					detailOrder.content.forEach((obj,idx)=>{
 						let  object = {};
@@ -343,52 +343,54 @@ router.get('/list-phone', function(req, res, next) {
 });
  
 
-// router.put('/update-comment-post/:id', function(req, res, next) {
-// 		let idScanCmt = parseInt(req.params.id);
-// 		let dataArr;
-// 		let date_now   = Date.now();
-// 		let data = {};
-// 		if( Array.isArray(req.body) == true) {
-// 		 	dataArr = JSON.stringify(req.body);
-// 			dataArr = JSON.parse(dataArr);
-// 		}else{
-// 			dataArr = [];
-// 		}
-// 		controllerScanComment.getDetailScanCmt( idScanCmt ,function ( err , detailOrderScanCmt){
-// 			if(err) {
-// 				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
-// 			}else{
-// 				if (detailOrderScanCmt == null || !detailOrderScanCmt){
-// 					return res.json( {code : 404 , data : [] } );
-// 				}
-// 				let arr = detailOrderScanCmt.content;
-// 				const updateArray = (array,index,updateFn) => {
-// 					  return [
-// 					  ...array.slice(0,index),
-// 					  updateFn(array[index]),
-// 					  ...array.slice(index+1)
-// 					  ];
-// 				}
-// 					if (dataArr.length !=0 ) {
-// 						dataArr.forEach(obj=>{
-// 							 // arr = updateArray(arr,obj.idex,item => ({...item,
-// 							 // 	address_post: 
-// 							 // 	obj.address_post.
-// 							 // }));
-// 						})
-// 					}
-// 					data.content   = arr;
-// 					data.last_time =  date_now ;
-// 					controllerScanComment.handleUpdateScantCmt(idScanCmt , data , function(err , updateSuccess) {
-// 						if(err)  {
-// 							return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
-// 						} else {
+router.put('/update-comment-post/:id', function(req, res, next) {
+		let idScanCmt = parseInt(req.params.id);
+		let dataArr;
+		let date_now   = Date.now();
+		let data = {};
+		if( Array.isArray(req.body) == true) {
+		 	dataArr = JSON.stringify(req.body);
+			dataArr = JSON.parse(dataArr);
+		}else{
+			dataArr = [];
+		}
+		controllerScanComment.getDetailScanCmt( idScanCmt ,function ( err , detailOrderScanCmt){
+			if(err) {
+				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
+			}else{
+				if (detailOrderScanCmt == null || !detailOrderScanCmt){
+					return res.json( {code : 404 , data : [] } );
+				}
+				let arr = detailOrderScanCmt.content;
+				function updateArray( array, index, _add_full , _add_county , _add_district , _phone ){
+					array[index].address_post.add_full = _add_full;
+					array[index].address_post.add_county = _add_county;
+					array[index].address_post.add_district = _add_district;
+					array[index].user_phone = _phone;
+					return array;
+				}
 
-// 							return res.json( {code : 200 , data : { msg : 'Thành Công'} } );
-// 						}
-// 					})
-// 			}
-// 		})
-// });
+					if (dataArr.length !=0 ) {
+						dataArr.forEach(obj=>{
+							arr = updateArray( arr, parseInt(obj.idex) , 
+							 	obj.address        ? obj.address  : '' , 
+							 	obj.province.name  ? obj.province.name  : '',
+							 	obj.district.name  ? obj.district.name  : '',
+							 	obj.phone          ? obj.phone  : '',
+							);
+						})
+					}
+			
+					data.content   = arr;
+					data.last_time =  date_now ;
+					controllerScanComment.handleUpdateScantCmt(idScanCmt , data , function(err , updateSuccess) {
+						if(err)  {
+						} else {
+							return res.json( {code : 200 , data : { msg : 'Thành Công'} } );
+						}
+					})
+			}
+		})
+});
 
 module.exports = router;
