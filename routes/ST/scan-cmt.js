@@ -369,10 +369,12 @@ router.put('/update-comment-post/:id', function(req, res, next) {
 				}
 				let arr = detailOrderScanCmt.content;
 				function updateArray( array, index, _add_full , _add_county , _add_district , _phone ){
-					array[index].address_post.add_full = _add_full;
-					array[index].address_post.add_county = _add_county;
-					array[index].address_post.add_district = _add_district;
-					array[index].user_phone = _phone;
+					if (arr[index] && array[index].address_post ) {
+						array[index].address_post.add_full = _add_full;
+						array[index].address_post.add_county = _add_county;
+						array[index].address_post.add_district = _add_district;
+						array[index].user_phone = _phone;
+					}
 					return array;
 				}
 
@@ -386,7 +388,7 @@ router.put('/update-comment-post/:id', function(req, res, next) {
 							);
 						})
 					}
-			
+
 					data.content   = arr;
 					data.last_time =  date_now ;
 					controllerScanComment.handleUpdateScantCmt(idScanCmt , data , function(err , updateSuccess) {
