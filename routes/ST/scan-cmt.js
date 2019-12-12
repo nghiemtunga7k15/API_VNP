@@ -185,7 +185,6 @@ router.put('/update-scan-cmt/:id', function(req, res, next) {
 				})
 			})
 		}
-
 			PromiseDetailScanCmt(idScanCmt).then(dataPromise=>{
 				let time_log_data = req.body.update_log ? dataPromise : dataPromise;
  				data.log_time = time_log_data;
@@ -213,10 +212,9 @@ router.delete('/delete/:id', function(req, res, next) {
 				return res.json( {code : 200 , data : { msg : 'Thành Công'} } );
 			}
 		})
-});
+});  
 
 router.put('/update/:id',  function(req, res, next) {
-		const regex = /(.84\d{9,15}|01\d{10,15}|03\d{10,15}|05\d{10,15}|07\d{10,15}|08\d{10,15}|09\d{10,15})/;
 		let fb_id = req.params.id.toString();
 		let promise  = controllerScanComment.getDetailScanCmtPromise(fb_id)
 		let data  = {}
@@ -235,24 +233,13 @@ router.put('/update/:id',  function(req, res, next) {
 			let promise = [];
 			let matching;
 			arrContent.forEach(obj=>{
-				matching = obj.message.match(regex);
-				if ( matching ) {
-						matching.forEach((match, groupIndex) => {    
-						   	obj["phone_call"] = match; 	   
-						}); 
-					}else{
-						obj["phone_call"] = ""; 
-				}
-				promise.push(axiosAPI.ApiGetPhone(obj.user_id));
+				obj["address_post"]         = {
+					add_full     : '',
+					add_county   : '',
+					add_district : ''
+				};
+				obj["address_comment"]      = null;
 			})
-			// Promise.all(promise).then(listPhone=>{
-			// 	let matching ;
-			// 	arrContent.forEach((value, idx)=>{
-			// 		if(listPhone == undefined){
-			// 			value["phone"] = listPhone[idx];
-			// 		}
-			// 		value["phone"] = '';				
-			// 	})
 				data.content = arrContent;
 				data.time_update = new Date().getTime() ;
 				controllerScanComment.handleUpdateByFaceId( fb_id  , data  ,function ( err , updateSuccess){
@@ -262,7 +249,6 @@ router.put('/update/:id',  function(req, res, next) {
 								return res.json( {code : 200 , data : { msg: 'Thành Công' } } );
 						}
 				})
-			// })
 		})
 		.catch(err=>{
 			return res.json( {code : 404 , data : { msg: 'Thất Bại' } } );
@@ -329,5 +315,80 @@ router.get('/detail-order', function(req, res, next) {
 		})
 			
 });
+
+router.get('/list-phone', function(req, res, next) {  
+		let conditions = { $or : [ { 'last_time' :0 }  ]};
+		let query      = modalScanComment.findOne( conditions );
+		query
+			.exec(function(err, detailOrder){
+				if(err) {
+					return res.json( {code : 404 , data : { msg : 'Err'} } );
+				}else{
+					let arr = [];
+					if (detailOrder == null || detailOrder.length == 0) {
+						return res.json( {code : 404 , data : [] } );
+					}
+					detailOrder.content.forEach((obj,idx)=>{
+						let  object = {};
+						if( obj.user_phone != 'Not Found') {
+							object['id'] = obj.user_id;
+							object['phone'] = obj.user_phone;
+							object['idx'] = idx;
+							arr.push(object);
+						}
+					})
+					return res.json( {code : 200 , id : detailOrder.idScanCmt ,  data : arr } );
+				}
+			})	
+});
+ 
+
+// router.put('/update-comment-post/:id', function(req, res, next) {
+// 		let idScanCmt = parseInt(req.params.id);
+// 		let dataArr;
+// 		let date_now   = Date.now();
+// 		let data = {};
+// 		if( Array.isArray(req.body) == true) {
+// 		 	dataArr = JSON.stringify(req.body);
+// 			dataArr = JSON.parse(dataArr);
+// 		}else{
+// 			dataArr = [];
+// 		}
+// 		controllerScanComment.getDetailScanCmt( idScanCmt ,function ( err , detailOrderScanCmt){
+// 			if(err) {
+// 				return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
+// 			}else{
+// 				if (detailOrderScanCmt == null || !detailOrderScanCmt){
+// 					return res.json( {code : 404 , data : [] } );
+// 				}
+// 				let arr = detailOrderScanCmt.content;
+// 				const updateArray = (array,index,updateFn) => {
+// 					  return [
+// 					  ...array.slice(0,index),
+// 					  updateFn(array[index]),
+// 					  ...array.slice(index+1)
+// 					  ];
+// 				}
+// 					if (dataArr.length !=0 ) {
+// 						dataArr.forEach(obj=>{
+// 							 // arr = updateArray(arr,obj.idex,item => ({...item,
+// 							 // 	address_post: 
+// 							 // 	obj.address_post.
+// 							 // }));
+// 						})
+// 					}
+// 					data.content   = arr;
+// 					data.last_time =  date_now ;
+// 					controllerScanComment.handleUpdateScantCmt(idScanCmt , data , function(err , updateSuccess) {
+// 						if(err)  {
+// 							return res.json( {code : 404 , data : { msg : 'Thất Bại'} } );
+// 						} else {
+
+// 							return res.json( {code : 200 , data : { msg : 'Thành Công'} } );
+// 						}
+// 					})
+// 			}
+// 		})
+// });
 
 module.exports = router;

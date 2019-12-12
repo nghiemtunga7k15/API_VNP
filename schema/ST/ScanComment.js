@@ -16,6 +16,7 @@ var ScanCommentSchema =  mongoose.Schema({
     note                     :   { type: String , default : '' }, 
     log_time                 :   { type: Array , "default": [] }, 
     status                   :   { type: Number , default : 0 },
+    last_time                :   { type: Number , default : 0 },
     time_create              :   { type: String },
     minutes                  :   { type: String },
     time_expired             :   { type: String },
