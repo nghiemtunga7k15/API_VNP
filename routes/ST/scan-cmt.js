@@ -393,7 +393,6 @@ router.put('/update-comment-post/:id', function(req, res, next) {
 
 					data.content   = arr;
 					data.last_time =  date_now ;
-					console.log(arr)
 					controllerScanComment.handleUpdateScantCmt(idScanCmt , data , function(err , updateSuccess) {
 						if(err)  {
 						} else {

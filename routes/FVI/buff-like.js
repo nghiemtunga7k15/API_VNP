@@ -80,7 +80,7 @@ router.get('/detail-order', function(req, res, next) {
 			if(err) {
 				return res.json( {code : 404 , data : { msg : 'Not Found'} } );
 			} else {
-				modalFbUser.find({status : 1 })
+				modalFbUser.find( { status : 1  , type : 1 })
 						.limit(parseInt(orderBuffLike.quantity))
 						.exec(function(err, cookie){
 							if (err) {
