@@ -36,7 +36,7 @@
     "vue-phone-number-input": "^1.1.10",
     "vue-smooth-picker": "^0.4.2",
     "vue2-gmap-custom-marker": "^6.0.1",
-    "xlsx": "^0.16.7"
+    "xlsx": "^0.17.0"
   },
   "devDependencies": {
     "@chenfengyuan/vue-qrcode": "^1.0.2",
